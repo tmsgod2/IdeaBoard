@@ -32,7 +32,7 @@ public class RankingFragment extends Fragment {
         rankList.add(new RankRecyclerViewData(R.drawable.ic_person_black,"이성재","부산대학교",70));
         rankList.add(new RankRecyclerViewData(R.drawable.ic_person_black,"모르는분","삼성sds",60));
 
-        final RecyclerView recyclerView = rootView.findViewById(R.id.ranking_recyclerView);
+        final RecyclerView recyclerView = rootView.findViewById(R.id.rankingRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
 
         RankRecyclerViewAdapter adapter = new RankRecyclerViewAdapter(rankList);
