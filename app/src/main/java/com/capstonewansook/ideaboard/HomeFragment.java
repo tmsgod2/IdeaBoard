@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment {
             public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
                 if(e.getAction() == MotionEvent.ACTION_DOWN){
                     View child = rv.findChildViewUnder(e.getX(),e.getY());
-                    TextView name = (TextView)rv.getChildViewHolder(child).itemView.findViewById(R.id.home_re_manystar_title_textView);
+                    TextView name = (TextView)rv.getChildViewHolder(child).itemView.findViewById(R.id.home_re_manystar_title_textview);
                     Toast.makeText(rootView.getContext(), "이름"+name.getText().toString(),Toast.LENGTH_SHORT).show();
                 }
                 return false;

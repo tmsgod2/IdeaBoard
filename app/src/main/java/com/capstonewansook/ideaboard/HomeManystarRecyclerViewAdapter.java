@@ -22,7 +22,7 @@ public class HomeManystarRecyclerViewAdapter extends RecyclerView.Adapter<HomeMa
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            title = itemView.findViewById(R.id.home_re_manystar_title_textView);
+            title = itemView.findViewById(R.id.home_re_manystar_title_textview);
             manystar = itemView.findViewById(R.id.home_re_manystar_num_textView);
         }
     }
