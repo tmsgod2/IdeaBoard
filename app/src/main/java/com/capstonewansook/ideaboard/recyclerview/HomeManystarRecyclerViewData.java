@@ -1,4 +1,4 @@
-package com.capstonewansook.ideaboard;
+package com.capstonewansook.ideaboard.recyclerview;
 
 public class HomeManystarRecyclerViewData implements Comparable<HomeManystarRecyclerViewData> {
     private String title;

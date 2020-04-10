@@ -13,6 +13,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstonewansook.ideaboard.recyclerview.RankRecyclerViewAdapter;
+import com.capstonewansook.ideaboard.recyclerview.RankRecyclerViewData;
+
 import java.util.ArrayList;
 
 

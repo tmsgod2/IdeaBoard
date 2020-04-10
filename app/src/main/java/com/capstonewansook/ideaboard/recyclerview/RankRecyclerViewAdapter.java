@@ -1,4 +1,4 @@
-package com.capstonewansook.ideaboard;
+package com.capstonewansook.ideaboard.recyclerview;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.capstonewansook.ideaboard.R;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -38,7 +40,7 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
 
     }
 
-    RankRecyclerViewAdapter(ArrayList<RankRecyclerViewData> list){
+    public RankRecyclerViewAdapter(ArrayList<RankRecyclerViewData> list){
         mData = list;
         Collections.sort(mData);
         for(int i = 0; i<mData.size();i++){

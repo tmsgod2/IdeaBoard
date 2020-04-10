@@ -1,4 +1,4 @@
-package com.capstonewansook.ideaboard;
+package com.capstonewansook.ideaboard.recyclerview;
 
 public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
     private int profileImage;
