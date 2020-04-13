@@ -23,7 +23,7 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
         ImageView profileImage;
         TextView nameText,ofiiceText,starText,manyStarText;
 
-        ViewHolder(View itemView){
+        public ViewHolder(View itemView){
             super(itemView);
 
             profileImage = itemView.findViewById(R.id.rank_re_profile_imageView);
