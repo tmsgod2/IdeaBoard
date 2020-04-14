@@ -45,7 +45,7 @@
                         <ImageView
                             android:layout_width="100dp"
                             android:layout_height="match_parent"
-                            android:src="@drawable/ic_person_black_24dp" />
+                            android:src="@drawable/ic_person_black" />
 
                         <TextView
                             android:id="@+id/ideamain_topic_textView"
