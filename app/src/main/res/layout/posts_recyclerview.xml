@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="1dp"
+    android:background="@drawable/posts_recyclerview_layout">
+
+    <ImageView
+        android:id="@+id/posts_imageView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/posts_textView2"
+        app:srcCompat="@drawable/ic_star_gold_24dp" />
+
+    <ImageView
+        android:id="@+id/posts_imageView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/bt_camera" />
+
+    <TextView
+        android:id="@+id/posts_textView1"
+        android:layout_width="110dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="YY, MM, DD"
+        android:textColor="@color/design_default_color_on_secondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/posts_imageView" />
+
+    <TextView
+        android:id="@+id/posts_textView2"
+        android:layout_width="300dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="글제목"
+        android:textColor="@color/design_default_color_on_secondary"
+        android:textSize="18dp"
+        app:layout_constraintEnd_toStartOf="@+id/posts_imageView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/posts_textView3"
+        android:layout_width="43dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="추천수"
+        android:textColor="@color/design_default_color_on_secondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/posts_imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/posts_textView2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

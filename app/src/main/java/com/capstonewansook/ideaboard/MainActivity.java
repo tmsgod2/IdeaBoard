@@ -19,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private ChatFragment chatFragment;
     private RankingFragment rankingFragment;
     private ProfileFragment profileFragment;
+    private PostsFragment postsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         chatFragment = new ChatFragment();
         rankingFragment = new RankingFragment();
         profileFragment = new ProfileFragment();
+        postsFragment = new PostsFragment();
 
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss();
