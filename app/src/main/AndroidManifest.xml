@@ -9,6 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".CleverIdeaBoard"></activity>
+        <activity android:name=".NewIdeaBoard" />
+        <activity android:name=".newpost" />
+        <activity android:name=".MainActivity">
         <activity android:name=".newpost"></activity>
         <activity android:name=".logintitle">
             <intent-filter>
@@ -16,7 +20,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".MainActivity">
         </activity>
