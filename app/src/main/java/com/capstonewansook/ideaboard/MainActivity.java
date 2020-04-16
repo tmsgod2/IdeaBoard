@@ -5,10 +5,13 @@ import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private RankingFragment rankingFragment;
     private ProfileFragment profileFragment;
 
+    public static Stack<FragmentData> fragmentStack = new Stack<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
         rankingFragment = new RankingFragment();
         profileFragment = new ProfileFragment();
 
+        fragmentStack.push(new FragmentData(homeFragment,R.id.home_menu));
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss();
         // 바텀 버튼 설정
@@ -44,18 +49,26 @@ public class MainActivity extends AppCompatActivity {
                 switch(item.getItemId()){
                     case R.id.home_menu:{
                         transaction.replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss();
+                        if(fragmentStack.peek().menuId!=R.id.home_menu)
+                            fragmentStack.push(new FragmentData(homeFragment,R.id.home_menu));
                         return true;
                     }
                     case R.id.chat_menu:{
                         transaction.replace(R.id.frameLayout, chatFragment).commitAllowingStateLoss();
+                        if(fragmentStack.peek().menuId!=R.id.chat_menu)
+                            fragmentStack.push(new FragmentData(chatFragment,R.id.chat_menu));
                         return true;
                     }
                     case R.id.ranking_menu:{
                         transaction.replace(R.id.frameLayout, rankingFragment).commitAllowingStateLoss();
+                        if(fragmentStack.peek().menuId!=R.id.ranking_menu)
+                            fragmentStack.push(new FragmentData(rankingFragment,R.id.ranking_menu));
                         return true;
                     }
                     case R.id.profile_menu:{
                         transaction.replace(R.id.frameLayout, profileFragment).commitAllowingStateLoss();
+                        if(fragmentStack.peek().menuId!=R.id.profile_menu)
+                            fragmentStack.push(new FragmentData(profileFragment,R.id.profile_menu));
                         return true;
                     }
                     default: return false;
@@ -64,4 +77,25 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public void replaceFragment(Fragment fragment){
+        fragmentManager = getSupportFragmentManager();
+        transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.frameLayout, fragment).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(fragmentStack.size()>1){
+            fragmentStack.pop();
+            Fragment nextFragment = fragmentStack.peek().fragment;
+            fragmentManager.beginTransaction().replace(R.id.frameLayout,nextFragment).commitAllowingStateLoss();
+            bottomNavigationView.setSelectedItemId(fragmentStack.peek().menuId);
+        }
+        else {
+            super.onBackPressed();
+            moveTaskToBack(true);
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
+        }
+    }
 }

@@ -13,12 +13,18 @@
         <activity android:name=".NewIdeaBoard" />
         <activity android:name=".newpost" />
         <activity android:name=".MainActivity">
+        <activity android:name=".newpost"></activity>
+        <activity android:name=".logintitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".MainActivity">
+        </activity>
+        <activity android:name=".ChatBoardActivity"></activity>
+        <activity android:name=".IdeamainActivity"></activity>
     </application>
 
 </manifest>
