@@ -8,17 +8,15 @@
 
     <EditText
         android:id="@+id/editText"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="100dp"
-        android:layout_marginRight="100dp"
+        android:layout_marginEnd="8dp"
         android:ems="10"
+        android:hint="검색어를 입력하세요"
         android:inputType="textPersonName"
-        android:text="Name"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/bt_search"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,14 +25,12 @@
         android:id="@+id/bt_search"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="36dp"
-        android:layout_marginEnd="65dp"
-        android:layout_marginRight="65dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/search_button"
 
+        app:layout_constraintBottom_toBottomOf="@+id/editText"
+
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/editText"
         app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
@@ -66,35 +62,29 @@
 
     <FrameLayout
         android:id="@+id/fr"
-        android:layout_width="409dp"
-        android:layout_height="358dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginStart="1dp"
-        android:layout_marginLeft="1dp"
         android:layout_marginEnd="1dp"
-        android:layout_marginRight="1dp"
-        android:layout_marginBottom="148dp"
+        android:background="@drawable/chatl"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rdgroup"
-        app:layout_constraintVertical_bias="1.0"
-        android:background="@drawable/chatl">
+        app:layout_constraintVertical_bias="1.0">
 
     </FrameLayout>
 
-    <Button
-        android:id="@+id/bt_plus"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginStart="317dp"
-        android:layout_marginLeft="317dp"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginBottom="100dp"
-        android:background="@drawable/plus_button"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/clever_newIdea_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:srcCompat="@drawable/ic_add_black"
+        app:backgroundTint="#0BD6BE"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -10,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".CleverIdeaBoard"></activity>
-        <activity android:name=".NewIdeaBoard" />
         <activity android:name=".newpost" />
 
         <activity android:name=".logintitle">

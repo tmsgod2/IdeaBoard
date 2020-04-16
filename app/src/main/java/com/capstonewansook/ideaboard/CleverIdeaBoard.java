@@ -2,19 +2,22 @@ package com.capstonewansook.ideaboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.RadioGroup;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 public class CleverIdeaBoard extends AppCompatActivity {
 
     boolean isManystar;
+    FloatingActionButton newIdeaButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clever_idea_board);
-
         Intent intent = getIntent();
         isManystar = intent.getExtras().getBoolean("isManystar");
         RadioGroup rg = (RadioGroup)findViewById(R.id.rdgroup);
@@ -45,6 +48,15 @@ public class CleverIdeaBoard extends AppCompatActivity {
                     transaction.commit();
 
                 }
+            }
+        });
+
+        newIdeaButton = (FloatingActionButton)findViewById(R.id.clever_newIdea_Button);
+        newIdeaButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent newIdeaIntent = new Intent(getApplicationContext(), newpost.class);
+                startActivity(newIdeaIntent);
             }
         });
     }
