@@ -12,8 +12,7 @@
         <activity android:name=".CleverIdeaBoard"></activity>
         <activity android:name=".NewIdeaBoard" />
         <activity android:name=".newpost" />
-        <activity android:name=".MainActivity">
-        <activity android:name=".newpost"></activity>
+
         <activity android:name=".logintitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
