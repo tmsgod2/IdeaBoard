@@ -1,5 +1,6 @@
 package com.capstonewansook.ideaboard;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -60,6 +61,8 @@ public class HomeFragment extends Fragment {
                     View child = rv.findChildViewUnder(e.getX(),e.getY());
                     TextView name = (TextView)rv.getChildViewHolder(child).itemView.findViewById(toastPosition);
                     Toast.makeText(view.getContext(), "이름"+name.getText().toString(),Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(),IdeamainActivity.class);
+                    startActivity(intent);
                 }
                 return false;
             }

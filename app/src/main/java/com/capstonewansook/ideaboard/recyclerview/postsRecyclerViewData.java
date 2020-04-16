@@ -1,4 +1,4 @@
-package com.capstonewansook.ideaboard;
+package com.capstonewansook.ideaboard.recyclerview;
 
 public class postsRecyclerViewData{
     private int image;

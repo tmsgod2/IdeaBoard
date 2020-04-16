@@ -47,6 +47,7 @@ public class RankingFragment extends Fragment {
                     View child = rv.findChildViewUnder(e.getX(),e.getY());
                     TextView name = (TextView)rv.getChildViewHolder(child).itemView.findViewById(R.id.rank_re_name_textView);
                     Toast.makeText(rootView.getContext(), "이름"+name.getText().toString(),Toast.LENGTH_SHORT).show();
+
                 }
                 return false;
             }
