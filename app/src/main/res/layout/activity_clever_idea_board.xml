@@ -54,7 +54,8 @@
             android:id="@+id/rb1_newidea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="최신순" />
+            android:text="최신순"
+            android:checked="true"/>
 
         <RadioButton
             android:id="@+id/rb2_newidea"
