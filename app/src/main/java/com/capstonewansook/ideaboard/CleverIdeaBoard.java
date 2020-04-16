@@ -1,20 +1,27 @@
 package com.capstonewansook.ideaboard;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RadioGroup;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
+
 public class CleverIdeaBoard extends AppCompatActivity {
 
+    boolean isManystar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clever_idea_board);
 
+        Intent intent = getIntent();
+        isManystar = intent.getExtras().getBoolean("isManystar");
         RadioGroup rg = (RadioGroup)findViewById(R.id.rdgroup);
-
+        if(!isManystar){
+            rg.check(R.id.rb1_newidea);
+        }else
+            rg.check(R.id.rb2_newidea);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +26,8 @@ import java.util.Date;
 
 public class HomeFragment extends Fragment {
 
+    ImageView manystarPlusImage;
+    ImageView newIdeaImage;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -47,6 +50,27 @@ public class HomeFragment extends Fragment {
 
         RecyclerViewSet(rootView,list, (RecyclerView) rootView.findViewById(R.id.home_manystar_recyclerView),new HomeManystarRecyclerViewAdapter(list),R.id.home_re_manystar_title_textview);
         RecyclerViewSet(rootView,list1,(RecyclerView) rootView.findViewById(R.id.home_newidea_recyclerView),new HomeNewideaRecyclerViewAdapter(list1),R.id.home_re_newidea_title_textView);
+
+        manystarPlusImage = (ImageView)rootView.findViewById(R.id.home_manystar_plus_imageView);
+        manystarPlusImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CleverIdeaBoard.class);
+                intent.putExtra("isManystar",true);
+                startActivity(intent);
+            }
+        });
+
+        newIdeaImage = (ImageView)rootView.findViewById(R.id.home_newidea_plus_image);
+        newIdeaImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CleverIdeaBoard.class);
+                intent.putExtra("isManystar",false);
+                startActivity(intent);
+            }
+        });
+
 
         return rootView;
     }

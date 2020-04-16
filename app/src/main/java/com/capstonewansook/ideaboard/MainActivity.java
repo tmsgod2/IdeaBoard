@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if(fragmentStack.size()>1){
+        if(fragmentStack.size()>1&&bottomNavigationView.getSelectedItemId()!=R.id.home_menu){
             fragmentStack.pop();
             Fragment nextFragment = fragmentStack.peek().fragment;
             fragmentManager.beginTransaction().replace(R.id.frameLayout,nextFragment).commitAllowingStateLoss();
