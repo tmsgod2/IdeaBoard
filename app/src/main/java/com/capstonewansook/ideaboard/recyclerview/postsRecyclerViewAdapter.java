@@ -1,4 +1,4 @@
-package com.capstonewansook.ideaboard;
+package com.capstonewansook.ideaboard.recyclerview;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.capstonewansook.ideaboard.R;
 
 import java.util.ArrayList;
 
@@ -30,7 +32,7 @@ public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecycler
 
         }
     }
-    postsRecyclerViewAdapter(ArrayList<postsRecyclerViewData> arrayList) {
+    public postsRecyclerViewAdapter(ArrayList<postsRecyclerViewData> arrayList) {
         this.arrayList = arrayList;
     }
     @NonNull

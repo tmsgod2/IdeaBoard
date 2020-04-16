@@ -3,7 +3,6 @@ package com.capstonewansook.ideaboard;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,7 @@ import androidx.fragment.app.Fragment;
 public class ProfileFragment extends Fragment {
 
     TextView postTextView;
-
+    TextView wantTextView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,8 +29,18 @@ public class ProfileFragment extends Fragment {
         postTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d("asd","터치");
-                ((MainActivity)getActivity()).replaceFragment(PostsFragment.newInstance());
+                Fragment post = PostsFragment.newInstance();
+                ((MainActivity)getActivity()).replaceFragment(post);
+                 MainActivity.fragmentStack.push(new FragmentData(post,R.id.profile_menu));
+            }
+        });
+        wantTextView = rootView.findViewById(R.id.profile_want_idea_textView);
+        wantTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Fragment post = PostsFragment.newInstance();
+                ((MainActivity)getActivity()).replaceFragment(post);
+                MainActivity.fragmentStack.push(new FragmentData(post,R.id.profile_menu));
             }
         });
         // Inflate the layout for this fragment

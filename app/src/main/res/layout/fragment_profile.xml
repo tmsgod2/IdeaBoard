@@ -64,7 +64,7 @@
             android:background="?attr/selectableItemBackground"/>
 
         <TextView
-            android:id="@+id/prodile_want_idea_textView"
+            android:id="@+id/profile_want_idea_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
