@@ -2,13 +2,9 @@ package com.capstonewansook.ideaboard;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,28 +36,7 @@ public class RankingFragment extends Fragment {
 
         RankRecyclerViewAdapter adapter = new RankRecyclerViewAdapter(rankList);
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                if(e.getAction() == MotionEvent.ACTION_DOWN){
-                    View child = rv.findChildViewUnder(e.getX(),e.getY());
-                    TextView name = (TextView)rv.getChildViewHolder(child).itemView.findViewById(R.id.rank_re_name_textView);
-                    Toast.makeText(rootView.getContext(), "이름"+name.getText().toString(),Toast.LENGTH_SHORT).show();
 
-                }
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
         return  rootView;
     }
 }

@@ -1,14 +1,10 @@
 package com.capstonewansook.ideaboard;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,26 +25,26 @@ public class ChatFragment extends Fragment {
         ViewGroup rootView =(ViewGroup)inflater.inflate(R.layout.fragment_chat, container, false);
         ArrayList<ChatRecyclerViewData> list = new ArrayList<>();
 
-        list.add(new ChatRecyclerViewData(R.drawable.iconfinder_32_111002,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
-        list.add(new ChatRecyclerViewData(R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.iconfinder_32_111002,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
+        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
 
         RecyclerViewSet(rootView,list,(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),new ChatRecyclerViewAdapter(list),R.id.chat_re_name_textView);
         return  rootView;
@@ -57,29 +53,5 @@ public class ChatFragment extends Fragment {
     private void RecyclerViewSet(final ViewGroup view, ArrayList list, RecyclerView recyclerView, RecyclerView.Adapter adapter, final int toastPosition){
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
-        recyclerView.addOnItemTouchListener(new RecyclerView.OnItemTouchListener() {
-            @Override
-            public boolean onInterceptTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-                if(e.getAction() == MotionEvent.ACTION_DOWN){
-                    View child = rv.findChildViewUnder(e.getX(),e.getY());
-                    if(child!=null) {
-                        TextView name = (TextView) rv.getChildViewHolder(child).itemView.findViewById(toastPosition);
-                        Intent intent = new Intent(getActivity(), ChatBoardActivity.class);
-                        startActivity(intent);
-                    }
-                }
-                return false;
-            }
-
-            @Override
-            public void onTouchEvent(@NonNull RecyclerView rv, @NonNull MotionEvent e) {
-
-            }
-
-            @Override
-            public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-            }
-        });
     }
 }

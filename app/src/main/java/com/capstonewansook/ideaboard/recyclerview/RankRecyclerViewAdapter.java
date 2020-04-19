@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,7 +60,7 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RankRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RankRecyclerViewAdapter.ViewHolder holder, final int position) {
         String name = mData.get(position).getName();
         String office = mData.get(position).getOffice();
         int manyStar = mData.get(position).getStar();
@@ -90,6 +91,12 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
                 break;
         }
 
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(view.getContext(),mData.get(position).getName(),Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

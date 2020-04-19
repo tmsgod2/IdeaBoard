@@ -46,7 +46,7 @@ public class IdeaFragment2 extends Fragment {
 
         mainAdapter = new IdeaRecyclerViewAdapter(arrayList);
         recyclerView.setAdapter(mainAdapter);
-        arrayList.add( new IdeaRecycletViewData(R.drawable.idea_profile,"안드러이드","2000.1.1",R.drawable.heart,R.drawable.comment,"13","10"));
+        arrayList.add( new IdeaRecycletViewData(R.drawable.idea_profile,"안드러이드","2011.1.1",R.drawable.heart,R.drawable.comment,"13","10"));
 
         return view;
     }

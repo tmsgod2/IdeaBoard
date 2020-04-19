@@ -3,12 +3,14 @@ package com.capstonewansook.ideaboard.recyclerview;
 import java.util.Date;
 
 public class ChatRecyclerViewData implements Comparable<ChatRecyclerViewData>{
+    private String chatroomID;
     private int profileImage;
     private String name;
     private String message;
     private Date date;
 
-    public ChatRecyclerViewData(int profileImage, String name, String message, Date date) {
+    public ChatRecyclerViewData(String chatroomID,int profileImage, String name, String message, Date date) {
+        this.chatroomID = chatroomID;
         this.profileImage = profileImage;
         this.name = name;
         this.message = message;
@@ -46,6 +48,14 @@ public class ChatRecyclerViewData implements Comparable<ChatRecyclerViewData>{
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getChatroomID() {
+        return chatroomID;
+    }
+
+    public void setChatroomID(String chatroomID) {
+        this.chatroomID = chatroomID;
     }
 
     @Override

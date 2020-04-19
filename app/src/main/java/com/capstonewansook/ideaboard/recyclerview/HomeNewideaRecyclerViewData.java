@@ -3,10 +3,12 @@ package com.capstonewansook.ideaboard.recyclerview;
 import java.util.Date;
 
 public class HomeNewideaRecyclerViewData implements Comparable<HomeNewideaRecyclerViewData> {
+    private String boardID;
     private String title;
     private Date date;
 
-    public HomeNewideaRecyclerViewData(String title, Date date) {
+    public HomeNewideaRecyclerViewData(String boardID, String title, Date date) {
+        this.boardID = boardID;
         this.title = title;
         this.date = date;
     }
@@ -25,6 +27,14 @@ public class HomeNewideaRecyclerViewData implements Comparable<HomeNewideaRecycl
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getBoardID() {
+        return boardID;
+    }
+
+    public void setBoardID(String boardID) {
+        this.boardID = boardID;
     }
 
     @Override

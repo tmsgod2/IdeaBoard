@@ -1,6 +1,7 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.view.LayoutInflater;
@@ -8,10 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstonewansook.ideaboard.ChatBoardActivity;
 import com.capstonewansook.ideaboard.R;
 
 import java.text.SimpleDateFormat;
@@ -53,7 +56,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ChatRecyclerViewAdapter.ViewHolder holder, final int position) {
         String name = mData.get(position).getName();
         int profile = mData.get(position).getProfileImage();
         String message = mData.get(position).getMessage();
@@ -64,6 +67,17 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         holder.nameText.setText(name);
         holder.messageText.setText(message);
         holder.dateText.setText(format.format(date));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Context context = view.getContext();
+                Intent intent = new Intent(context, ChatBoardActivity.class);
+                Toast.makeText(context,mData.get(position).getName()+" " + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
+                context.startActivity(intent);
+
+            }
+        });
 
     }
 

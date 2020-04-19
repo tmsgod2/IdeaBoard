@@ -1,6 +1,7 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstonewansook.ideaboard.IdeamainActivity;
 import com.capstonewansook.ideaboard.R;
 
 import java.util.ArrayList;
@@ -57,6 +59,14 @@ public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecycler
         holder.textView1.setText(yymmdd);
         holder.textView2.setText(name);
         holder.textView3.setText(String.valueOf(star));
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), IdeamainActivity.class);
+                view.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override

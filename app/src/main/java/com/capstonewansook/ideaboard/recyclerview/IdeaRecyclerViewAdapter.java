@@ -1,5 +1,6 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstonewansook.ideaboard.IdeamainActivity;
 import com.capstonewansook.ideaboard.R;
 
 import java.util.ArrayList;
@@ -45,6 +47,8 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
             public void onClick(View v) {
                 String curName = holder.tv_day.getText().toString();
                 Toast.makeText(v.getContext(),curName,Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(v.getContext(), IdeamainActivity.class);
+                v.getContext().startActivity(intent);
             }
         });
 
