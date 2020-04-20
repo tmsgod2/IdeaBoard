@@ -6,52 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="검색어를 입력하세요"
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/bt_search"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/bt_search"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/search_button"
-
-        app:layout_constraintBottom_toBottomOf="@+id/editText"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <RadioGroup
         android:id="@+id/rdgroup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="134dp"
-        android:layout_marginLeft="134dp"
+        android:layout_marginTop="33dp"
         android:layout_marginEnd="134dp"
-        android:layout_marginRight="134dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText">
+        app:layout_constraintTop_toBottomOf="@+id/cleveridea_searchView">
 
         <RadioButton
             android:id="@+id/rb1_newidea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="최신순"
-            android:checked="true"/>
+            android:checked="true"
+            android:text="최신순" />
 
         <RadioButton
             android:id="@+id/rb2_newidea"
@@ -87,4 +59,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_add_black"
         app:backgroundTint="#0BD6BE"/>
+
+    <SearchView
+        android:id="@+id/cleveridea_searchView"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
