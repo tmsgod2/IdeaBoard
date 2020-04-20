@@ -1,9 +1,12 @@
 package com.capstonewansook.ideaboard;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -81,6 +84,45 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout, fragment).commitAllowingStateLoss();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
+    //메인 액티비티 메뉴바 설정
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case R.id.menu_main_logout:
+                Logout();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    //로그아웃 확인창 함수. 예를 누르면 로그인 액티비티로, 아니오를 누르면 그대로
+    private void Logout(){
+        AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
+        alert_confirm.setMessage("로그아웃 하시겠습니까?").setCancelable(false).setPositiveButton("예",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                }).setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                });
+        AlertDialog alert = alert_confirm.create();
+        alert.show();
     }
 
     @Override

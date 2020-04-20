@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "233751859976",
+    "firebase_url": "https://ideaboard-7e15b.firebaseio.com",
+    "project_id": "ideaboard-7e15b",
+    "storage_bucket": "ideaboard-7e15b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233751859976:android:02fb748b019a3ce2fc52bd",
+        "android_client_info": {
+          "package_name": "com.capstonewansook.ideaboard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "233751859976-t3uhe1oin4c65nu6871r9i2i7efbcea8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.capstonewansook.ideaboard",
+            "certificate_hash": "22d9af7d97be1251e81b6147a646c7bce9f1a006"
+          }
+        },
+        {
+          "client_id": "233751859976-jt8md2f464ipgtp3jid6m8ghjrp4eklg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_igiZlXxTTePDJFdEoyHVIeqAQwmqrdE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "233751859976-jt8md2f464ipgtp3jid6m8ghjrp4eklg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
