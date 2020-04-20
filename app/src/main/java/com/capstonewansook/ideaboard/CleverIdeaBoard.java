@@ -2,9 +2,12 @@ package com.capstonewansook.ideaboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.RadioGroup;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -18,6 +21,13 @@ public class CleverIdeaBoard extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clever_idea_board);
+
+        //상단 액션바의 뒤로가기 버튼을 위해 작성
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle("아이디어");
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
         isManystar = intent.getExtras().getBoolean("isManystar");
         RadioGroup rg = (RadioGroup)findViewById(R.id.rdgroup);
@@ -59,5 +69,16 @@ public class CleverIdeaBoard extends AppCompatActivity {
                 startActivity(newIdeaIntent);
             }
         });
+    }
+    //상단의 뒤로가기 버튼 클릭시 뒤로 감
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch(item.getItemId()){
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }

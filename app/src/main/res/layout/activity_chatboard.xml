@@ -1,61 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:weightSum="9"
-    tools:context=".MainActivity">
+    tools:context=".IdeamainActivity">
+
+
+    <EditText
+        android:id="@+id/chatboard_editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        android:text="Name"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/chatboard_sendButton"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/bt_gallery"
+        android:maxLines="4"
+        />
+
+    <Button
+        android:id="@+id/chatboard_sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="보내기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/chatboard_editText" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="427dp"
-        android:layout_weight="7"
-        android:background="@drawable/recycleline" />
+        android:id="@+id/saple_recyclerview"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/chatboard_editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:gravity="bottom"
-        android:orientation="horizontal"
-        android:background="@drawable/chatline">
+    <ImageView
+        android:id="@+id/bt_clib"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/chatboard_editText"
+        app:srcCompat="@drawable/bt_clib" />
 
-        <EditText
-            android:layout_width="320dp"
-            android:layout_height="match_parent"
-            android:gravity="bottom" />
-
-        <Button
-            android:id="@+id/bt_send"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:text="보내기" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
-        android:gravity="bottom"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/bt_clib"
-            android:layout_width="30dp"
-            android:layout_height="22dp"
-            android:background="@drawable/bt_clib"
-            android:padding="0dp"
-            android:scaleType="centerInside" />
-
-        <Button
-            android:id="@+id/bt_gallery"
-            android:layout_width="31dp"
-            android:layout_height="match_parent"
-            android:background="@drawable/bt_camera"
-            android:padding="0dp"
-            android:scaleType="centerInside" />
-    </LinearLayout>
-</LinearLayout>
+    <ImageView
+        android:id="@+id/bt_gallery"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/bt_clib"
+        app:layout_constraintTop_toTopOf="@+id/chatboard_editText"
+        app:srcCompat="@drawable/ic_image_black_24dp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
