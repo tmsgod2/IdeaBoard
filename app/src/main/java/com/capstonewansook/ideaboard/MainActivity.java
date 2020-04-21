@@ -2,6 +2,8 @@ package com.capstonewansook.ideaboard;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,9 +16,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     // 첫 번째 뒤로가기 버튼을 누를때 표시
     private Toast toast;
 
+    public static StorageReference mStorageRef;
+    public static Bitmap profileBitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
         chatFragment = new ChatFragment();
         rankingFragment = new RankingFragment();
         profileFragment = new ProfileFragment();
+        mStorageRef =  FirebaseStorage.getInstance().getReference();
+        try {
+            ProfileSetting();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         fragmentStack.push(new FragmentData(homeFragment,R.id.home_menu));
         transaction = fragmentManager.beginTransaction();
@@ -167,5 +184,24 @@ public class MainActivity extends AppCompatActivity {
                 System.exit(1);
             }
         }
+    }
+    private void ProfileSetting() throws IOException {
+        final File localFile = File.createTempFile("images", "jpg");
+        StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
+        profileRef.getFile(localFile)
+                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        // Successfully downloaded data to local file
+                        // ...
+                        profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle failed download
+                // ...
+            }
+        });
     }
 }

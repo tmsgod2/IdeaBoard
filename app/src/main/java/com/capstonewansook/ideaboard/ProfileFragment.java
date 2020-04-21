@@ -3,8 +3,6 @@ package com.capstonewansook.ideaboard;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
@@ -25,12 +23,10 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
 import java.io.IOException;
 
 
@@ -44,14 +40,13 @@ public class ProfileFragment extends Fragment {
     private TextView wantTextView;
     private static final int RC_IMAGE_CHANGE = 1001;
     private static final int RC_EXTERNAL_STORAGE_PERMISSION = 2001;
-    private StorageReference mStorageRef;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_profile, container, false);
-        mStorageRef = FirebaseStorage.getInstance().getReference();
+        MainActivity.mStorageRef = FirebaseStorage.getInstance().getReference();
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -77,16 +72,10 @@ public class ProfileFragment extends Fragment {
             // Permission has already been granted
         }
 
-
-        try {
-            ProfileWatch();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         profileImageView = rootView.findViewById(R.id.profile_imageView);
         profileImageView.setBackground(new ShapeDrawable((new OvalShape())));
         profileImageView.setClipToOutline(true);
+        profileImageView.setImageBitmap(MainActivity.profileBitmap);
         profileImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -128,26 +117,6 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    private void ProfileWatch() throws IOException {
-        final File localFile = File.createTempFile("images", "jpg");
-        StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
-        profileRef.getFile(localFile)
-                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        // Successfully downloaded data to local file
-                        // ...
-                        Bitmap bitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                        profileImageView.setImageBitmap(bitmap);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle failed download
-                // ...
-            }
-        });
-    }
     private void ProfileImageChange(){
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, RC_IMAGE_CHANGE);
@@ -160,14 +129,14 @@ public class ProfileFragment extends Fragment {
             case RC_IMAGE_CHANGE:
                 Uri image = data.getData();
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
-                    profileImageView.setImageBitmap(bitmap);
+                    MainActivity.profileBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
+                    profileImageView.setImageBitmap(MainActivity.profileBitmap);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
 //                Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
-                StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
+                StorageReference profileRef =  MainActivity.mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
 
                 profileRef.putFile(image)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
