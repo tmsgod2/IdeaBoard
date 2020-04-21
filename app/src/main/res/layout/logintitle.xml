@@ -43,20 +43,12 @@
             android:orientation="vertical">
 
 
-            <Button
+            <com.google.android.gms.common.SignInButton
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="100dp"
-                android:drawableStart="@drawable/googlelog2"
-                android:drawablePadding="1dp"
-                android:textSize="20dp"
-                android:textStyle="bold"
-                android:textColor="#ffffff"
-                android:background="@color/colorPrimaryDark"
-                android:text="구글 로그인"
-                android:id="@+id/googlelogin"
-                />
+                android:id="@+id/googlelogin" />
 
             <Button
                 android:layout_width="280dp"
@@ -87,6 +79,8 @@
                 android:text="페이스북 로그인"
                 android:id="@+id/facebooklogin"
                 />
+
+
 
 
         </LinearLayout>

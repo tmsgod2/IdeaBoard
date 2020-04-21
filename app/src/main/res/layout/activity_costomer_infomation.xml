@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/infomation_nickname_editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:hint="앱 내에서 활동하며 보여줄 이름"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_nickname_textView" />
+
+    <TextView
+        android:id="@+id/infomation_nickname_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:text="*닉네임"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/infomation_office_editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="본인이 다니는 회사 혹은 재학중인 학교"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/infomation_nickname_editText"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/infomation_nickname_editText"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_office_textView" />
+
+    <EditText
+        android:id="@+id/infomation_state_editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:ems="10"
+        android:hint="사람들에게 보여줄 내 상태 메시지"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/infomation_office_editText"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/infomation_office_editText"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_state_textView" />
+
+    <TextView
+        android:id="@+id/infomation_state_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="상태 메시지"
+        app:layout_constraintStart_toStartOf="@+id/infomation_nickname_textView"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_job_spinner" />
+
+    <TextView
+        android:id="@+id/infomation_office_textView"
+        android:layout_width="62dp"
+        android:layout_height="15dp"
+        android:layout_marginTop="16dp"
+        android:text="회사/학교"
+        app:layout_constraintStart_toStartOf="@+id/infomation_nickname_textView"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_location_editText" />
+
+    <Button
+        android:id="@+id/infomation_sameCheck_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="중복확인"
+        app:layout_constraintBottom_toTopOf="@+id/infomation_nickname_editText"
+        app:layout_constraintEnd_toEndOf="@+id/infomation_nickname_editText" />
+
+    <Button
+        android:id="@+id/infomation_ok_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="84dp"
+        android:layout_marginBottom="72dp"
+        android:text="확인"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_state_editText"
+        app:layout_constraintVertical_bias="0.815" />
+
+    <Button
+        android:id="@+id/infomation_cancle_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="80dp"
+        android:text="취소"
+        app:layout_constraintBottom_toBottomOf="@+id/infomation_ok_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/infomation_ok_button"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/infomation_location_editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:hint="현재 거주하는 곳"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="@+id/infomation_nickname_editText"
+        app:layout_constraintStart_toStartOf="@+id/infomation_nickname_editText"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_locate_textView" />
+
+    <TextView
+        android:id="@+id/infomation_locate_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="*사는 곳"
+        app:layout_constraintStart_toStartOf="@+id/infomation_nickname_textView"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_nickname_editText" />
+
+    <TextView
+        android:id="@+id/infomation_job_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="*직업"
+        app:layout_constraintStart_toStartOf="@+id/infomation_office_textView"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_office_editText" />
+
+    <Spinner
+        android:id="@+id/infomation_job_spinner"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/infomation_office_editText"
+        app:layout_constraintStart_toStartOf="@+id/infomation_office_editText"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_job_textView" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="76dp"
+        android:text="*는 필수로 입력해야합니다."
+        app:layout_constraintBottom_toTopOf="@+id/infomation_ok_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/infomation_state_editText"
+        app:layout_constraintVertical_bias="0.0" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
