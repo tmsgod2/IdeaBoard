@@ -1,9 +1,11 @@
 package com.capstonewansook.ideaboard;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -13,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.Stack;
 
@@ -27,10 +30,24 @@ public class MainActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
 
     public static Stack<FragmentData> fragmentStack = new Stack<>();
+
+    public static CustomerData cus;
+    private String uid;
+
+    // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
+    private long backKeyPressedTime = 0;
+    // 첫 번째 뒤로가기 버튼을 누를때 표시
+    private Toast toast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        cus = (CustomerData)getIntent().getSerializableExtra("CustomerData");
+        uid = getIntent().getStringExtra("UID");
+        Toast.makeText(this, "환영합니다! " + cus.getName()+ "\n"
+                +uid,Toast.LENGTH_LONG).show();
 
         fragmentManager = getSupportFragmentManager();
 
@@ -112,7 +129,10 @@ public class MainActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
+                        FirebaseAuth.getInstance().signOut();
+                        Intent intent = new Intent(getApplicationContext(),logintitle.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                     }
                 }).setNegativeButton("아니오",
                 new DialogInterface.OnClickListener() {
@@ -134,10 +154,18 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigationView.setSelectedItemId(fragmentStack.peek().menuId);
         }
         else {
-            super.onBackPressed();
-            moveTaskToBack(true);
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
+            if (System.currentTimeMillis() > backKeyPressedTime + 2000) {
+                backKeyPressedTime = System.currentTimeMillis();
+                toast = Toast.makeText(this, "\'뒤로\' 버튼을 한번 더 누르시면 종료됩니다.", Toast.LENGTH_SHORT);
+                toast.show();
+                return;
+            }
+            if(System.currentTimeMillis()<=backKeyPressedTime + 2000) {
+                super.onBackPressed();
+                moveTaskToBack(true);
+                android.os.Process.killProcess(android.os.Process.myPid());
+                System.exit(1);
+            }
         }
     }
 }

@@ -22,6 +22,7 @@
         </activity>
         <activity android:name=".ChatBoardActivity"></activity>
         <activity android:name=".IdeamainActivity"></activity>
+        <activity android:name=".InfomationActivity"></activity>
     </application>
 
 </manifest>

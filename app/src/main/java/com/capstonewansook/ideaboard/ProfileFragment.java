@@ -15,16 +15,34 @@ import androidx.fragment.app.Fragment;
 
 public class ProfileFragment extends Fragment {
 
-    TextView postTextView;
-    TextView wantTextView;
+    private TextView nameTextView;
+    private TextView stateTextView;
+    private TextView officeTextView;
+    private TextView postTextView;
+    private TextView wantTextView;
+    private String name;
+    private String office;
+    private boolean ismine;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_profile, container, false);
+
         ImageView imageView = rootView.findViewById(R.id.profile_imageView);
         imageView.setBackground(new ShapeDrawable((new OvalShape())));
         imageView.setClipToOutline(true);
+
+        nameTextView = rootView.findViewById(R.id.profile_name_textView);
+        nameTextView.setText(MainActivity.cus.getName());
+
+        stateTextView = rootView.findViewById(R.id.profile_state_textView);
+        stateTextView.setText(MainActivity.cus.getState());
+
+        officeTextView = rootView.findViewById(R.id.profile_office_textView);
+        officeTextView.setText(MainActivity.cus.getOffice());
+
         postTextView = rootView.findViewById(R.id.profile_post_textView);
         postTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -34,6 +52,7 @@ public class ProfileFragment extends Fragment {
                  MainActivity.fragmentStack.push(new FragmentData(post,R.id.profile_menu));
             }
         });
+
         wantTextView = rootView.findViewById(R.id.profile_want_idea_textView);
         wantTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,4 +66,5 @@ public class ProfileFragment extends Fragment {
         return rootView;
 
     }
+
 }
