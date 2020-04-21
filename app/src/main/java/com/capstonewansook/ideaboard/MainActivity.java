@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public static Stack<FragmentData> fragmentStack = new Stack<>();
 
     public static CustomerData cus;
-    private String uid;
+    public static String uid;
 
     // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
     private long backKeyPressedTime = 0;
