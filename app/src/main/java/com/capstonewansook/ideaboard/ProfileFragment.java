@@ -47,6 +47,8 @@ public class ProfileFragment extends Fragment {
 
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_profile, container, false);
         MainActivity.mStorageRef = FirebaseStorage.getInstance().getReference();
+
+        //사용자 휴대폰의 이미지 저장소를 사용할 수 있게 허가 받음
         if (ContextCompat.checkSelfPermission(getActivity(),
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {

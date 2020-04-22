@@ -38,9 +38,12 @@ public class MainActivity extends AppCompatActivity {
     private RankingFragment rankingFragment;
     private ProfileFragment profileFragment;
 
+    //뒤로가기 눌렀을 때 들어간 순서 역순으로 프래그먼트 띄우기 위한 스택
     public static Stack<FragmentData> fragmentStack = new Stack<>();
 
+    //현재 접속한 고객의 정보 전역 변수
     public static CustomerData cus;
+    //현재 접속한 고객의 uid 변수
     public static String uid;
 
     // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
@@ -48,7 +51,10 @@ public class MainActivity extends AppCompatActivity {
     // 첫 번째 뒤로가기 버튼을 누를때 표시
     private Toast toast;
 
+
+    //파이어베이스 스토리지 변수
     public static StorageReference mStorageRef;
+    //프로필 사진 저장 변수
     public static Bitmap profileBitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,12 +120,14 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //프래그먼트->프래그먼트 이동을 위한 함수
     public void replaceFragment(Fragment fragment){
         fragmentManager = getSupportFragmentManager();
         transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.frameLayout, fragment).commitAllowingStateLoss();
     }
 
+    //상단 액션바에 메뉴 추가
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu,menu);
@@ -162,6 +170,7 @@ public class MainActivity extends AppCompatActivity {
         alert.show();
     }
 
+    //뒤로가기 눌렀을 때 함수
     @Override
     public void onBackPressed() {
         if(fragmentStack.size()>1&&bottomNavigationView.getSelectedItemId()!=R.id.home_menu){
@@ -185,6 +194,8 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+    //미리 프로필 사진 불러와서 내정보 확인했을 때 끊김 없이 보여줌
     private void ProfileSetting() throws IOException {
         final File localFile = File.createTempFile("images", "jpg");
         StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");

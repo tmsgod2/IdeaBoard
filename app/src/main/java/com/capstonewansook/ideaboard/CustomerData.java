@@ -9,18 +9,16 @@ public class CustomerData implements Serializable {
     private String job;
     private String state;
     private int stars;
-    private String profileURI;
     private boolean isFirst;
 
     //고객 정보 저장을 위한 대이터
-    public CustomerData(String name, String locate, String office, String job, String state, int stars, String profileURI) {
+    public CustomerData(String name, String locate, String office, String job, String state, int stars) {
         this.name = name;
         this.locate = locate;
         this.office = office;
         this.job = job;
         this.state = state;
         this.stars = stars;
-        this.profileURI = profileURI;
         isFirst = false;
     }
 
@@ -83,13 +81,5 @@ public class CustomerData implements Serializable {
 
     public void setStars(int stars) {
         this.stars = stars;
-    }
-
-    public String getProfileURI() {
-        return profileURI;
-    }
-
-    public void setProfileURI(String profileURI) {
-        this.profileURI = profileURI;
     }
 }

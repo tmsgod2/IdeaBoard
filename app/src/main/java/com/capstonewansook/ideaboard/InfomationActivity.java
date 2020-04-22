@@ -107,7 +107,7 @@ public class InfomationActivity extends AppCompatActivity {
                     final CustomerData cus = new CustomerData(nicknameEditText.getText().toString(),
                             locateEditText.getText().toString(), officeEditText.getText().toString(),
                             jobSpinner.getSelectedItem().toString(),stateEditText.getText().toString(),
-                            0,"");
+                            0);
                     db.collection("users").document(uid)
                             .set(cus)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
