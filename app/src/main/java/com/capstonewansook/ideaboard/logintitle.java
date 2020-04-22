@@ -41,6 +41,7 @@ public class logintitle extends AppCompatActivity {
     private SignInButton signInButton;
     private FirebaseFirestore db;
     private CustomerData cus;
+    public static boolean isNewCustomer = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class logintitle extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
-
+        db = FirebaseFirestore.getInstance();
         signInButton = findViewById(R.id.googlelogin);
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +65,7 @@ public class logintitle extends AppCompatActivity {
             }
         });
 
-        db = FirebaseFirestore.getInstance();
+
         facebookButton = (Button) findViewById(R.id.facebooklogin);
         facebookButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,9 +77,9 @@ public class logintitle extends AppCompatActivity {
             }
         });
 
-        if(mAuth.getCurrentUser() != null){
-            updateUI(mAuth.getCurrentUser());
-        }
+//        if(mAuth.getCurrentUser() != null){
+//            updateUI(mAuth.getCurrentUser());
+//        }
 
     }
 
@@ -112,18 +113,7 @@ public class logintitle extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
-
                             final FirebaseUser user = mAuth.getCurrentUser();
-                            db.collection("users").document(user.getUid())
-                                    .get()
-                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                        @Override
-                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                            if(documentSnapshot.getData().isEmpty())
-                                                DBCreate(user);
-                                        }
-                                    });
-
                             updateUI(user);
                         }
                         else{
@@ -134,7 +124,7 @@ public class logintitle extends AppCompatActivity {
                 });
     }
 
-    private void updateUI(FirebaseUser user){
+    private void updateUI(final FirebaseUser user){
         if(user != null){
             DocumentReference docRef = db.collection("users").document(mAuth.getCurrentUser().getUid());
             docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -142,16 +132,21 @@ public class logintitle extends AppCompatActivity {
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     String uid = mAuth.getUid();
                     cus = documentSnapshot.toObject(CustomerData.class);
-                    if(cus.getisFirst()){
-                        Intent intent = new Intent(getApplication(), InfomationActivity.class);
-                        intent.putExtra("UID",uid);
-                        startActivity(intent);
+                    try {
+                        if (cus.getisFirst()) {
+                            Intent intent = new Intent(getApplication(), InfomationActivity.class);
+                            intent.putExtra("UID", uid);
+                            startActivity(intent);
+                        } else {
+                            Intent intent = new Intent(getApplication(), MainActivity.class);
+                            intent.putExtra("UID", uid);
+                            intent.putExtra("CustomerData", cus);
+                            startActivity(intent);
+                        }
                     }
-                    else {
-                        Intent intent = new Intent(getApplication(), MainActivity.class);
-                        intent.putExtra("UID",uid);
-                        intent.putExtra("CustomerData",cus);
-                        startActivity(intent);
+                    catch (NullPointerException e){
+                        DBCreate(user);
+                        updateUI(user);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {

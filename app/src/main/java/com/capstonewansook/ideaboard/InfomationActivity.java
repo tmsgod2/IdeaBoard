@@ -91,6 +91,10 @@ public class InfomationActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(),"다른 닉네임을 사용하십시오!", Toast.LENGTH_LONG).show();
                             isSame = true;
                         }
+                        else{
+                            Toast.makeText(getApplicationContext(),"사용 가능합니다!",Toast.LENGTH_LONG).show();
+                            isSame = false;
+                        }
                     }
                 }
                 else{
