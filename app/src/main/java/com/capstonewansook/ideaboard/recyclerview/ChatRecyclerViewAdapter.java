@@ -23,6 +23,7 @@ import java.util.Collections;
 import java.util.Date;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
+    //의미없는 주석
     private ArrayList<ChatRecyclerViewData> mData;
 
 
