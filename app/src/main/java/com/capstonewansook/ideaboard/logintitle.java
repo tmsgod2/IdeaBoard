@@ -81,7 +81,6 @@ public class logintitle extends AppCompatActivity {
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(intent);
             }
@@ -92,7 +91,7 @@ public class logintitle extends AppCompatActivity {
         eSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
+
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 if(email.equals("")){
@@ -103,6 +102,7 @@ public class logintitle extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(),"비밀번호를 입력해주세요!", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                Progressing();
                 EmailSignIn(email,password);
 
             }
@@ -116,17 +116,7 @@ public class logintitle extends AppCompatActivity {
             }
         });
 
-        facebookButton = (Button) findViewById(R.id.facebooklogin);
-        facebookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                Toast.makeText(getApplicationContext(), "페이스북으로 로그인", Toast.LENGTH_LONG).show();
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-            }
-        });
-
+        Progressing();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
     }
@@ -166,6 +156,7 @@ public class logintitle extends AppCompatActivity {
             }
             catch (ApiException e){
                 Toast.makeText(getApplicationContext(),"구글 로그인 실패" + e.getMessage(),Toast.LENGTH_LONG).show();
+                ProgressEnd();
             }
 
         }
@@ -184,6 +175,7 @@ public class logintitle extends AppCompatActivity {
                         else{
                             Toast.makeText(getApplicationContext(),"구글 로그인 실패", Toast.LENGTH_SHORT).show();
                             updateUI(null);
+                            ProgressEnd();
                         }
                     }
                 });
@@ -221,7 +213,7 @@ public class logintitle extends AppCompatActivity {
                 }
             });
         }
-        progressBar.setVisibility(View.GONE);
+        ProgressEnd();
     }
 
     private void DBCreate(FirebaseUser user) {
@@ -241,5 +233,22 @@ public class logintitle extends AppCompatActivity {
                         Log.w(TAG, "에러",e);
                     }
                 });
+    }
+    private void Progressing(){
+        progressBar.setVisibility(View.VISIBLE);
+        emailEditText.setEnabled(false);
+        passwordEditText.setEnabled(false);
+        eSignInButton.setEnabled(false);
+        gSignInButton.setEnabled(false);
+        signUpTextView.setEnabled(false);
+    }
+
+    private void ProgressEnd(){
+        progressBar.setVisibility(View.GONE);
+        emailEditText.setEnabled(true);
+        passwordEditText.setEnabled(true);
+        eSignInButton.setEnabled(true);
+        gSignInButton.setEnabled(true);
+        signUpTextView.setEnabled(true);
     }
 }
