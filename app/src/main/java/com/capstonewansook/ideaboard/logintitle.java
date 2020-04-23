@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,10 +37,18 @@ public class logintitle extends AppCompatActivity {
     private final static String TAG = "로그인";
     Button facebookButton;
     Button kakaoButton;
+    //파이어베이스 인증 변수
     private FirebaseAuth mAuth;
+
+    private EditText emailEditText;
+    private EditText passwordEditText;
+
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 9001;
-    private SignInButton signInButton;
+    private static final int RC_SIGN_UP = 8001;
+    private TextView signUpTextView;
+    private Button eSignInButton;
+    private SignInButton gSignInButton;
     private FirebaseFirestore db;
     private CustomerData cus;
     public static boolean isNewCustomer = false;
@@ -53,18 +63,50 @@ public class logintitle extends AppCompatActivity {
                 .requestEmail()
                 .build();
 
+        //인증 초기화
         mAuth = FirebaseAuth.getInstance();
 
         mGoogleSignInClient = GoogleSignIn.getClient(this,gso);
         db = FirebaseFirestore.getInstance();
-        signInButton = findViewById(R.id.googlelogin);
-        signInButton.setOnClickListener(new View.OnClickListener() {
+
+        emailEditText = (EditText)findViewById(R.id.login_email_editText);
+        passwordEditText = (EditText)findViewById(R.id.login_passwd_editText);
+
+        signUpTextView = (TextView)findViewById(R.id.login_signup_textView);
+        signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                signIn();
+                Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(intent);
             }
         });
 
+
+        eSignInButton = (Button)findViewById(R.id.login_email_button);
+        eSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = emailEditText.getText().toString();
+                String password = passwordEditText.getText().toString();
+                if(email.equals("")){
+                    Toast.makeText(getApplicationContext(),"이메일을 입력해주세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                else if(password.equals("")){
+                    Toast.makeText(getApplicationContext(),"비밀번호를 입력해주세요!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                EmailSignIn(email,password);
+            }
+        });
+
+        gSignInButton = findViewById(R.id.googlelogin);
+        gSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GooglesignIn();
+            }
+        });
 
         facebookButton = (Button) findViewById(R.id.facebooklogin);
         facebookButton.setOnClickListener(new View.OnClickListener() {
@@ -77,14 +119,28 @@ public class logintitle extends AppCompatActivity {
             }
         });
 
-//        if(mAuth.getCurrentUser() != null){
-//            updateUI(mAuth.getCurrentUser());
-//        }
-
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUI(currentUser);
     }
 
+    private void EmailSignIn(String email, String password){
+        mAuth.signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()){
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            updateUI(user);
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(), "인증에 실패했습니다.", Toast.LENGTH_LONG).show();
+                            updateUI(null);
+                        }
+                    }
+                });
+    }
 
-    private void signIn(){
+    private void GooglesignIn(){
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent,RC_SIGN_IN);
     }
