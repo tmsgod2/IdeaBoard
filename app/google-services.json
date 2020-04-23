@@ -16,7 +16,7 @@
       "oauth_client": [
         {
           "client_id": "233751859976-t3uhe1oin4c65nu6871r9i2i7efbcea8.apps.googleusercontent.com",
-          "client_type": 1,
+          "client_type": 3,
           "android_info": {
             "package_name": "com.capstonewansook.ideaboard",
             "certificate_hash": "22d9af7d97be1251e81b6147a646c7bce9f1a006"

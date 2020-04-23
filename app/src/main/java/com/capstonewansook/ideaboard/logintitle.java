@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,13 +54,17 @@ public class logintitle extends AppCompatActivity {
     private CustomerData cus;
     public static boolean isNewCustomer = false;
 
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.logintitle);
 
+        progressBar = (ProgressBar)findViewById(R.id.login_progressBar);
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("233751859976-jt8md2f464ipgtp3jid6m8ghjrp4eklg.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
@@ -76,6 +81,7 @@ public class logintitle extends AppCompatActivity {
         signUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
                 Intent intent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(intent);
             }
@@ -86,6 +92,7 @@ public class logintitle extends AppCompatActivity {
         eSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressBar.setVisibility(View.VISIBLE);
                 String email = emailEditText.getText().toString();
                 String password = passwordEditText.getText().toString();
                 if(email.equals("")){
@@ -97,6 +104,7 @@ public class logintitle extends AppCompatActivity {
                     return;
                 }
                 EmailSignIn(email,password);
+
             }
         });
 
@@ -130,6 +138,7 @@ public class logintitle extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             FirebaseUser user = mAuth.getCurrentUser();
+                            Log.d(TAG, user.getEmail()+"");
                             updateUI(user);
                         }
                         else{
@@ -212,6 +221,7 @@ public class logintitle extends AppCompatActivity {
                 }
             });
         }
+        progressBar.setVisibility(View.GONE);
     }
 
     private void DBCreate(FirebaseUser user) {
