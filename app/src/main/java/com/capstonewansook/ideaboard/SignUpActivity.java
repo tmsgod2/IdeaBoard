@@ -16,8 +16,19 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.regex.Pattern;
+
 public class SignUpActivity extends AppCompatActivity {
 
+    public static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+"
+    );
     private static final String TAG = "SignUpActivity";
     private FirebaseAuth mAuth;
     private EditText emailEditText;
@@ -37,7 +48,7 @@ public class SignUpActivity extends AppCompatActivity {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isEmpty()){
+                if(isCorrect()){
                     String email = emailEditText.getText().toString();
                     String password = passEditText.getText().toString();
                     SignUp(email,password);
@@ -46,27 +57,39 @@ public class SignUpActivity extends AppCompatActivity {
         });
     }
 
-    private boolean isEmpty(){
+    private boolean isCorrect(){
 
         if(emailEditText.getText().toString().equals("")){
             Snackbar.make(this.emailEditText,"이메일을 입력하세요",Snackbar.LENGTH_SHORT).show();
-            return true;
+            return false;
         }
         if(passEditText.getText().toString().equals("")){
             Snackbar.make(this.passEditText,"비밀번호를 입력하세요",Snackbar.LENGTH_SHORT).show();
-            return true;
+            return false;
         }
         if(passConEditText.getText().toString().equals("")){
             Snackbar.make(this.passConEditText,"비밀번호 확인을 입력하세요",Snackbar.LENGTH_SHORT).show();
-            return true;
+            return false;
+        }
+        if(!EMAIL_ADDRESS_PATTERN.matcher(emailEditText.getText().toString()).matches()){
+            Snackbar.make(this.emailEditText,"이메일 형식이 아닙니다.",Snackbar.LENGTH_SHORT).show();
+            return false;
+        }
+        if(!Pattern.matches("^(?=.*\\d)(?=.*[~`!@#$%\\^&*()-])(?=.*[a-zA-Z]).{8,20}$",passEditText.getText().toString())){
+            Snackbar.make(this.emailEditText,"비밀번호 형식을 맟춰 주십시오.",Snackbar.LENGTH_SHORT).show();
+            return false;
         }
         if(!passEditText.getText().toString().equals(passConEditText.getText().toString())){
             Snackbar.make(this.passEditText,"비밀번호가 일치하지 않습니다!",Snackbar.LENGTH_SHORT).show();
-            return true;
+            return false;
         }
-        return false;
+
+        return true;
 
     }
+
+
+
 
     private void SignUp(String email, String password){
         mAuth.createUserWithEmailAndPassword(email,password)
