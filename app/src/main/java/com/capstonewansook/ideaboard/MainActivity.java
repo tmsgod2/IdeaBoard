@@ -197,22 +197,22 @@ public class MainActivity extends AppCompatActivity {
 
     //미리 프로필 사진 불러와서 내정보 확인했을 때 끊김 없이 보여줌
     private void ProfileSetting() throws IOException {
-        final File localFile = File.createTempFile("images", "jpg");
-        StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
-        profileRef.getFile(localFile)
-                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        // Successfully downloaded data to local file
-                        // ...
-                        profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle failed download
-                // ...
-            }
-        });
+            final File localFile = File.createTempFile("images", "jpg");
+            StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
+            profileRef.getFile(localFile)
+                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                            // Successfully downloaded data to local file
+                            // ...
+                            profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle failed download
+                    // ...
+                }
+            });
     }
 }
