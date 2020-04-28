@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -47,6 +48,9 @@ public class newpost extends AppCompatActivity {
     private ArrayList<Uri> imguri;
     private int count;
     public StorageReference postsimage = FirebaseStorage.getInstance().getReference();
+    private String postid;
+    private RelativeLayout loadinglayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,13 +69,14 @@ public class newpost extends AppCompatActivity {
         context = this;
         imguri = new ArrayList<Uri>();
         count = 0;
+        loadinglayout = (RelativeLayout) findViewById(R.id.loadingLayout);
 
         newbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 NewpostData newpostData = new NewpostData(MainActivity.uid,title.getText().toString(),contents.getText().toString(), new Date(System.currentTimeMillis()).toString());
                 DBCreate(newpostData);
-                onBackPressed();
+                loadinglayout.setVisibility(View.VISIBLE);
             }
         });
         imagebutton.setOnClickListener(new View.OnClickListener() {
@@ -110,10 +115,13 @@ public class newpost extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                        postid = documentReference.getId();
                         if(clipData != null)
                         {
-                            upimg(documentReference.getId());
+                            upimg();
+                            onBackPressed();
                         }
+                        loadinglayout.setVisibility(View.GONE);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -164,10 +172,10 @@ public class newpost extends AppCompatActivity {
             }
         }
     }
-    protected void upimg(String postid){
-        for(int i = 0; i< imguri.size();i++) {
+    protected void upimg() {
+        for (int i = 0; i < imguri.size(); i++) {
             try {
-                if(imguri.get(i) != null) {
+                if (imguri.get(i) != null) {
                     Uri image = imguri.get(i);
                     StorageReference riverseRef = postsimage.child("posts/" + postid + "/image" + i);
                     riverseRef.putFile(image);
