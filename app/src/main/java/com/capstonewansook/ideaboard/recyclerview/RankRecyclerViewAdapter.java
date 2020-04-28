@@ -94,7 +94,7 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),mData.get(position).getName(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(view.getContext(),mData.get(position).getUid(),Toast.LENGTH_SHORT).show();
             }
         });
 

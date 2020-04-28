@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -30,6 +31,8 @@ import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+    
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
@@ -118,6 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
 
     //프래그먼트->프래그먼트 이동을 위한 함수
@@ -155,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         FirebaseAuth.getInstance().signOut();
+                        profileBitmap = null;
                         Intent intent = new Intent(getApplicationContext(),logintitle.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -168,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         AlertDialog alert = alert_confirm.create();
         alert.show();
+
     }
 
     //뒤로가기 눌렀을 때 함수
@@ -187,6 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             if(System.currentTimeMillis()<=backKeyPressedTime + 2000) {
+                profileBitmap = null;
                 super.onBackPressed();
                 moveTaskToBack(true);
                 android.os.Process.killProcess(android.os.Process.myPid());
@@ -197,22 +204,24 @@ public class MainActivity extends AppCompatActivity {
 
     //미리 프로필 사진 불러와서 내정보 확인했을 때 끊김 없이 보여줌
     private void ProfileSetting() throws IOException {
-            final File localFile = File.createTempFile("images", "jpg");
-            StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
-            profileRef.getFile(localFile)
-                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            // Successfully downloaded data to local file
-                            // ...
-                            profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle failed download
-                    // ...
-                }
-            });
+        final File localFile = File.createTempFile("images", "jpg");
+        StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
+        profileRef.getFile(localFile)
+                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        // Successfully downloaded data to local file
+                        // ...
+                        profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        Log.d(TAG, "이미지 불러오기 성공");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle failed download
+                // ...
+            }
+        });
+
     }
 }

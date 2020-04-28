@@ -6,6 +6,15 @@ public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
     private String office;
     private int star;
     private int grade=99999;
+    private String uid;
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
+    }
 
     public RankRecyclerViewData(int profileImage, String name, String office, int star) {
         this.profileImage = profileImage;
