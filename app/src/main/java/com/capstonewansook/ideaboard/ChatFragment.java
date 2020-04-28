@@ -20,7 +20,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class ChatFragment extends Fragment {
     FirebaseFirestore db2 = FirebaseFirestore.getInstance();
     String TAG = "h";
     ArrayList<ChatRecyclerViewData> list = new ArrayList<>();
-    static String message[];
+    String message[];
     String uid[];
     String name[];
     ViewGroup rootView;
@@ -59,29 +58,6 @@ public class ChatFragment extends Fragment {
 
 
         list.add(new ChatRecyclerViewData("asdasd",R.drawable.iconfinder_32_111002,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"이선행","안녕하세요",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"눈사슴","총이 넘어지면? 우당탕",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"모르는분","이건 이렇게 하는게 어떠세요",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"박상준","ㅎㅇ",new Date(System.currentTimeMillis())));
-//        list.add(new ChatRecyclerViewData("asdasd",R.drawable.ic_person_black,"유기봄","ㅁㅇㅁㅇㅁㅇㅁㅇ",new Date(System.currentTimeMillis())));
-
-
-
-
 
         //채팅상대의 uid 가져오기,채팅룸 uid 가져오기,Date 가져오기
         db.collection("chatrooms")
@@ -132,10 +108,14 @@ public class ChatFragment extends Fragment {
                                                             Map<String,Object> shot = snap.getData();
                                                             message[g] = String.valueOf(shot.get("message"));
 //                                    Date date = shot.get("date");
-//                                                            Toast.makeText(getActivity(),"메세지"+message[g], Toast.LENGTH_SHORT).show();
+                                                            Log.d(TAG, message[g]+g);
+
                                                         }
                                                     }
-
+                                                    ChatRecyclerViewData Crd = new ChatRecyclerViewData("123",R.drawable.iconfinder_32_111002,name[0],message[1],date[0]);
+                                                    Toast.makeText(getActivity(),Crd.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    list.add(Crd);
+                                                    RecyclerViewSet(rootView,list,(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),new ChatRecyclerViewAdapter(list),R.id.chat_re_name_textView);
                                                 } else {
                                                     Log.w(TAG, "Error getting documents.", task.getException());
                                                 }
@@ -143,13 +123,11 @@ public class ChatFragment extends Fragment {
                                         });
                             }
 
-
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
                     }
                 });
-
 
 
            //채팅주인의 이름 가져오기
@@ -173,12 +151,10 @@ public class ChatFragment extends Fragment {
                                 }
                                 for(int i = 0 ;i < count; i++)
                                 {
-                                    ChatRecyclerViewData Crd = new ChatRecyclerViewData("123",R.drawable.iconfinder_32_111002,name[i],message[i],date[i]);
-                                    Toast.makeText(getActivity(),Crd.getMessage(), Toast.LENGTH_SHORT).show();
-                                    list.add(Crd);
+
                                 }
 //                                Toast.makeText(getActivity(),"리사뷰1111111", Toast.LENGTH_SHORT).show();
-                                RecyclerViewSet(rootView,list,(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),new ChatRecyclerViewAdapter(list),R.id.chat_re_name_textView);
+
 
                             }
 
@@ -187,7 +163,6 @@ public class ChatFragment extends Fragment {
                         }
                     }
                 });
-
 
         return  rootView;
 

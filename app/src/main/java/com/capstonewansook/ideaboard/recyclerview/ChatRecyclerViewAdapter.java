@@ -19,7 +19,6 @@ import com.capstonewansook.ideaboard.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
@@ -43,7 +42,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
     public ChatRecyclerViewAdapter(ArrayList<ChatRecyclerViewData> mData) {
         this.mData = mData;
-        Collections.sort(mData);
+//        Collections.sort(mData);
     }
 
     @NonNull
