@@ -8,7 +8,8 @@ public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
     private String office;
     private int star;
     private int grade=99999;
-    private String Uid;
+
+    private String uid;
 
     public void setUid(String uid) {
         this.Uid = Uid;
@@ -16,6 +17,7 @@ public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
 
     public String getUid() {
         return Uid;
+
     }
 
     public RankRecyclerViewData(Bitmap profileImage, String name, String office, int star, String Uid) {

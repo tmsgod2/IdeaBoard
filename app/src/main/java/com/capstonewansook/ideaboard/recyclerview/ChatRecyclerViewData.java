@@ -4,26 +4,26 @@ import java.util.Date;
 
 public class ChatRecyclerViewData implements Comparable<ChatRecyclerViewData>{
     private String chatroomID;
-    private int profileImage;
+    private String uid2;
     private String name;
     private String message;
     private Date date;
 
-    public ChatRecyclerViewData(String chatroomID,int profileImage, String name, String message, Date date) {
+    public ChatRecyclerViewData(String chatroomID,String uid2, String name, String message, Date date) {
         this.chatroomID = chatroomID;
-        this.profileImage = profileImage;
+        this.uid2 = uid2;
         this.name = name;
         this.message = message;
         this.date = date;
 
     }
 
-    public int getProfileImage() {
-        return profileImage;
+    public String getUid2() {
+        return uid2;
     }
 
-    public void setProfileImage(int profileImage) {
-        this.profileImage = profileImage;
+    public void setUid2(String uid2) {
+        this.uid2 = uid2;
     }
 
     public String getName() {

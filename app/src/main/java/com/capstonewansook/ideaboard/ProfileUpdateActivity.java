@@ -12,26 +12,28 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.SetOptions;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
-public class InfomationActivity extends AppCompatActivity {
+public class ProfileUpdateActivity extends AppCompatActivity {
 
     private String uid;
-    private boolean isSame=true;
+    private boolean isSame=false;
     private Button nicknameSameCheckButton;
     private EditText nicknameEditText;
     private EditText locateEditText;
@@ -41,17 +43,18 @@ public class InfomationActivity extends AppCompatActivity {
     private Button okButton;
     private Button cancleButton;
     private FirebaseFirestore db;
-
     private static ArrayList<String> nicknameArray = new ArrayList<>();
+    private CustomerData currentCus;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_costomer_infomation);
 
         //로그인 한 사람 uid 저장
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         uid = intent.getStringExtra("UID");
+        currentCus = (CustomerData)intent.getSerializableExtra("CustomerData");
         Toast.makeText(this,uid,Toast.LENGTH_LONG);
 
         //파이어스토어 연결
@@ -59,13 +62,18 @@ public class InfomationActivity extends AppCompatActivity {
 
         //뷰 연결
         nicknameEditText = (EditText)findViewById(R.id.infomation_nickname_editText);
+        nicknameEditText.setText(currentCus.getName());
+        nicknameEditText.setEnabled(false);
         locateEditText = (EditText)findViewById(R.id.infomation_location_editText);
+        locateEditText.setText(currentCus.getLocate());
         officeEditText = (EditText)findViewById(R.id.infomation_office_editText);
+        officeEditText.setText(currentCus.getOffice());
         stateEditText = (EditText) findViewById(R.id.infomation_state_editText);
+        stateEditText.setText(currentCus.getState());
 
         //Spinner에 배열 넣기
         Resources res = getResources();
-        String[] jobItem = res.getStringArray(R.array.infomation_job_array);
+        final String[] jobItem = res.getStringArray(R.array.infomation_job_array);
         Arrays.sort(jobItem);
         jobSpinner =(Spinner)findViewById(R.id.infomation_job_spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(
@@ -74,56 +82,33 @@ public class InfomationActivity extends AppCompatActivity {
                 jobItem
         );
         jobSpinner.setAdapter(adapter);
-        jobSpinner.setSelection(0);
+        jobSpinner.setSelection(Arrays.binarySearch(jobItem,currentCus.getJob()));
 
         nicknameArrayInit();
 
         nicknameSameCheckButton = (Button)findViewById(R.id.infomation_sameCheck_button);
-        nicknameSameCheckButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String nickname = nicknameEditText.getText().toString();
-                if(!nickname.equals("")){
-                    if(nicknameArray.isEmpty()){
-                        Toast.makeText(getApplicationContext(),"사용 가능합니다!",Toast.LENGTH_LONG).show();
-                        isSame = false;
-                    }
-                    else{
-                        if(nicknameArray.contains(nickname)){
-                            Toast.makeText(getApplicationContext(),"다른 닉네임을 사용하십시오!", Toast.LENGTH_LONG).show();
-                            isSame = true;
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(),"사용 가능합니다!",Toast.LENGTH_LONG).show();
-                            isSame = false;
-                        }
-                    }
-                }
-                else{
-                    Toast.makeText(getApplicationContext(),"닉네임을 입력하세요",Toast.LENGTH_LONG).show();
-                    isSame = false;
-                }
-            }
-        });
+        nicknameSameCheckButton.setVisibility(View.GONE);
+
         okButton = (Button)findViewById(R.id.infomation_ok_button);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!EditTextIsEmpty()){
-                    final CustomerData cus = new CustomerData(nicknameEditText.getText().toString(),
-                            locateEditText.getText().toString(), officeEditText.getText().toString(),
-                            jobSpinner.getSelectedItem().toString(),stateEditText.getText().toString(),
-                            0);
+                    Map<String,Object> updateCus =  new HashMap<>();
+                    updateCus.put("state",stateEditText.getText().toString());
+                    updateCus.put("locate",locateEditText.getText().toString());
+                    updateCus.put("office",officeEditText.getText().toString());
+                    updateCus.put("job",jobSpinner.getSelectedItem().toString());
+                    final Map<String,Object> putUpdateCus = updateCus;
                     db.collection("users").document(uid)
-                            .set(cus)
+                            .set(updateCus, SetOptions.merge())
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Toast.makeText(getApplicationContext(),"환영합니다." + cus.getName()+" 님",Toast.LENGTH_LONG).show();
-                                    Intent mainIntent = new Intent(getApplicationContext(), MainActivity.class);
-                                    mainIntent.putExtra("CustomerData",cus);
-                                    mainIntent.putExtra("UID",uid);
-                                    startActivity(mainIntent);
+                                    Intent profileIntent = new Intent();
+                                    profileIntent.putExtra("UpdateCustomerData", (Serializable) putUpdateCus);
+                                    setResult(RESULT_OK,profileIntent);
+                                    finish();
                                 }
                             });
                 }
@@ -141,7 +126,6 @@ public class InfomationActivity extends AppCompatActivity {
         });
 
     }
-
 
     private void nicknameArrayInit(){
         db.collection("users")
@@ -185,7 +169,7 @@ public class InfomationActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        FirebaseAuth.getInstance().signOut();
+                        setResult(RESULT_CANCELED);
                         finish();
                     }
                 }).setNegativeButton("아니오",

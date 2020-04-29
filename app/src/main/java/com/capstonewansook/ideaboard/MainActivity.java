@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -30,6 +31,8 @@ import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String TAG = "MainActivity";
+    
     private BottomNavigationView bottomNavigationView;
     private FragmentManager fragmentManager;
     private FragmentTransaction transaction;
@@ -56,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     public static StorageReference mStorageRef;
     //프로필 사진 저장 변수
     public static Bitmap profileBitmap;
+
+    public static ChatroomData chatroomData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +123,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        chatroomData = new ChatroomData(uid);
+
     }
 
     //프래그먼트->프래그먼트 이동을 위한 함수
@@ -155,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         FirebaseAuth.getInstance().signOut();
+                        profileBitmap = null;
                         Intent intent = new Intent(getApplicationContext(),logintitle.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -168,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 });
         AlertDialog alert = alert_confirm.create();
         alert.show();
+
     }
 
     //뒤로가기 눌렀을 때 함수
@@ -187,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             if(System.currentTimeMillis()<=backKeyPressedTime + 2000) {
+                profileBitmap = null;
                 super.onBackPressed();
                 moveTaskToBack(true);
                 android.os.Process.killProcess(android.os.Process.myPid());
@@ -206,6 +217,7 @@ public class MainActivity extends AppCompatActivity {
                         // Successfully downloaded data to local file
                         // ...
                         profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        Log.d(TAG, "이미지 불러오기 성공");
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -214,5 +226,6 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         });
+
     }
 }

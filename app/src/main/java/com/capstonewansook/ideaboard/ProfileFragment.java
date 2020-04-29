@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,7 +28,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
+import java.util.HashMap;
+
+import static com.capstonewansook.ideaboard.MainActivity.RESULT_OK;
 
 
 public class ProfileFragment extends Fragment {
@@ -40,9 +43,10 @@ public class ProfileFragment extends Fragment {
     private TextView wantTextView;
     private static final int RC_IMAGE_CHANGE = 1001;
     private static final int RC_EXTERNAL_STORAGE_PERMISSION = 2001;
+    private static final int RC_UPDATE_INFOMATION = 3001;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_profile, container, false);
@@ -53,25 +57,14 @@ public class ProfileFragment extends Fragment {
                 Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Permission is not granted
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
                     Manifest.permission.READ_CONTACTS)) {
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
             } else {
-                // No explanation needed; request the permission
                 ActivityCompat.requestPermissions(getActivity(),
                         new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         RC_EXTERNAL_STORAGE_PERMISSION);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
         } else {
-            // Permission has already been granted
         }
 
         profileImageView = rootView.findViewById(R.id.profile_imageView);
@@ -115,6 +108,17 @@ public class ProfileFragment extends Fragment {
             }
         });
         // Inflate the layout for this fragment
+
+        ImageButton updateButton = rootView.findViewById(R.id.profile_update_button);
+        updateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(),ProfileUpdateActivity.class);
+                intent.putExtra("CustomerData",MainActivity.cus);
+                intent.putExtra("UID",MainActivity.uid);
+                startActivityForResult(intent,RC_UPDATE_INFOMATION);
+            }
+        });
         return rootView;
 
     }
@@ -128,14 +132,14 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
+            //이미지 변경시
             case RC_IMAGE_CHANGE:
-                Uri image = data.getData();
                 try {
+                Uri image = data.getData();
+
                     MainActivity.profileBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), image);
                     profileImageView.setImageBitmap(MainActivity.profileBitmap);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
 
 //                Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
                 StorageReference profileRef =  MainActivity.mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
@@ -157,6 +161,24 @@ public class ProfileFragment extends Fragment {
                             }
                         });
                 return;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+            // 개인정보 수정 요청시
+            case RC_UPDATE_INFOMATION:
+                if(resultCode == RESULT_OK){
+                    HashMap<String,Object> cusData =(HashMap<String, Object>) data.getSerializableExtra("UpdateCustomerData");
+                    Log.d("before", (String) cusData.get("job"));
+                    stateTextView.setText(cusData.get("state").toString());
+                    officeTextView.setText(cusData.get("office").toString());
+                    MainActivity.cus.setJob(cusData.get("job").toString());
+                    MainActivity.cus.setState(cusData.get("state").toString());
+                    MainActivity.cus.setLocate(cusData.get("locate").toString());
+                    MainActivity.cus.setOffice(cusData.get("office").toString());
+                    Log.d("after",MainActivity.cus.getJob());
+                }
+
         }
     }
 
