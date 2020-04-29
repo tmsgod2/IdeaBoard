@@ -12,11 +12,11 @@ public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
     private String uid;
 
     public void setUid(String uid) {
-        this.Uid = Uid;
+        this.uid = uid;
     }
 
     public String getUid() {
-        return Uid;
+        return uid;
 
     }
 
@@ -25,7 +25,7 @@ public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
         this.name = name;
         this.office = office;
         this.star = star;
-        this.Uid = Uid;
+        this.uid = Uid;
     }
 
     public Bitmap getProfileImage() {
