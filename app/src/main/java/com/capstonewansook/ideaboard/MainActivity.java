@@ -59,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     public static StorageReference mStorageRef;
     //프로필 사진 저장 변수
     public static Bitmap profileBitmap;
+
+    public static ChatroomData chatroomData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,6 +123,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        chatroomData = new ChatroomData(uid);
 
     }
 

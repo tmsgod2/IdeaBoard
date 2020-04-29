@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +16,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.capstonewansook.ideaboard.ChatBoardActivity;
 import com.capstonewansook.ideaboard.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -24,8 +31,7 @@ import java.util.Date;
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
     //의미없는 주석
     private ArrayList<ChatRecyclerViewData> mData;
-
-
+    private FirebaseStorage storage;
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView profileImage;
         TextView nameText,messageText,dateText;
@@ -49,6 +55,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     @Override
     public ChatRecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
+        storage = FirebaseStorage.getInstance();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.chat_recyclerview,parent,false);
         ChatRecyclerViewAdapter.ViewHolder vh = new ChatRecyclerViewAdapter.ViewHolder(view);
@@ -56,29 +63,44 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChatRecyclerViewAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final ChatRecyclerViewAdapter.ViewHolder holder, final int position) {
         String name = mData.get(position).getName();
-        int profile = mData.get(position).getProfileImage();
         String message = mData.get(position).getMessage();
         Date date = mData.get(position).getDate();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
-        holder.profileImage.setImageResource(profile);
+
+//        holder.profileImage.setImageResource(profile);
         holder.nameText.setText(name);
         holder.messageText.setText(message);
         holder.dateText.setText(format.format(date));
+
+
+        Log.d("ChatRecyclerViewAdapter",mData.get(position).getUid2());
+        StorageReference profileRef = storage.getReference().child("users/"+mData.get(position).getUid2()+"/profileImage.jpg");
+        profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Glide.with(holder.profileImage.getContext())
+                                .load(task.getResult())
+                                .into(holder.profileImage);
+                    } else {
+                        holder.profileImage.setImageResource(R.drawable.kakaotalklog2);
+                    }
+                }
+            });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ChatBoardActivity.class);
-                Toast.makeText(context,mData.get(position).getName()+" " + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,mData.get(position).getChatroomID()+" " + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
                 context.startActivity(intent);
 
             }
         });
-
     }
 
     @Override
