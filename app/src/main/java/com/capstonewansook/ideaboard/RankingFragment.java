@@ -3,6 +3,7 @@ package com.capstonewansook.ideaboard;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
@@ -31,7 +33,7 @@ import java.util.ArrayList;
 
 
 public class RankingFragment extends Fragment {
-
+    private static final String TAG = "RankingFragment";
     public StorageReference mStorageRef;
     public Bitmap bitmap;
 
@@ -67,7 +69,7 @@ public class RankingFragment extends Fragment {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         final ViewGroup rootView = (ViewGroup)inflater.inflate(R.layout.fragment_ranking, container, false);
-            db.collection("users").get()
+            db.collection("users").orderBy("stars", Query.Direction.DESCENDING).limit(5).get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -76,40 +78,26 @@ public class RankingFragment extends Fragment {
                                 if(task.getResult() != null)
                                 {
                                  for(QueryDocumentSnapshot snap: task.getResult()) {
-                                     if (snap.get("name") != null && MainActivity.profileBitmap != null) {
-                                         try {
-                                             ProfileSetting();
-                                             //Log.d( "mvc123", bitmap+"");
-                                             rankList.add(new RankRecyclerViewData(MainActivity.profileBitmap, snap.get("name").toString(), snap.get("office").toString(), Integer.parseInt(snap.get("star").toString()), snap.getId()));
-
-                                         } catch (Exception e) {
-                                             e.printStackTrace();
-                                         }
+                                     if (snap.get("name") != null) {
+                                         rankList.add(new RankRecyclerViewData(snap.get("name").toString(), snap.get("office").toString(), Integer.parseInt(snap.get("stars").toString()), snap.getId()));
 
                                      }
-                                     else if(snap.get("name") != null && MainActivity.profileBitmap == null) {
-                                        // Drawable drawable = getResources().getDrawable(R.drawable.ic_person_black);
-                                        // Bitmap bitmapdrawable = ((BitmapDrawable) drawable).getBitmap();
-                                        // Bitmap bitmapdrawable  = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.ic_person_black);
-
-                                         rankList.add(new RankRecyclerViewData(MainActivity.profileBitmap, snap.get("name").toString(), snap.get("office").toString(), Integer.parseInt(snap.get("star").toString()), snap.getId()));
-                                        // Log.d( "mbc123", bitmapdrawable+"");
-                                     }
                                  }
-
-
+                                    final RecyclerView recyclerView = rootView.findViewById(R.id.rankingRecyclerView);
+                                    recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
+                                    RankRecyclerViewAdapter adapter = new RankRecyclerViewAdapter(rankList);
+                                    recyclerView.setAdapter(adapter);
                                  }
-
 
 
                             }
                         }
                     });
 
-        final RecyclerView recyclerView = rootView.findViewById(R.id.rankingRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
-        RankRecyclerViewAdapter adapter = new RankRecyclerViewAdapter(rankList);
-        recyclerView.setAdapter(adapter);
+            for(RankRecyclerViewData s : rankList){
+                Log.d(TAG,s.getName());
+            }
+
         return  rootView;
     }
 

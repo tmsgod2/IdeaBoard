@@ -1,14 +1,10 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
-import android.graphics.Bitmap;
-
 public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
-    private Bitmap profileImage;
     private String name;
     private String office;
     private int star;
     private int grade=99999;
-
     private String uid;
 
     public void setUid(String uid) {
@@ -20,21 +16,13 @@ public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
 
     }
 
-    public RankRecyclerViewData(Bitmap profileImage, String name, String office, int star, String Uid) {
-        this.profileImage = profileImage;
+    public RankRecyclerViewData(String name, String office, int star, String Uid) {
         this.name = name;
         this.office = office;
         this.star = star;
         this.uid = Uid;
     }
 
-    public Bitmap getProfileImage() {
-        return profileImage;
-    }
-
-    public void setProfileImage(Bitmap profileImage) {
-        this.profileImage = profileImage;
-    }
 
     public String getName() {
         return name;

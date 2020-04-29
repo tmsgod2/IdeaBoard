@@ -1,10 +1,10 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,14 +15,19 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.capstonewansook.ideaboard.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerViewAdapter.ViewHolder> {
     private ArrayList<RankRecyclerViewData> mData = null;
-
+    private FirebaseStorage storage;
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView profileImage;
         TextView nameText,ofiiceText,starText,manyStarText;
@@ -43,6 +48,7 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
     }
 
     public RankRecyclerViewAdapter(ArrayList<RankRecyclerViewData> list){
+        storage = FirebaseStorage.getInstance();
         mData = list;
         Collections.sort(mData);
         for(int i = 0; i<mData.size();i++){
@@ -61,18 +67,30 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RankRecyclerViewAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final RankRecyclerViewAdapter.ViewHolder holder, final int position) {
         String name = mData.get(position).getName();
         String office = mData.get(position).getOffice();
         int manyStar = mData.get(position).getStar();
-        Bitmap profile = mData.get(position).getProfileImage();
         int grade = mData.get(position).getGrade();
 
+
+        StorageReference profileRef = storage.getReference().child("users/"+mData.get(position).getUid()+"/profileImage");
+        profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Glide.with(holder.profileImage.getContext())
+                            .load(task.getResult())
+                            .into(holder.profileImage);
+                } else {
+                    holder.profileImage.setImageResource(R.drawable.kakaotalklog2);
+                }
+            }
+        });
         holder.nameText.setText(name);
         holder.ofiiceText.setText(office);
         holder.manyStarText.setText(String.valueOf(manyStar));
         //이거 바꿔야 할 수도 있음
-        holder.profileImage.setImageBitmap(profile);
         holder.starText.setText(String.valueOf(grade));
 
         switch (grade){
