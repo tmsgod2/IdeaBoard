@@ -1,33 +1,38 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
+import android.graphics.Bitmap;
+
 public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
-    private int profileImage;
+    private Bitmap profileImage;
     private String name;
     private String office;
     private int star;
     private int grade=99999;
+
     private String uid;
 
-    public String getUid() {
-        return uid;
-    }
-
     public void setUid(String uid) {
-        this.uid = uid;
+        this.Uid = Uid;
     }
 
-    public RankRecyclerViewData(int profileImage, String name, String office, int star) {
+    public String getUid() {
+        return Uid;
+
+    }
+
+    public RankRecyclerViewData(Bitmap profileImage, String name, String office, int star, String Uid) {
         this.profileImage = profileImage;
         this.name = name;
         this.office = office;
         this.star = star;
+        this.Uid = Uid;
     }
 
-    public int getProfileImage() {
+    public Bitmap getProfileImage() {
         return profileImage;
     }
 
-    public void setProfileImage(int profileImage) {
+    public void setProfileImage(Bitmap profileImage) {
         this.profileImage = profileImage;
     }
 

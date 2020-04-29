@@ -1,6 +1,7 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -64,14 +65,14 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
         String name = mData.get(position).getName();
         String office = mData.get(position).getOffice();
         int manyStar = mData.get(position).getStar();
-        int profile = mData.get(position).getProfileImage();
+        Bitmap profile = mData.get(position).getProfileImage();
         int grade = mData.get(position).getGrade();
 
         holder.nameText.setText(name);
         holder.ofiiceText.setText(office);
         holder.manyStarText.setText(String.valueOf(manyStar));
         //이거 바꿔야 할 수도 있음
-        holder.profileImage.setImageResource(profile);
+        holder.profileImage.setImageBitmap(profile);
         holder.starText.setText(String.valueOf(grade));
 
         switch (grade){
