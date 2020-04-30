@@ -119,8 +119,8 @@ public class newpost extends AppCompatActivity {
                         if(clipData != null)
                         {
                             upimg();
-                            onBackPressed();
                         }
+                        onBackPressed();
                         loadinglayout.setVisibility(View.GONE);
                     }
                 })
