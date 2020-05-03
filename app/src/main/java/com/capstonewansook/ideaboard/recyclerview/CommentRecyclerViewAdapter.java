@@ -39,6 +39,8 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
         String name = mData.get(position).getName();
         Date date = mData.get(position).getDate();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        String content = mData.get(position).getContent();
+
 
         holder.nameTextView.setText(name);
         holder.dateTextView.setText(format.format(date));
@@ -48,6 +50,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
                 Toast.makeText(holder.itemView.getContext(), mData.get(position).getUid(),Toast.LENGTH_SHORT).show();
             }
         });
+        holder.contentTextView.setText(content);
 
 
     }

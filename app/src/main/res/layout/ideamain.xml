@@ -35,15 +35,17 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:id="@+id/ideamain_profile_imageView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:src="@drawable/ic_person_black" />
 
                 <TextView
-                    android:id="@+id/ideamain_topic_textView"
+                    android:id="@+id/ideamain_title_textView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:textSize="24sp"
                     android:text="제목은 어쩌구 저쩌구" />
 
             </LinearLayout>
@@ -52,13 +54,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:background="@android:color/white">
 
                 <TextView
                     android:id="@+id/ideamain_contents_textView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:textSize="18sp"
                     android:text="내용은 이거저거 요거 그거등등등" />
 
                 <LinearLayout
@@ -69,26 +72,77 @@
 
             </LinearLayout>
 
+            <CheckBox
+                android:id="@+id/ideamain_star_checkBox"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/checkbox_background"
+                android:button="@android:color/transparent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                />
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ideamain_comment_recyclerView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"/>
 
         </LinearLayout>
 
     </ScrollView>
 
+    <EditText
+        android:id="@+id/ideamain_comment_editText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ideamain_comment_submit_button"
+        android:layout_margin="0dp"
+        android:visibility="gone"
+        android:background="@color/colorEditText"
+        android:gravity="top"
+        android:minLines="2"
+        android:maxLines="4"
+        />
+    <Button
+        android:id="@+id/ideamain_comment_submit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="댓글쓰기"
+        android:visibility="gone"
+        />
 
-    <ImageButton
-        android:id="@+id/star"
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/ideamain_comment_exit_imageView"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/ic_highlight_off_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/ideamain_comment_submit_button"
+        app:layout_constraintStart_toStartOf="@+id/ideamain_comment_submit_button"
+        app:layout_constraintEnd_toEndOf="@+id/ideamain_comment_submit_button"
+        android:visibility="gone"
+        />
+
+
+
+
+    <Button
+        android:id="@+id/ideamain_comment_button"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="0dp"
-        android:src="@drawable/ic_stars_black"
+        android:text="댓글쓰기"
+        android:drawableStart="@drawable/ic_chat_black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline5" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline5"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
