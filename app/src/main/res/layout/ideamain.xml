@@ -64,14 +64,58 @@
                     android:textSize="18sp"
                     android:text="내용은 이거저거 요거 그거등등등" />
 
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
                 <LinearLayout
                     android:id="@+id/ideamain_image_linearlayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"></LinearLayout>
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                </LinearLayout>
+                </HorizontalScrollView>
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <CheckBox
                 android:id="@+id/ideamain_star_checkBox"
                 android:layout_width="30dp"
@@ -83,6 +127,16 @@
                 android:layout_marginBottom="8dp"
                 />
 
+            <ImageView
+                android:id="@+id/ideamain_chat_imageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_insert_comment_black_24dp"
+                android:layout_gravity=""
+                android:layout_alignParentRight="true"
+                android:layout_margin="8dp"
+                />
+            </RelativeLayout>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ideamain_comment_recyclerView"
                 android:layout_width="match_parent"
@@ -137,11 +191,11 @@
         android:layout_height="0dp"
         android:layout_marginTop="0dp"
         android:text="댓글쓰기"
-        android:drawableStart="@drawable/ic_chat_black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/guideline5"
+        android:background="@color/colorPrimary"
         />
 
 

@@ -2,6 +2,7 @@ package com.capstonewansook.ideaboard;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -29,10 +30,13 @@ import java.util.Date;
 public class IdeamainActivity extends AppCompatActivity {
 
     private static final String TAG = "IdeamainActivity";
+    String uid;
+    String boardId;
     ImageView profileImage;
     TextView titleTextView;
     TextView contentTextView;
     CheckBox starCheckBox;
+    ImageView chatImageView;
     EditText commentEditText;
     Button commentButton;
     Button commentSubmitButton;
@@ -43,6 +47,9 @@ public class IdeamainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ideamain);
 
+        uid = getIntent().getStringExtra("uid");
+        boardId = getIntent().getStringExtra("boardId");
+
         //상단 액션바의 뒤로가기 버튼을 위해 작성
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("아이디어 게시판 창");
@@ -51,6 +58,7 @@ public class IdeamainActivity extends AppCompatActivity {
         titleTextView = findViewById(R.id.ideamain_title_textView);
         contentTextView = findViewById(R.id.ideamain_contents_textView);
         starCheckBox = findViewById(R.id.ideamain_star_checkBox);
+        chatImageView = findViewById(R.id.ideamain_chat_imageView);
         commentEditText = findViewById(R.id.ideamain_comment_editText);
         commentButton = findViewById(R.id.ideamain_comment_button);
         commentSubmitButton = findViewById(R.id.ideamain_comment_submit_button);
@@ -70,6 +78,15 @@ public class IdeamainActivity extends AppCompatActivity {
                 else{
                     Toast.makeText(getApplicationContext(), "추천을 하셨습니다.", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        chatImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent chatIntent = new Intent(getApplicationContext(), ChatBoardActivity.class);
+                startActivity(chatIntent);
+
             }
         });
 
@@ -126,6 +143,7 @@ public class IdeamainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    //댓글쓰기 버튼 클릭했을 때 에디트 텍스트랑 댓글 등록 버튼 활성화 밑 키보드 활성화
     public void KeboardOn(){
         commentEditText.setVisibility(View.VISIBLE);
         commentSubmitButton.setVisibility(View.VISIBLE);
@@ -135,6 +153,7 @@ public class IdeamainActivity extends AppCompatActivity {
         imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
     }
 
+    //댓글 쓰기 취소 시 에디트 텍스트, 댓글등록 버튼 비활성화, 키보드 비활성화
     public void KeboardOff(){
         commentEditText.setText("");
         commentEditText.setVisibility(View.GONE);
