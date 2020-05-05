@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,12 +28,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class newpost extends AppCompatActivity {
     private final static String TAG = null;
@@ -50,7 +51,7 @@ public class newpost extends AppCompatActivity {
     public StorageReference postsimage = FirebaseStorage.getInstance().getReference();
     private String postid;
     private RelativeLayout loadinglayout;
-
+    private DocumentReference docref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,12 +72,22 @@ public class newpost extends AppCompatActivity {
         count = 0;
         loadinglayout = (RelativeLayout) findViewById(R.id.loadingLayout);
 
+
         newbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                NewpostData newpostData = new NewpostData(MainActivity.uid,title.getText().toString(),contents.getText().toString(), new Date(System.currentTimeMillis()).toString());
-                DBCreate(newpostData);
-                loadinglayout.setVisibility(View.VISIBLE);
+                if(!title.getText().toString().equals("") && !contents.getText().toString().equals("")) {
+                    NewpostData newpostData = new NewpostData(MainActivity.uid, title.getText().toString(), contents.getText().toString(),(Object) FieldValue.serverTimestamp());
+                    DBCreate(newpostData);
+
+
+
+                    loadinglayout.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    Toast.makeText(getApplicationContext(), "빈칸을 입력해주세요!", Toast.LENGTH_LONG).show();
+                }
             }
         });
         imagebutton.setOnClickListener(new View.OnClickListener() {
@@ -120,6 +131,7 @@ public class newpost extends AppCompatActivity {
                         {
                             upimg();
                         }
+
                         onBackPressed();
                         loadinglayout.setVisibility(View.GONE);
                     }
@@ -130,6 +142,7 @@ public class newpost extends AppCompatActivity {
                         Log.w(TAG, "Error writing document", e);
                     }
                 });
+
     }
     public void permission() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -173,11 +186,14 @@ public class newpost extends AppCompatActivity {
         }
     }
     protected void upimg() {
+        int j = 0;
         for (int i = 0; i < imguri.size(); i++) {
             try {
+
                 if (imguri.get(i) != null) {
                     Uri image = imguri.get(i);
-                    StorageReference riverseRef = postsimage.child("posts/" + postid + "/image" + i);
+                    StorageReference riverseRef = postsimage.child("posts/" + postid + "/image" + j);
+                    j++;
                     riverseRef.putFile(image);
                 }
             } catch (Exception e) {
