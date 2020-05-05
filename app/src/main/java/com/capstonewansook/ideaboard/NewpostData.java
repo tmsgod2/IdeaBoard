@@ -6,10 +6,10 @@ public class NewpostData implements Serializable {
     private String uid;
     private String title;
     private String content;
-    private String date;
+    private Object date;
     private int stars;
 
-    public NewpostData(String uid, String title, String content, String date) {
+    public NewpostData(String uid, String title, String content, Object date) {
         this.uid = uid;
         this.title = title;
         this.content = content;
@@ -19,7 +19,7 @@ public class NewpostData implements Serializable {
     public String getUid() {        return uid;    }
     public String getTitle() {        return title;    }
     public String getContent() {        return content;    }
-    public String getDate() {        return date;    }
+    public Object getDate() {        return date;    }
     public int getStars() {        return stars;    }
     public void setUid(String uid) {        this.uid = uid;    }
     public void setTitle(String title) {        this.title = title;    }
