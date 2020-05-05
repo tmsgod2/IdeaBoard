@@ -7,11 +7,19 @@
     tools:context=".IdeamainActivity">
 
 
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.92" />
+
     <ScrollView
         android:id="@+id/scrollView2"
         android:layout_width="match_parent"
-        android:layout_height="680dp"
+        android:layout_height="0dp"
         android:overScrollMode="never"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -23,68 +31,181 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/ideamain_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="아이디어" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="match_parent"
+                    android:id="@+id/ideamain_profile_imageView"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
                     android:src="@drawable/ic_person_black" />
 
                 <TextView
-                    android:id="@+id/ideamain_topic_textView"
+                    android:id="@+id/ideamain_title_textView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
+                    android:textSize="24sp"
                     android:text="제목은 어쩌구 저쩌구" />
 
             </LinearLayout>
 
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="530dp"
-                android:orientation="vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:background="@android:color/white">
 
                 <TextView
                     android:id="@+id/ideamain_contents_textView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:gravity="center"
+                    android:textSize="18sp"
                     android:text="내용은 이거저거 요거 그거등등등" />
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
+                <LinearLayout
+                    android:id="@+id/ideamain_image_linearlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_launcher"/>
+
+                </LinearLayout>
+                </HorizontalScrollView>
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+            <CheckBox
+                android:id="@+id/ideamain_star_checkBox"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/checkbox_background"
+                android:button="@android:color/transparent"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                />
+            <TextView
+                android:id="@+id/ideamain_star_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/ideamain_star_checkBox"
+                android:text="100"
+                android:layout_alignBottom="@+id/ideamain_star_checkBox"/>
+
+            <ImageView
+                android:id="@+id/ideamain_chat_imageView"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:src="@drawable/ic_insert_comment_black_24dp"
+                android:layout_gravity=""
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginEnd="32dp"
+                />
+            </RelativeLayout>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/ideamain_comment_recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"/>
 
         </LinearLayout>
 
     </ScrollView>
 
-
-    <ImageButton
-        android:id="@+id/star"
+    <EditText
+        android:id="@+id/ideamain_comment_editText"
         android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:padding="0dp"
-        android:src="@drawable/ic_stars_black"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ideamain_comment_submit_button"
+        android:layout_margin="0dp"
+        android:visibility="gone"
+        android:background="@color/colorEditText"
+        android:gravity="top"
+        android:minLines="2"
+        android:maxLines="4"
+        />
+    <Button
+        android:id="@+id/ideamain_comment_submit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:text="댓글쓰기"
+        android:visibility="gone"
+        />
+
+    <ImageView
+        android:id="@+id/ideamain_comment_exit_imageView"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:src="@drawable/ic_highlight_off_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/ideamain_comment_submit_button"
+        app:layout_constraintStart_toStartOf="@+id/ideamain_comment_submit_button"
+        app:layout_constraintEnd_toEndOf="@+id/ideamain_comment_submit_button"
+        android:visibility="gone"
+        />
+
+
+
+
+    <Button
+        android:id="@+id/ideamain_comment_button"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="0dp"
+        android:text="댓글쓰기"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+        app:layout_constraintTop_toBottomOf="@+id/guideline5"
+        android:background="@color/colorPrimary"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

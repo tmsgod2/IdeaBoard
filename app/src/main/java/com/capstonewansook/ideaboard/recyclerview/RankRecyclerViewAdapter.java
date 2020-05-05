@@ -10,12 +10,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.capstonewansook.ideaboard.FragmentData;
+import com.capstonewansook.ideaboard.MainActivity;
+import com.capstonewansook.ideaboard.NotmeProfileFragment;
+import com.capstonewansook.ideaboard.ProfileFragment;
 import com.capstonewansook.ideaboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -113,7 +117,16 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(view.getContext(),mData.get(position).getUid(),Toast.LENGTH_SHORT).show();
+                if(!MainActivity.uid.equals(mData.get(position).getUid())) {
+                    Fragment post = NotmeProfileFragment.newInstance(mData.get(position).getUid());
+                    ((MainActivity) holder.itemView.getContext()).replaceFragment(post);
+                    MainActivity.fragmentStack.push(new FragmentData(post, R.id.ranking_menu));
+                }
+                else{
+                    Fragment post = ProfileFragment.newInstance();
+                    ((MainActivity) holder.itemView.getContext()).replaceFragment(post);
+                    MainActivity.fragmentStack.push(new FragmentData(post, R.id.profile_menu));
+                }
             }
         });
 
