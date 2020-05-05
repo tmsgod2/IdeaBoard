@@ -7,13 +7,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstonewansook.ideaboard.recyclerview.HomeManystarRecyclerViewAdapter;
 import com.capstonewansook.ideaboard.recyclerview.HomeManystarRecyclerViewData;
+import com.capstonewansook.ideaboard.recyclerview.HomeNewideaRecyclerViewAdapter;
+import com.capstonewansook.ideaboard.recyclerview.HomeNewideaRecyclerViewData;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
@@ -23,6 +32,7 @@ public class HomeFragment extends Fragment {
     private ImageView manystarPlusImage;
     private ImageView newIdeaImage;
     FirebaseFirestore db;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -30,9 +40,53 @@ public class HomeFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
 
-        ArrayList<HomeManystarRecyclerViewData> list = new ArrayList<>();
+        final ArrayList<HomeManystarRecyclerViewData> list = new ArrayList<>();
 
-        list.add(new HomeManystarRecyclerViewData("asdasdasd","인기 많은 아이디어", 100));
+        db.collection("posts").orderBy("stars", Query.Direction.DESCENDING).limit(5).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            if(task.getResult() != null)
+                            {
+                                for(QueryDocumentSnapshot snap: task.getResult()) {
+                                    if (snap.get("title") != null) {
+                                        list.add(new HomeManystarRecyclerViewData(snap.getId().toString(),snap.get("title").toString(),Integer.parseInt(snap.get("stars").toString())));
+
+                                    }
+                                }
+                                RecyclerViewSet(rootView,list, (RecyclerView) rootView.findViewById(R.id.home_manystar_recyclerView),new HomeManystarRecyclerViewAdapter(list),R.id.home_re_manystar_title_textview);
+                            }
+
+
+                        }
+                    }
+                });
+
+        final ArrayList<HomeNewideaRecyclerViewData> newlist = new ArrayList<>();
+        db.collection("posts").orderBy("date", Query.Direction.DESCENDING).limit(5).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            if(task.getResult() != null)
+                            {
+                                for(QueryDocumentSnapshot snap: task.getResult()) {
+                                    if (snap.get("title") != null) {
+                                        newlist.add(new HomeNewideaRecyclerViewData(snap.getId().toString(),snap.get("title").toString(), ((Timestamp)snap.get("date")).toDate()));
+
+                                    }
+                                }
+                                RecyclerViewSet(rootView,newlist, (RecyclerView) rootView.findViewById(R.id.home_newidea_recyclerView),new HomeNewideaRecyclerViewAdapter(newlist),R.id.home_re_newidea_title_textView);
+                            }
+
+
+                        }
+                    }
+                });
+
 
         RecyclerViewSet(rootView,list, (RecyclerView) rootView.findViewById(R.id.home_manystar_recyclerView),new HomeManystarRecyclerViewAdapter(list),R.id.home_re_manystar_title_textview);
 //        RecyclerViewSet(rootView,list1,(RecyclerView) rootView.findViewById(R.id.home_newidea_recyclerView),new HomeNewideaRecyclerViewAdapter(list1),R.id.home_re_newidea_title_textView);
