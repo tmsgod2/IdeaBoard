@@ -48,8 +48,25 @@ public class CleverIdeaBoard extends AppCompatActivity {
         RadioGroup rg = (RadioGroup)findViewById(R.id.rdgroup);
         if(!isManystar){
             rg.check(R.id.rb1_newidea);
-        }else
+            Bundle bundle = new Bundle();
+            bundle.putString("fromFrag1","프레그먼트1");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            IdeaFragment1 fragment1 = new IdeaFragment1();
+            fragment1.setArguments(bundle);
+            transaction.replace(R.id.fr,fragment1);
+            transaction.commit();
+        }else {
             rg.check(R.id.rb2_newidea);
+            Bundle bundle = new Bundle();
+            bundle.putString("fromFrag2","프레그먼트2");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            IdeaFragment2 fragment2 = new IdeaFragment2();
+            fragment2.setArguments(bundle);
+            transaction.replace(R.id.fr,fragment2);
+            transaction.commit();
+
+        }
+
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
             @Override
