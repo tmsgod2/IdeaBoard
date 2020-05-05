@@ -32,10 +32,12 @@ public class IdeamainActivity extends AppCompatActivity {
     private static final String TAG = "IdeamainActivity";
     String uid;
     String boardId;
+    int star;
     ImageView profileImage;
     TextView titleTextView;
     TextView contentTextView;
     CheckBox starCheckBox;
+    TextView starTextView;
     ImageView chatImageView;
     EditText commentEditText;
     Button commentButton;
@@ -49,6 +51,7 @@ public class IdeamainActivity extends AppCompatActivity {
 
         uid = getIntent().getStringExtra("uid");
         boardId = getIntent().getStringExtra("boardId");
+        star = 0;
 
         //상단 액션바의 뒤로가기 버튼을 위해 작성
         ActionBar actionBar = getSupportActionBar();
@@ -58,6 +61,7 @@ public class IdeamainActivity extends AppCompatActivity {
         titleTextView = findViewById(R.id.ideamain_title_textView);
         contentTextView = findViewById(R.id.ideamain_contents_textView);
         starCheckBox = findViewById(R.id.ideamain_star_checkBox);
+        starTextView = findViewById(R.id.ideamain_star_textView);
         chatImageView = findViewById(R.id.ideamain_chat_imageView);
         commentEditText = findViewById(R.id.ideamain_comment_editText);
         commentButton = findViewById(R.id.ideamain_comment_button);
@@ -68,18 +72,26 @@ public class IdeamainActivity extends AppCompatActivity {
         contentTextView.setText("asd");
 
 
+        starTextView.setText(String.valueOf(star));
         starCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG,starCheckBox.isChecked()+"");
                 if(!starCheckBox.isChecked()){
                     Toast.makeText(getApplicationContext(), "추천을 취소하셨습니다.", Toast.LENGTH_SHORT).show();
+                    star--;
+                    starTextView.setText(String.valueOf(star));
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "추천을 하셨습니다.", Toast.LENGTH_SHORT).show();
+                    star++;
+                    starTextView.setText(String.valueOf(star));
                 }
+
             }
         });
+
+
 
         chatImageView.setOnClickListener(new View.OnClickListener() {
             @Override
