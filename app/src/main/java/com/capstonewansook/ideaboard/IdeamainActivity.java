@@ -3,6 +3,8 @@ package com.capstonewansook.ideaboard;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ShapeDrawable;
+import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -81,7 +83,8 @@ public class IdeamainActivity extends AppCompatActivity {
         contentTextView.setText(mainData.content);
         star = mainData.stars;
 
-
+        profileImage.setBackground(new ShapeDrawable((new OvalShape())));
+        profileImage.setClipToOutline(true);
         starTextView.setText(String.valueOf(mainData.stars));
         starCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,6 +151,8 @@ public class IdeamainActivity extends AppCompatActivity {
         if(mainData.imgLength>0)
             ImageDownload();
 
+        setProfileImage();
+
     }
 
     //상단의 뒤로가기 버튼 클릭시 뒤로 감
@@ -191,7 +196,22 @@ public class IdeamainActivity extends AppCompatActivity {
 
     }
 
-    private void ImageDownload(){
+    private void setProfileImage(){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference profileRef = storage.getReference().child("users/" + uid + "/profileImage");
+        profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if(task.isSuccessful()){
+                    Glide.with(getApplicationContext())
+                            .load(task.getResult())
+                            .into(profileImage);
+                }
+            }
+        });
+    }
+
+   private void ImageDownload(){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         for(int i = 0; i<mainData.imgLength;i++) {
             final ImageView image = new ImageView(getApplicationContext());
