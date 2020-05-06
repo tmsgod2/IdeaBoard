@@ -1,6 +1,5 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
-import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
@@ -9,13 +8,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.capstonewansook.ideaboard.IdeamainActivity;
+import com.capstonewansook.ideaboard.IdeaMainIn;
 import com.capstonewansook.ideaboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -44,7 +42,7 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final IdeaRecyclerViewAdapter.CustromViewHolder holder, int position) {///
+    public void onBindViewHolder(@NonNull final IdeaRecyclerViewAdapter.CustromViewHolder holder, final int position) {///
         Date date = arrayList.get(position).getTv_day();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -90,10 +88,10 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String curName = holder.tv_day.getText().toString();
-                Toast.makeText(v.getContext(),curName,Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(v.getContext(), IdeamainActivity.class);
-                v.getContext().startActivity(intent);
+//                String curName = holder.tv_day.getText().toString();
+//                Intent intent = new Intent(v.getContext(), IdeamainActivity.class);
+//                v.getContext().startActivity(intent);
+                IdeaMainIn.IdeaMainConnect(holder.itemView.getContext(), arrayList.get(position).getIdpost());
             }
         });
 

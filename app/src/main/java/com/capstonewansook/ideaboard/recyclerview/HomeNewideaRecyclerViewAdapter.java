@@ -1,17 +1,15 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstonewansook.ideaboard.IdeamainActivity;
+import com.capstonewansook.ideaboard.IdeaMainIn;
 import com.capstonewansook.ideaboard.R;
 
 import java.text.SimpleDateFormat;
@@ -50,7 +48,7 @@ public class HomeNewideaRecyclerViewAdapter extends RecyclerView.Adapter<HomeNew
     }
 
     @Override
-    public void onBindViewHolder(@NonNull HomeNewideaRecyclerViewAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final HomeNewideaRecyclerViewAdapter.ViewHolder holder, final int position) {
         String title = mData.get(position).getTitle();
         Date date = mData.get(position).getDate();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -62,10 +60,7 @@ public class HomeNewideaRecyclerViewAdapter extends RecyclerView.Adapter<HomeNew
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, IdeamainActivity.class);
-                Toast.makeText(context, mData.get(position).getTitle()+" "+mData.get(position).getDate(),Toast.LENGTH_SHORT ).show();
-                context.startActivity(intent);
+                IdeaMainIn.IdeaMainConnect(holder.itemView.getContext(), mData.get(position).getBoardID());
             }
         });
 
