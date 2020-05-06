@@ -1,7 +1,6 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.capstonewansook.ideaboard.IdeamainActivity;
+import com.capstonewansook.ideaboard.IdeaMainIn;
 import com.capstonewansook.ideaboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -57,7 +56,7 @@ public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecycler
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final postsRecyclerViewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final postsRecyclerViewAdapter.ViewHolder holder, final int position) {
         int image2 = arrayList.get(position).getImage2();
         String name = arrayList.get(position).getName();
         String yymmdd = arrayList.get(position).getYymmdd();
@@ -89,8 +88,7 @@ public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecycler
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), IdeamainActivity.class);
-                view.getContext().startActivity(intent);
+                IdeaMainIn.IdeaMainConnect(holder.itemView.getContext(), arrayList.get(position).getBoardId());
             }
         });
     }

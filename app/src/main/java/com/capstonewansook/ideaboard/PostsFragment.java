@@ -51,11 +51,10 @@ public class PostsFragment extends Fragment {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                postsList.add(new postsRecyclerViewData(R.drawable.ic_star_gold_24dp,
-                                        document.get("title").toString()
+                                postsList.add(new postsRecyclerViewData(document.getId(),R.drawable.ic_star_gold_24dp,
+                                        document.get("title").toString() , document.get("content").toString()
                                         ,new SimpleDateFormat("yyyy년 MM월dd일 HH시 mm분").format(((Timestamp)document.get("date")).toDate()),
-                                        Integer.parseInt(document.get("stars").toString()),
-                                        document.getId()
+                                        Integer.parseInt(document.get("stars").toString())
                                         ,document.get("content").toString()));
                             }
                             adapter = new postsRecyclerViewAdapter(postsList);

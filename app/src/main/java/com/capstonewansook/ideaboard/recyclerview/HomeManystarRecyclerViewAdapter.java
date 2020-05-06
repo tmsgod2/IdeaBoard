@@ -1,17 +1,15 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstonewansook.ideaboard.IdeamainActivity;
+import com.capstonewansook.ideaboard.IdeaMainIn;
 import com.capstonewansook.ideaboard.R;
 
 import java.util.ArrayList;
@@ -60,10 +58,11 @@ public class HomeManystarRecyclerViewAdapter extends RecyclerView.Adapter<HomeMa
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Context context = view.getContext();
-                Intent intent = new Intent(context, IdeamainActivity.class);
-                Toast.makeText(context, mData.get(position).getTitle()+" "+mData.get(position).getStars(),Toast.LENGTH_SHORT ).show();
-                context.startActivity(intent);
+                IdeaMainIn.IdeaMainConnect(holder.itemView.getContext(), mData.get(position).getBoardID());
+//                Context context = view.getContext();
+//                Intent intent = new Intent(context, IdeamainActivity.class);
+//                Toast.makeText(context, mData.get(position).getTitle()+" "+mData.get(position).getStars(),Toast.LENGTH_SHORT ).show();
+//                context.startActivity(intent);
             }
         });
 

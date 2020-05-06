@@ -8,12 +8,14 @@ public class NewpostData implements Serializable {
     private String content;
     private Object date;
     private int stars;
+    private int images;
 
-    public NewpostData(String uid, String title, String content, Object date) {
+    public NewpostData(String uid, String title, String content, Object date,int images) {
         this.uid = uid;
         this.title = title;
         this.content = content;
         this.date = date;
+        this.images = images;
     }
 
     public String getUid() {        return uid;    }
@@ -26,4 +28,12 @@ public class NewpostData implements Serializable {
     public void setContent(String content) {        this.content = content;    }
     public void setDate(String date) {        this.date = date;    }
     public void setStars(int stars) {        this.stars = stars;    }
+
+    public int getImages() {
+        return images;
+    }
+
+    public void setImages(int images) {
+        this.images = images;
+    }
 }

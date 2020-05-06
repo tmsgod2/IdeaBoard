@@ -3,6 +3,7 @@ package com.capstonewansook.ideaboard;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -12,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +23,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.capstonewansook.ideaboard.recyclerview.CommentRecyclerViewAdapter;
 import com.capstonewansook.ideaboard.recyclerview.CommentRecyclerViewData;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -30,6 +37,7 @@ import java.util.Date;
 public class IdeamainActivity extends AppCompatActivity {
 
     private static final String TAG = "IdeamainActivity";
+    IdeaMainData mainData;
     String uid;
     String boardId;
     int star;
@@ -43,15 +51,14 @@ public class IdeamainActivity extends AppCompatActivity {
     Button commentButton;
     Button commentSubmitButton;
     ImageView commentExitImageView;
+    LinearLayout imageLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ideamain);
 
-        uid = getIntent().getStringExtra("uid");
-        boardId = getIntent().getStringExtra("boardId");
-        star = 0;
+        mainData = (IdeaMainData)getIntent().getSerializableExtra(IdeaMainIn.IDEAMAIN_KEY);
 
         //상단 액션바의 뒤로가기 버튼을 위해 작성
         ActionBar actionBar = getSupportActionBar();
@@ -67,19 +74,22 @@ public class IdeamainActivity extends AppCompatActivity {
         commentButton = findViewById(R.id.ideamain_comment_button);
         commentSubmitButton = findViewById(R.id.ideamain_comment_submit_button);
         commentExitImageView = findViewById(R.id.ideamain_comment_exit_imageView);
+        imageLayout = findViewById(R.id.ideamain_image_linearlayout);
+        boardId = mainData.boardId;
+        uid = mainData.uid;
+        titleTextView.setText(mainData.title);
+        contentTextView.setText(mainData.content);
+        star = mainData.stars;
 
-        titleTextView.setText("이런거 한번 생각해봤는데 어떰?");
-        contentTextView.setText("asd");
 
-
-        starTextView.setText(String.valueOf(star));
+        starTextView.setText(String.valueOf(mainData.stars));
         starCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG,starCheckBox.isChecked()+"");
                 if(!starCheckBox.isChecked()){
-                    Toast.makeText(getApplicationContext(), "추천을 취소하셨습니다.", Toast.LENGTH_SHORT).show();
                     star--;
+                    Toast.makeText(getApplicationContext(), "추천을 취소하셨습니다.", Toast.LENGTH_SHORT).show();
                     starTextView.setText(String.valueOf(star));
                 }
                 else{
@@ -135,6 +145,8 @@ public class IdeamainActivity extends AppCompatActivity {
         list.add(new CommentRecyclerViewData("asdasdasd","이앙",new Date(System.currentTimeMillis()),"asdasdasdasdasd"));
         RecyclerViewSet((RecyclerView)findViewById(R.id.ideamain_comment_recyclerView),new CommentRecyclerViewAdapter(list));
 
+        if(mainData.imgLength>0)
+            ImageDownload();
 
     }
 
@@ -156,7 +168,7 @@ public class IdeamainActivity extends AppCompatActivity {
     }
 
     //댓글쓰기 버튼 클릭했을 때 에디트 텍스트랑 댓글 등록 버튼 활성화 밑 키보드 활성화
-    public void KeboardOn(){
+    private void KeboardOn(){
         commentEditText.setVisibility(View.VISIBLE);
         commentSubmitButton.setVisibility(View.VISIBLE);
         commentExitImageView.setVisibility(View.VISIBLE);
@@ -166,12 +178,42 @@ public class IdeamainActivity extends AppCompatActivity {
     }
 
     //댓글 쓰기 취소 시 에디트 텍스트, 댓글등록 버튼 비활성화, 키보드 비활성화
-    public void KeboardOff(){
+    private void KeboardOff(){
         commentEditText.setText("");
         commentEditText.setVisibility(View.GONE);
         commentSubmitButton.setVisibility(View.GONE);
         commentButton.setVisibility(View.VISIBLE);
         InputMethodManager immhide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
+
+    private void StarsUpdate(boolean isUp){
+
+    }
+
+    private void ImageDownload(){
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        for(int i = 0; i<mainData.imgLength;i++) {
+            final ImageView image = new ImageView(getApplicationContext());
+            image.setLayoutParams(new LinearLayout.LayoutParams(300,300));
+            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) image.getLayoutParams();
+            params.leftMargin = 8;
+            params.rightMargin = 8;
+            image.setLayoutParams(params);
+            StorageReference imagefileRef = storage.getReference().child("posts/" + boardId + "/image" +i);
+            Log.d(TAG, "posts/" + boardId + "/image" +i);
+            imagefileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if(task.isSuccessful()){
+                        Glide.with(getApplicationContext())
+                                .load(task.getResult())
+                                .into(image);
+                        imageLayout.addView(image);
+                    }
+                }
+            });
+        }
     }
 }

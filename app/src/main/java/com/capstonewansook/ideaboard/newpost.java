@@ -77,7 +77,7 @@ public class newpost extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!title.getText().toString().equals("") && !contents.getText().toString().equals("")) {
-                    NewpostData newpostData = new NewpostData(MainActivity.uid, title.getText().toString(), contents.getText().toString(),(Object) FieldValue.serverTimestamp());
+                    NewpostData newpostData = new NewpostData(MainActivity.uid, title.getText().toString(), contents.getText().toString(),(Object) FieldValue.serverTimestamp(),imguri.size());
                     DBCreate(newpostData);
 
 
