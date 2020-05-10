@@ -107,5 +107,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
     public int getItemCount() {
         return mData.size();
     }
-
+    public void move(int postion){
+        notifyItemMoved(postion, 0);
+    }
 }

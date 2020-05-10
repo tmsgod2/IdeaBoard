@@ -41,6 +41,12 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
+        final CommentRecyclerViewData data = mData.get(position);
+        final String boardId = mData.get(position).getBoardId();
+        final String commentId = mData.get(position).getCommentId();
+        if(mData.get(position).getUid().equals(MainActivity.uid)){
+            holder.deleteTextView.setVisibility(View.VISIBLE);
+        }
         String name = mData.get(position).getName();
         Date date = mData.get(position).getDate();
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -55,14 +61,10 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
                 Toast.makeText(holder.itemView.getContext(), mData.get(position).getUid() + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
             }
         });
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+        holder.deleteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View view) {
-
-                if(mData.get(position).getUid().equals(MainActivity.uid)){
-                    IsDelete(holder.itemView.getContext(),mData.get(position).getBoardId(), mData.get(position).getCommentId(),position);
-                }
-                return true;
+            public void onClick(View view) {
+                IsDelete(holder.itemView.getContext(),boardId, commentId,data);
             }
         });
         holder.contentTextView.setText(content);
@@ -81,16 +83,18 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
         TextView nameTextView;
         TextView dateTextView;
         TextView contentTextView;
+        TextView deleteTextView;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.comment_name_textView);
             dateTextView = itemView.findViewById(R.id.comment_date_textView);
             contentTextView = itemView.findViewById(R.id.comment_content_textView);
+            deleteTextView = itemView.findViewById(R.id.comment_delete_textView);
         }
 
     }
 
-    private void CommentDelete(final Context context, String boardId, String commentId , final int position){
+    private void CommentDelete(final Context context, String boardId, String commentId , final CommentRecyclerViewData position){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("posts").document(boardId).collection("comments").document(commentId)
                 .delete()
@@ -103,8 +107,7 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
                 });
     }
 
-    private void IsUpdate(final Context context, final String boardId, final String commentId, final int position){}
-    private void IsDelete(final Context context, final String boardId, final String commentId, final int position){
+    private void IsDelete(final Context context, final String boardId, final String commentId, final CommentRecyclerViewData position){
         AlertDialog.Builder alert_confirm = new AlertDialog.Builder(context);
         alert_confirm.setMessage("삭제 하시겠습니까?").setCancelable(false).setPositiveButton("예",
                 new DialogInterface.OnClickListener() {
@@ -124,12 +127,14 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
     }
 
-    public void remove(int position){
+    public void remove(CommentRecyclerViewData data){
         try{
+            int position = mData.indexOf(data);
             mData.remove(position);
             notifyItemRemoved(position);//새로고침
         } catch(IndexOutOfBoundsException ex){
             ex.printStackTrace();
         }
     }
+
 }

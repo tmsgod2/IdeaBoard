@@ -2,6 +2,7 @@ package com.capstonewansook.ideaboard;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -22,6 +23,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,6 +55,7 @@ public class IdeamainActivity extends AppCompatActivity {
     String uid;
     String boardId;
     int star;
+    TextView deleteTextView;
     ImageView profileImage;
     TextView titleTextView;
     TextView contentTextView;
@@ -81,6 +84,7 @@ public class IdeamainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("아이디어 게시판 창");
 
+        deleteTextView = findViewById(R.id.ideamain_delete_textView);
         profileImage = findViewById(R.id.ideamain_profile_imageView);
         titleTextView = findViewById(R.id.ideamain_title_textView);
         contentTextView = findViewById(R.id.ideamain_contents_textView);
@@ -100,6 +104,15 @@ public class IdeamainActivity extends AppCompatActivity {
         contentTextView.setText(mainData.content);
         star = mainData.stars;
 
+        if(uid.equals(MainActivity.uid)){
+            deleteTextView.setVisibility(View.VISIBLE);
+        }
+        deleteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IsDelete();
+            }
+        });
         profileImage.setBackground(new ShapeDrawable((new OvalShape())));
         profileImage.setClipToOutline(true);
         starTextView.setText(String.valueOf(mainData.stars));
@@ -297,5 +310,34 @@ public class IdeamainActivity extends AppCompatActivity {
                 });
     }
 
+    private void IsDelete(){
+        AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
+        alert_confirm.setMessage("삭제 하시겠습니까?").setCancelable(false).setPositiveButton("예",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        DeleteIdea();
+                    }
+                }).setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                });
+        AlertDialog alert = alert_confirm.create();
+        alert.show();
 
+    }
+
+    private void DeleteIdea(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(boardId).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        finish();
+                    }
+                });
+    }
 }
