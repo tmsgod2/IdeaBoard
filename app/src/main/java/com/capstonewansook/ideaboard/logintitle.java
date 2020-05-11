@@ -112,6 +112,7 @@ public class logintitle extends AppCompatActivity {
         gSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Progressing();
                 GooglesignIn();
             }
         });
@@ -200,20 +201,25 @@ public class logintitle extends AppCompatActivity {
                             intent.putExtra("CustomerData", cus);
                             startActivity(intent);
                         }
+                        ProgressEnd();
                     }
                     catch (NullPointerException e){
                         DBCreate(user);
                         updateUI(user);
                     }
                 }
+
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
                     Log.d(TAG, "실패 " + mAuth.getCurrentUser().getUid().toString());
+
                 }
             });
+
+        }else{
+            ProgressEnd();
         }
-        ProgressEnd();
     }
 
     private void DBCreate(FirebaseUser user) {
@@ -251,4 +257,5 @@ public class logintitle extends AppCompatActivity {
         gSignInButton.setEnabled(true);
         signUpTextView.setEnabled(true);
     }
+
 }

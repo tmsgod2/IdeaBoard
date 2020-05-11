@@ -4,7 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/comment_recyclerview_layout">
+    android:background="@drawable/comment_recyclerview_layout"
+    android:foreground="?attr/selectableItemBackground">
+
+    <TextView
+        android:id="@+id/comment_delete_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="삭제"
+        android:textColor="@color/design_default_color_error"
+        app:layout_constraintEnd_toStartOf="@+id/comment_date_textView"
+        app:layout_constraintTop_toTopOf="@+id/comment_date_textView"
+        android:background="?attr/selectableItemBackground"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/comment_date_textView"
@@ -40,4 +53,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/comment_date_textView"
         />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -31,8 +31,12 @@ public class PostsFragment extends Fragment {
     private ArrayList<postsRecyclerViewData> postsList;
     private postsRecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
-    public static PostsFragment newInstance(){
-        return new PostsFragment();
+    String uid;
+    public PostsFragment(String uid){
+        this.uid = uid;
+    }
+    public static PostsFragment newInstance(String uid){
+        return new PostsFragment(uid);
     }
     @Nullable
     @Override
@@ -43,7 +47,7 @@ public class PostsFragment extends Fragment {
         postsList = new ArrayList<>();
 
         db.collection("posts")
-                .whereEqualTo("uid", MainActivity.uid)
+                .whereEqualTo("uid", uid)
                 .orderBy("date", Query.Direction.DESCENDING)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

@@ -63,7 +63,7 @@ public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecycler
         String content = arrayList.get(position).getContent();
         int star = arrayList.get(position).getStar();
 
-            StorageReference profileRef = storage.getReference().child("posts/" + arrayList.get(position).getUid()+"/image0");
+            StorageReference profileRef = storage.getReference().child("posts/" + arrayList.get(position).getBoardId()+"/image0");
             profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {

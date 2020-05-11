@@ -3,16 +3,36 @@ package com.capstonewansook.ideaboard.recyclerview;
 import java.util.Date;
 
 public class CommentRecyclerViewData implements Comparable<CommentRecyclerViewData> {
+    private String boardId;
+    private String commentId;
     private String uid;
     private String name;
     private Date date;
     private String content;
 
-    public CommentRecyclerViewData(String uid, String name, Date date, String content) {
+    public CommentRecyclerViewData(String boardId, String commentId, String uid, String name, Date date, String content) {
+        this.boardId = boardId;
+        this.commentId = commentId;
         this.uid = uid;
         this.name = name;
         this.date = date;
         this.content = content;
+    }
+
+    public String getBoardId() {
+        return boardId;
+    }
+
+    public void setBoardId(String boardId) {
+        this.boardId = boardId;
+    }
+
+    public String getCommentId() {
+        return commentId;
+    }
+
+    public void setCommentId(String commentId) {
+        this.commentId = commentId;
     }
 
     public String getUid() {
@@ -49,6 +69,6 @@ public class CommentRecyclerViewData implements Comparable<CommentRecyclerViewDa
 
     @Override
     public int compareTo(CommentRecyclerViewData c) {
-        return c.date.compareTo(this.date);
+        return this.date.compareTo(c.date);
     }
 }

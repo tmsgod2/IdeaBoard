@@ -2,6 +2,7 @@ package com.capstonewansook.ideaboard;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
@@ -16,10 +17,12 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,9 +31,15 @@ import com.bumptech.glide.Glide;
 import com.capstonewansook.ideaboard.recyclerview.CommentRecyclerViewAdapter;
 import com.capstonewansook.ideaboard.recyclerview.CommentRecyclerViewData;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -49,6 +58,7 @@ public class IdeamainActivity extends AppCompatActivity {
     String boardId;
     int star;
     int count;
+    TextView deleteTextView;
     ImageView profileImage;
     TextView titleTextView;
     TextView contentTextView;
@@ -60,11 +70,16 @@ public class IdeamainActivity extends AppCompatActivity {
     Button commentSubmitButton;
     ImageView commentExitImageView;
     LinearLayout imageLayout;
+    RelativeLayout loadingLayout;
+
+    final ArrayList<CommentRecyclerViewData> list = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ideamain);
+        loadingLayout = findViewById(R.id.loadingLayout);
+        loadingLayout.bringToFront();
 
         mainData = (IdeaMainData) getIntent().getSerializableExtra(IdeaMainIn.IDEAMAIN_KEY);
 
@@ -72,6 +87,7 @@ public class IdeamainActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("아이디어 게시판 창");
 
+        deleteTextView = findViewById(R.id.ideamain_delete_textView);
         profileImage = findViewById(R.id.ideamain_profile_imageView);
         titleTextView = findViewById(R.id.ideamain_title_textView);
         contentTextView = findViewById(R.id.ideamain_contents_textView);
@@ -83,6 +99,8 @@ public class IdeamainActivity extends AppCompatActivity {
         commentSubmitButton = findViewById(R.id.ideamain_comment_submit_button);
         commentExitImageView = findViewById(R.id.ideamain_comment_exit_imageView);
         imageLayout = findViewById(R.id.ideamain_image_linearlayout);
+
+
         boardId = mainData.boardId;
         uid = mainData.uid;
         titleTextView.setText(mainData.title);
@@ -106,6 +124,15 @@ public class IdeamainActivity extends AppCompatActivity {
                 } else {
                     starCheckBox.setBackgroundResource(R.drawable.ic_star_gold_24dp);
                 }
+        star = mainData.stars;
+
+        if(uid.equals(MainActivity.uid)){
+            deleteTextView.setVisibility(View.VISIBLE);
+        }
+        deleteTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                IsDelete();
             }
         });
         profileImage.setBackground(new ShapeDrawable((new OvalShape())));
@@ -147,14 +174,13 @@ public class IdeamainActivity extends AppCompatActivity {
                 KeboardOff();
             }
         });
-        final ArrayList<CommentRecyclerViewData> list = new ArrayList<>();
+
         commentSubmitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String comment = commentEditText.getText().toString();
-                if (comment.length() > 0 && !comment.equals("")) {
-                    list.add(new CommentRecyclerViewData(MainActivity.uid, MainActivity.cus.getName(), new Date(System.currentTimeMillis()), comment));
-                    RecyclerViewSet((RecyclerView) findViewById(R.id.ideamain_comment_recyclerView), new CommentRecyclerViewAdapter(list));
+                if(comment.length()>0&&!comment.equals("")){
+                    CommentWrite();
                     KeboardOff();
                 }
             }
@@ -162,8 +188,8 @@ public class IdeamainActivity extends AppCompatActivity {
 
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        list.add(new CommentRecyclerViewData("asdasdasd", "이앙", new Date(System.currentTimeMillis()), "asdasdasdasdasd"));
-        RecyclerViewSet((RecyclerView) findViewById(R.id.ideamain_comment_recyclerView), new CommentRecyclerViewAdapter(list));
+        // 댓글 리사이클러뷰 어뎁터 리스트 추가
+        CommentRead();
 
         if (mainData.imgLength > 0)
             ImageDownload();
@@ -325,7 +351,7 @@ public class IdeamainActivity extends AppCompatActivity {
         });
     }
 
-    private void ImageDownload() {
+    private void ImageDownload(){
         FirebaseStorage storage = FirebaseStorage.getInstance();
         for (int i = 0; i < mainData.imgLength; i++) {
             final ImageView image = new ImageView(getApplicationContext());
@@ -349,5 +375,78 @@ public class IdeamainActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    private void CommentRead(){
+        loadingLayout.setVisibility(View.VISIBLE);
+        list.clear();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(boardId).collection("comments")
+                .orderBy("date", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    if (task.getResult() != null) {
+                        for (QueryDocumentSnapshot snap : task.getResult()) {
+                            if (snap.get("name") != null) {
+                                list.add(new CommentRecyclerViewData(boardId,snap.getId(),snap.get("uid").toString(),snap.get("name").toString(),((Timestamp)snap.get("date")).toDate(),snap.get("content").toString()));
+                            }
+                        }
+                        if(!list.isEmpty()){
+                            RecyclerViewSet((RecyclerView)findViewById(R.id.ideamain_comment_recyclerView), new CommentRecyclerViewAdapter(list));
+                        }
+                        loadingLayout.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+    }
+
+    private void CommentWrite(){
+        loadingLayout.setVisibility(View.VISIBLE);
+        Map<String, Object> c = new HashMap<>();
+        c.put("uid", MainActivity.uid);
+        c.put("name", MainActivity.cus.getName());
+        c.put("date", (Object) FieldValue.serverTimestamp());
+        c.put("content", commentEditText.getText().toString());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(boardId).collection("comments").add(c)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        CommentRead();
+                    }
+                });
+    }
+
+    private void IsDelete(){
+        AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
+        alert_confirm.setMessage("삭제 하시겠습니까?").setCancelable(false).setPositiveButton("예",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        DeleteIdea();
+                    }
+                }).setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        return;
+                    }
+                });
+        AlertDialog alert = alert_confirm.create();
+        alert.show();
+
+    }
+
+    private void DeleteIdea(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(boardId).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        finish();
+                    }
+                });
     }
 }
