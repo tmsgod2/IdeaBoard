@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,20 +36,27 @@ public class IdeaFragment1 extends Fragment {
     FirebaseFirestore db;
     public StorageReference mStorageRef;
 
+
     private ArrayList<IdeaRecycletViewData> arrayList;
     private IdeaRecyclerViewAdapter mainAdapter;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
+    private SearchView searchV;
+
+
+
 
     @Nullable
     @Override
     //
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.ideafragment,container,false);
         rv=view.findViewById(R.id.rv_newidea);
         Context context = view.getContext();
         mStorageRef = FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
+
 
 
 
@@ -88,6 +96,8 @@ public class IdeaFragment1 extends Fragment {
 
 
 
+
+
         recyclerView = view.findViewById(R.id.rv_newidea);
         linearLayoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -99,5 +109,9 @@ public class IdeaFragment1 extends Fragment {
 //        arrayList.add( new IdeaRecycletViewData(R.drawable.idea_profile,"안드러이드","2000.1.1","13","10"));
 
         return view;
+    }
+
+    public void StartAdapter(String str){
+        mainAdapter.getFilter().filter(str);
     }
 }

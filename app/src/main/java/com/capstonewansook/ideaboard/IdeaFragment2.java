@@ -155,4 +155,8 @@ public class IdeaFragment2 extends Fragment {
             }
         });
     }
+
+    public void StartAdapter(String str){
+        mainAdapter.getFilter().filter(str);
+    }
 }

@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,14 +25,18 @@ import com.google.firebase.storage.StorageReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
-public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerViewAdapter.CustromViewHolder> {
+public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerViewAdapter.CustromViewHolder> implements Filterable {
     private ArrayList<IdeaRecycletViewData> arrayList;
+    private ArrayList<IdeaRecycletViewData> arrayListall;
     private FirebaseStorage storage;
 
     public IdeaRecyclerViewAdapter(ArrayList<IdeaRecycletViewData> arrayList) {
         storage = FirebaseStorage.getInstance();
         this.arrayList = arrayList;
+        this.arrayListall = new ArrayList<>(arrayList);
+
     }
 
     @NonNull
@@ -120,6 +126,53 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
         }
     }
 
+
+/////
+    public void dataSetChanged(ArrayList<IdeaRecycletViewData> exampleList) {
+        arrayList = exampleList;
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return exampleFilter;
+    }
+
+
+    private Filter exampleFilter = new Filter() {
+        //Automatic on background thread
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<IdeaRecycletViewData> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(arrayListall);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (IdeaRecycletViewData item : arrayListall) {
+                    //TODO filter 대상 setting
+                    if (item.getTv_story().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(item);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        //Automatic on UI thread
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            arrayList.clear();
+            arrayList.addAll((ArrayList) results.values);
+            notifyDataSetChanged();
+        }
+    };
+/////
+
+
+
     public class CustromViewHolder extends RecyclerView.ViewHolder {
         protected ImageView iv_profile;
         protected TextView tv_story;
@@ -145,4 +198,11 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
 
         }
     }
+
+/////
+    public interface onItemListener {
+        void onItemClicked(int position);
+        //void onItemClicked(ItemModel model); 모델값을 넘길수 있음
+        //다른버튼도 정의할 수 있음 onShareButtonClicked(int position);
+    }/////
 }

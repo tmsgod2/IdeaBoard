@@ -12,13 +12,18 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.capstonewansook.ideaboard.recyclerview.IdeaRecyclerViewAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-public class CleverIdeaBoard extends AppCompatActivity {
+public class CleverIdeaBoard extends AppCompatActivity implements IdeaRecyclerViewAdapter.onItemListener {
 
 
     boolean isManystar;
     FloatingActionButton newIdeaButton;
+    IdeaFragment1 fragment1;
+    IdeaFragment2 fragment2;
+    int flag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,7 +35,7 @@ public class CleverIdeaBoard extends AppCompatActivity {
 
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        SearchView searchView = findViewById(R.id.cleveridea_searchView);
+        final SearchView searchView = findViewById(R.id.cleveridea_searchView);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -39,7 +44,14 @@ public class CleverIdeaBoard extends AppCompatActivity {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                return true;
+
+                if(flag==1) {
+                    fragment1.StartAdapter(s);
+                }
+                else{
+                    fragment2.StartAdapter(s);
+                }
+                return false;
             }
         });
 
@@ -47,20 +59,22 @@ public class CleverIdeaBoard extends AppCompatActivity {
         isManystar = intent.getExtras().getBoolean("isManystar");
         RadioGroup rg = (RadioGroup)findViewById(R.id.rdgroup);
         if(!isManystar){
+            flag=1;
             rg.check(R.id.rb1_newidea);
             Bundle bundle = new Bundle();
             bundle.putString("fromFrag1","프레그먼트1");
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            IdeaFragment1 fragment1 = new IdeaFragment1();
+            fragment1 = new IdeaFragment1();
             fragment1.setArguments(bundle);
             transaction.replace(R.id.fr,fragment1);
             transaction.commit();
         }else {
+            flag=2;
             rg.check(R.id.rb2_newidea);
             Bundle bundle = new Bundle();
             bundle.putString("fromFrag2","프레그먼트2");
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            IdeaFragment2 fragment2 = new IdeaFragment2();
+            fragment2 = new IdeaFragment2();
             fragment2.setArguments(bundle);
             transaction.replace(R.id.fr,fragment2);
             transaction.commit();
@@ -73,18 +87,20 @@ public class CleverIdeaBoard extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 String result;
                 if(checkedId == R.id.rb1_newidea){
+                    flag=1;
                     Bundle bundle = new Bundle();
                     bundle.putString("fromFrag1","프레그먼트1");
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    IdeaFragment1 fragment1 = new IdeaFragment1();
+                    fragment1 = new IdeaFragment1();
                     fragment1.setArguments(bundle);
                     transaction.replace(R.id.fr,fragment1);
                     transaction.commit();
                 }else{
+                    flag=2;
                     Bundle bundle = new Bundle();
                     bundle.putString("fromFrag2","프레그먼트2");
                     FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    IdeaFragment2 fragment2 = new IdeaFragment2();
+                    fragment2 = new IdeaFragment2();
                     fragment2.setArguments(bundle);
                     transaction.replace(R.id.fr,fragment2);
                     transaction.commit();
@@ -101,6 +117,7 @@ public class CleverIdeaBoard extends AppCompatActivity {
                 startActivity(newIdeaIntent);
             }
         });
+
     }
 
     //상단의 뒤로가기 버튼 클릭시 뒤로 감
@@ -113,5 +130,12 @@ public class CleverIdeaBoard extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+    @Override
+    public void onItemClicked(int position) {
+
     }
 }
