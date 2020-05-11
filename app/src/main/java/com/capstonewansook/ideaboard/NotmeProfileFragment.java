@@ -100,7 +100,7 @@ public class NotmeProfileFragment extends Fragment {
         postTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment post = PostsFragment.newInstance();
+                Fragment post = PostsFragment.newInstance(uid);
                 ((MainActivity)getActivity()).replaceFragment(post);
             }
         });
@@ -108,7 +108,7 @@ public class NotmeProfileFragment extends Fragment {
         wantTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment post = PostsFragment.newInstance();
+                Fragment post = PostsFragment.newInstance(uid);
                 ((MainActivity)getActivity()).replaceFragment(post);
             }
         });

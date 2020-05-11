@@ -92,7 +92,8 @@ public class ProfileFragment extends Fragment {
         postTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment post = PostsFragment.newInstance();
+
+                Fragment post = PostsFragment.newInstance(MainActivity.uid);
                 ((MainActivity)getActivity()).replaceFragment(post);
                  MainActivity.fragmentStack.push(new FragmentData(post,R.id.profile_menu));
             }
@@ -102,7 +103,7 @@ public class ProfileFragment extends Fragment {
         wantTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment post = PostsFragment.newInstance();
+                Fragment post = PostsFragment.newInstance(MainActivity.uid);
                 ((MainActivity)getActivity()).replaceFragment(post);
                 MainActivity.fragmentStack.push(new FragmentData(post,R.id.profile_menu));
             }

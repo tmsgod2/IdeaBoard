@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/comment_menu_update"
+        android:title="수정하기" >
+        <menu>
+            <item android:title="apple"/>
+            <item android:title="babana"/>
+            <item android:title="remon"/>
+        </menu>
+    </item>
+    <item
+        android:id="@+id/comment_menu_delete"
+        android:title="삭제하기" >
+        <menu>
+            <item android:title="apple"/>
+            <item android:title="babana"/>
+            <item android:title="remon"/>
+        </menu>
+    </item>
+</menu>
