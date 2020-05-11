@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -30,19 +29,26 @@ import com.capstonewansook.ideaboard.recyclerview.CommentRecyclerViewAdapter;
 import com.capstonewansook.ideaboard.recyclerview.CommentRecyclerViewData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class IdeamainActivity extends AppCompatActivity {
-
+    private FirebaseFirestore db;
+    private boolean starCheck;
     private static final String TAG = "IdeamainActivity";
     IdeaMainData mainData;
     String uid;
     String boardId;
     int star;
+    int count;
     ImageView profileImage;
     TextView titleTextView;
     TextView contentTextView;
@@ -60,7 +66,7 @@ public class IdeamainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.ideamain);
 
-        mainData = (IdeaMainData)getIntent().getSerializableExtra(IdeaMainIn.IDEAMAIN_KEY);
+        mainData = (IdeaMainData) getIntent().getSerializableExtra(IdeaMainIn.IDEAMAIN_KEY);
 
         //상단 액션바의 뒤로가기 버튼을 위해 작성
         ActionBar actionBar = getSupportActionBar();
@@ -81,31 +87,42 @@ public class IdeamainActivity extends AppCompatActivity {
         uid = mainData.uid;
         titleTextView.setText(mainData.title);
         contentTextView.setText(mainData.content);
-        star = mainData.stars;
-
+        //star = 0; //mainData.stars;
+        count = 0;
+        db = FirebaseFirestore.getInstance();
+        FirebaseFirestore.getInstance().collection("users").document(MainActivity.uid).collection(boardId).document("Star").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                try {
+                    if (task.getResult() != null) {
+                        starCheck = (boolean) task.getResult().get("star");
+                        starCheckBox.setChecked(starCheck);
+                    }
+                } catch (NullPointerException e) {
+                    starCheckBox.setChecked(false);
+                }
+                if (starCheckBox.isChecked() == false) {
+                    starCheckBox.setBackgroundResource(R.drawable.ic_star_black_ranking);
+                } else {
+                    starCheckBox.setBackgroundResource(R.drawable.ic_star_gold_24dp);
+                }
+            }
+        });
         profileImage.setBackground(new ShapeDrawable((new OvalShape())));
         profileImage.setClipToOutline(true);
         starTextView.setText(String.valueOf(mainData.stars));
         starCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG,starCheckBox.isChecked()+"");
-                if(!starCheckBox.isChecked()){
-                    star--;
-                    Toast.makeText(getApplicationContext(), "추천을 취소하셨습니다.", Toast.LENGTH_SHORT).show();
-                    starTextView.setText(String.valueOf(star));
+                starCheckBox.setEnabled(false);
+                if(starCheckBox.isChecked()==false) {
+                    StarsUpdate(false);
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "추천을 하셨습니다.", Toast.LENGTH_SHORT).show();
-                    star++;
-                    starTextView.setText(String.valueOf(star));
+                    StarsUpdate(true);
                 }
-
             }
         });
-
-
-
         chatImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -135,9 +152,9 @@ public class IdeamainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String comment = commentEditText.getText().toString();
-                if(comment.length()>0&&!comment.equals("")){
-                    list.add(new CommentRecyclerViewData(MainActivity.uid, MainActivity.cus.getName(), new Date(System.currentTimeMillis()),comment));
-                    RecyclerViewSet((RecyclerView)findViewById(R.id.ideamain_comment_recyclerView),new CommentRecyclerViewAdapter(list));
+                if (comment.length() > 0 && !comment.equals("")) {
+                    list.add(new CommentRecyclerViewData(MainActivity.uid, MainActivity.cus.getName(), new Date(System.currentTimeMillis()), comment));
+                    RecyclerViewSet((RecyclerView) findViewById(R.id.ideamain_comment_recyclerView), new CommentRecyclerViewAdapter(list));
                     KeboardOff();
                 }
             }
@@ -145,10 +162,10 @@ public class IdeamainActivity extends AppCompatActivity {
 
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        list.add(new CommentRecyclerViewData("asdasdasd","이앙",new Date(System.currentTimeMillis()),"asdasdasdasdasd"));
-        RecyclerViewSet((RecyclerView)findViewById(R.id.ideamain_comment_recyclerView),new CommentRecyclerViewAdapter(list));
+        list.add(new CommentRecyclerViewData("asdasdasd", "이앙", new Date(System.currentTimeMillis()), "asdasdasdasdasd"));
+        RecyclerViewSet((RecyclerView) findViewById(R.id.ideamain_comment_recyclerView), new CommentRecyclerViewAdapter(list));
 
-        if(mainData.imgLength>0)
+        if (mainData.imgLength > 0)
             ImageDownload();
 
         setProfileImage();
@@ -158,7 +175,7 @@ public class IdeamainActivity extends AppCompatActivity {
     //상단의 뒤로가기 버튼 클릭시 뒤로 감
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -167,13 +184,13 @@ public class IdeamainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void RecyclerViewSet(RecyclerView recyclerView, RecyclerView.Adapter adapter){
+    private void RecyclerViewSet(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(adapter);
     }
 
     //댓글쓰기 버튼 클릭했을 때 에디트 텍스트랑 댓글 등록 버튼 활성화 밑 키보드 활성화
-    private void KeboardOn(){
+    private void KeboardOn() {
         commentEditText.setVisibility(View.VISIBLE);
         commentSubmitButton.setVisibility(View.VISIBLE);
         commentExitImageView.setVisibility(View.VISIBLE);
@@ -183,7 +200,7 @@ public class IdeamainActivity extends AppCompatActivity {
     }
 
     //댓글 쓰기 취소 시 에디트 텍스트, 댓글등록 버튼 비활성화, 키보드 비활성화
-    private void KeboardOff(){
+    private void KeboardOff() {
         commentEditText.setText("");
         commentEditText.setVisibility(View.GONE);
         commentSubmitButton.setVisibility(View.GONE);
@@ -192,17 +209,114 @@ public class IdeamainActivity extends AppCompatActivity {
         immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
     }
 
-    private void StarsUpdate(boolean isUp){
-
+    //추천
+    private void StarsUpdate(final boolean up) {
+        if(up == true) {
+            Map<String, Object> starfield = new HashMap<>();
+            starfield.put("star", true);
+            db.collection("users")
+                .document(MainActivity.uid)
+                .collection(boardId)
+                .document("Star")
+                .set(starfield);
+            Map<String, Object> starcollection = new HashMap<>();
+            starcollection.put("star", true);
+            db.collection("posts")
+                    .document(boardId)
+                    .collection("star")
+                    .document(MainActivity.uid)
+                    .set(starcollection)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            db.collection("posts")
+                                    .document(boardId)
+                                    .collection("star")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            star = 0;
+                                            for (DocumentSnapshot snap : task.getResult()) {
+                                                if ((boolean) snap.get("star") == true) {
+                                                    star += 1;
+                                                }
+                                            }
+                                            if (starCheckBox.isChecked() == false) {
+                                                starCheckBox.setBackgroundResource(R.drawable.ic_star_black_ranking);
+                                            } else {
+                                                starCheckBox.setBackgroundResource(R.drawable.ic_star_gold_24dp);
+                                            }
+                                            starTextView.setText(String.valueOf(star));
+                                            starCheckBox.setEnabled(true);
+                                            Map<String, Object> starplus = new HashMap<>();
+                                            starplus.put("stars", star);
+                                            db.collection("posts")
+                                                    .document(boardId)
+                                                    .update(starplus);
+                                        }
+                                    });
+                        }
+                    });
+        }
+        else
+        {
+            Map<String, Object> starfield = new HashMap<>();
+            starfield.put("star", false);
+            db.collection("users")
+                    .document(MainActivity.uid)
+                    .collection(boardId)
+                    .document("Star")
+                    .set(starfield);
+            Map<String, Object> starcollection = new HashMap<>();
+            starcollection.put("star", false);
+            db.collection("posts")
+                    .document(boardId)
+                    .collection("star")
+                    .document(MainActivity.uid)
+                    .set(starcollection)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            db.collection("posts")
+                                    .document(boardId)
+                                    .collection("star")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            star = 0;
+                                            for (DocumentSnapshot snap : task.getResult()) {
+                                                if ((boolean) snap.get("star") == true) {
+                                                    star += 1;
+                                                }
+                                            }
+                                            if (starCheckBox.isChecked() == false) {
+                                                starCheckBox.setBackgroundResource(R.drawable.ic_star_black_ranking);
+                                            } else {
+                                                starCheckBox.setBackgroundResource(R.drawable.ic_star_gold_24dp);
+                                            }
+                                            starTextView.setText(String.valueOf(star));
+                                            starCheckBox.setEnabled(true);
+                                            Map<String, Object> starplus = new HashMap<>();
+                                            starplus.put("stars", star);
+                                            db.collection("posts")
+                                                    .document(boardId)
+                                                    .update(starplus);
+                                        }
+                                    });
+                        }
+                    });
+        }
     }
 
-    private void setProfileImage(){
+    private void setProfileImage() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference profileRef = storage.getReference().child("users/" + uid + "/profileImage");
         profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Glide.with(getApplicationContext())
                             .load(task.getResult())
                             .into(profileImage);
@@ -211,22 +325,22 @@ public class IdeamainActivity extends AppCompatActivity {
         });
     }
 
-   private void ImageDownload(){
+    private void ImageDownload() {
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        for(int i = 0; i<mainData.imgLength;i++) {
+        for (int i = 0; i < mainData.imgLength; i++) {
             final ImageView image = new ImageView(getApplicationContext());
-            image.setLayoutParams(new LinearLayout.LayoutParams(300,300));
+            image.setLayoutParams(new LinearLayout.LayoutParams(300, 300));
             image.setScaleType(ImageView.ScaleType.CENTER_CROP);
             LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) image.getLayoutParams();
             params.leftMargin = 8;
             params.rightMargin = 8;
             image.setLayoutParams(params);
-            StorageReference imagefileRef = storage.getReference().child("posts/" + boardId + "/image" +i);
-            Log.d(TAG, "posts/" + boardId + "/image" +i);
+            StorageReference imagefileRef = storage.getReference().child("posts/" + boardId + "/image" + i);
+            Log.d(TAG, "posts/" + boardId + "/image" + i);
             imagefileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
-                    if(task.isSuccessful()){
+                    if (task.isSuccessful()) {
                         Glide.with(getApplicationContext())
                                 .load(task.getResult())
                                 .into(image);
