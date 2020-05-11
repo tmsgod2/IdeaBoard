@@ -28,11 +28,9 @@ public class NewpostData implements Serializable {
     public void setContent(String content) {        this.content = content;    }
     public void setDate(String date) {        this.date = date;    }
     public void setStars(int stars) {        this.stars = stars;    }
-
     public int getImages() {
         return images;
     }
-
     public void setImages(int images) {
         this.images = images;
     }
