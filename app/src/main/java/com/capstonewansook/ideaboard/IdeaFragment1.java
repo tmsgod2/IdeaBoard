@@ -110,7 +110,7 @@ public class IdeaFragment1 extends Fragment {
 
         return view;
     }
-
+//
     public void StartAdapter(String str){
         mainAdapter.getFilter().filter(str);
     }

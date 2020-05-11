@@ -57,7 +57,7 @@ public class CleverIdeaBoard extends AppCompatActivity implements IdeaRecyclerVi
 
         Intent intent = getIntent();
         isManystar = intent.getExtras().getBoolean("isManystar");
-        RadioGroup rg = (RadioGroup)findViewById(R.id.rdgroup);
+        RadioGroup rg = findViewById(R.id.rdgroup);
         if(!isManystar){
             flag=1;
             rg.check(R.id.rb1_newidea);

@@ -205,4 +205,4 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
         //void onItemClicked(ItemModel model); 모델값을 넘길수 있음
         //다른버튼도 정의할 수 있음 onShareButtonClicked(int position);
     }/////
-}
+}//

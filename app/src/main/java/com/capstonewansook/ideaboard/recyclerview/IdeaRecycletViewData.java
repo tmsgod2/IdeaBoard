@@ -1,7 +1,7 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
 import java.util.Date;
-
+//
 public class IdeaRecycletViewData {
 
     private  String iv_profill;
