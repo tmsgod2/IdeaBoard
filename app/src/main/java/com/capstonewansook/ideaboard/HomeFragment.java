@@ -32,64 +32,13 @@ public class HomeFragment extends Fragment {
     private ImageView manystarPlusImage;
     private ImageView newIdeaImage;
     FirebaseFirestore db;
-
+    ViewGroup rootView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
+        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_home, container, false);
 
         db = FirebaseFirestore.getInstance();
-
-        final ArrayList<HomeManystarRecyclerViewData> list = new ArrayList<>();
-
-        db.collection("posts").orderBy("stars", Query.Direction.DESCENDING).limit(5).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful())
-                        {
-                            if(task.getResult() != null)
-                            {
-                                for(QueryDocumentSnapshot snap: task.getResult()) {
-                                    if (snap.get("title") != null) {
-                                        list.add(new HomeManystarRecyclerViewData(snap.getId().toString(),snap.get("title").toString(),Integer.parseInt(snap.get("stars").toString())));
-
-                                    }
-                                }
-                                RecyclerViewSet(rootView,list, (RecyclerView) rootView.findViewById(R.id.home_manystar_recyclerView),new HomeManystarRecyclerViewAdapter(list),R.id.home_re_manystar_title_textview);
-                            }
-
-
-                        }
-                    }
-                });
-
-        final ArrayList<HomeNewideaRecyclerViewData> newlist = new ArrayList<>();
-        db.collection("posts").orderBy("date", Query.Direction.DESCENDING).limit(5).get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful())
-                        {
-                            if(task.getResult() != null)
-                            {
-                                for(QueryDocumentSnapshot snap: task.getResult()) {
-                                    if (snap.get("title") != null) {
-                                        newlist.add(new HomeNewideaRecyclerViewData(snap.getId().toString(),snap.get("title").toString(), ((Timestamp)snap.get("date")).toDate()));
-
-                                    }
-                                }
-                                RecyclerViewSet(rootView,newlist, (RecyclerView) rootView.findViewById(R.id.home_newidea_recyclerView),new HomeNewideaRecyclerViewAdapter(newlist),R.id.home_re_newidea_title_textView);
-                            }
-
-
-                        }
-                    }
-                });
-
-
-        RecyclerViewSet(rootView,list, (RecyclerView) rootView.findViewById(R.id.home_manystar_recyclerView),new HomeManystarRecyclerViewAdapter(list),R.id.home_re_manystar_title_textview);
-//        RecyclerViewSet(rootView,list1,(RecyclerView) rootView.findViewById(R.id.home_newidea_recyclerView),new HomeNewideaRecyclerViewAdapter(list1),R.id.home_re_newidea_title_textView);
 
         manystarPlusImage = (ImageView)rootView.findViewById(R.id.home_manystar_plus_imageView);
         manystarPlusImage.setOnClickListener(new View.OnClickListener() {
@@ -113,6 +62,57 @@ public class HomeFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        final ArrayList<HomeManystarRecyclerViewData> list = new ArrayList<>();
+
+        db.collection("posts").orderBy("stars", Query.Direction.DESCENDING).limit(5).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            if(task.getResult() != null)
+                            {
+                                for(QueryDocumentSnapshot snap: task.getResult()) {
+                                    if (snap.get("title") != null) {
+                                        list.add(new HomeManystarRecyclerViewData(snap.getId().toString(),snap.get("title").toString(),Integer.parseInt(snap.get("stars").toString())));
+
+                                    }
+                                }
+                                RecyclerViewSet(rootView,list, (RecyclerView) rootView.findViewById(R.id.home_manystar_recyclerView),new HomeManystarRecyclerViewAdapter(list),R.id.home_re_manystar_title_textview);
+                            }
+
+
+                        }
+                    }
+                });
+        final ArrayList<HomeNewideaRecyclerViewData> newlist = new ArrayList<>();
+        db.collection("posts").orderBy("date", Query.Direction.DESCENDING).limit(5).get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            if(task.getResult() != null)
+                            {
+                                for(QueryDocumentSnapshot snap: task.getResult()) {
+                                    if (snap.get("title") != null) {
+                                        newlist.add(new HomeNewideaRecyclerViewData(snap.getId().toString(),snap.get("title").toString(), ((Timestamp)snap.get("date")).toDate()));
+
+                                    }
+                                }
+                                RecyclerViewSet(rootView,newlist, (RecyclerView) rootView.findViewById(R.id.home_newidea_recyclerView),new HomeNewideaRecyclerViewAdapter(newlist),R.id.home_re_newidea_title_textView);
+                            }
+
+
+                        }
+                    }
+                });
+
     }
 
     private void RecyclerViewSet(final ViewGroup view, ArrayList list, RecyclerView recyclerView, RecyclerView.Adapter adapter, final int toastPosition){
