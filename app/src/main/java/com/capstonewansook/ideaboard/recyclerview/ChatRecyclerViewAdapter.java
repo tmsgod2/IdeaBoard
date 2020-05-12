@@ -98,6 +98,9 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                 Toast.makeText(holder.itemView.getContext(),mData.get(position).getChatroomID()+" " + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ChatBoardActivity.class);
+                intent.putExtra("rid",mData.get(position).getChatroomID());
+                intent.putExtra("uid2",mData.get(position).getUid2());
+                intent.putExtra("name",mData.get(position).getName());
                 context.startActivity(intent);
 
             }
