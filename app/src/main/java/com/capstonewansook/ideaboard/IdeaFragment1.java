@@ -44,8 +44,6 @@ public class IdeaFragment1 extends Fragment {
     private SearchView searchV;
 
 
-
-
     @Nullable
     @Override
     //
