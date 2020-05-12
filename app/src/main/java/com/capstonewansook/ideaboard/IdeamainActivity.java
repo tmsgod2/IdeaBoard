@@ -107,7 +107,8 @@ public class IdeamainActivity extends AppCompatActivity {
         //star = 0; //mainData.stars;
         count = 0;
         db = FirebaseFirestore.getInstance();
-        FirebaseFirestore.getInstance().collection("users").document(MainActivity.uid).collection(boardId).document("Star").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+        FirebaseFirestore.getInstance().collection("users").document(MainActivity.uid).collection("Star").document(boardId).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 try {
@@ -240,8 +241,8 @@ public class IdeamainActivity extends AppCompatActivity {
                     starfield.put("star", true);
                     db.collection("users")
                             .document(MainActivity.uid)
-                            .collection(boardId)
-                            .document("Star")
+                            .collection("Star")
+                            .document(boardId)
                             .set(starfield);
                     Map<String, Object> starcollection = new HashMap<>();
                     starcollection.put("star", true);
@@ -287,8 +288,8 @@ public class IdeamainActivity extends AppCompatActivity {
                     starfield.put("star", false);
                     db.collection("users")
                             .document(MainActivity.uid)
-                            .collection(boardId)
-                            .document("Star")
+                            .collection("Star")
+                            .document(boardId)
                             .set(starfield);
                     Map<String, Object> starcollection = new HashMap<>();
                     starcollection.put("star", false);

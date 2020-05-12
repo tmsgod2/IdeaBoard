@@ -19,7 +19,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 
 public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecyclerViewAdapter.ViewHolder>
 {
@@ -44,6 +47,7 @@ public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecycler
     public postsRecyclerViewAdapter(ArrayList<postsRecyclerViewData> arrayList) {
         storage = FirebaseStorage.getInstance();
         this.arrayList = arrayList;
+        Collections.sort(this.arrayList);
     }
     @NonNull
     @Override
@@ -59,7 +63,7 @@ public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecycler
     public void onBindViewHolder(@NonNull final postsRecyclerViewAdapter.ViewHolder holder, final int position) {
         int image2 = arrayList.get(position).getImage2();
         String name = arrayList.get(position).getName();
-        String yymmdd = arrayList.get(position).getYymmdd();
+        Date yymmdd = arrayList.get(position).getYymmdd();
         String content = arrayList.get(position).getContent();
         int star = arrayList.get(position).getStar();
 
@@ -80,7 +84,8 @@ public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecycler
 
 
         holder.imageView2.setImageResource(image2);
-        holder.textView1.setText(yymmdd);
+        // new SimpleDateFormat("yyyy년 MM월dd일 HH시 mm분").format((Timestamp) task.getResult().get("date")).toDate()
+        holder.textView1.setText( new SimpleDateFormat("yyyy년 MM월dd일 HH시 mm분").format(yymmdd));
         holder.textView2.setText(name);
         holder.textView3.setText(String.valueOf(star));
         holder.textView4.setText(content);
