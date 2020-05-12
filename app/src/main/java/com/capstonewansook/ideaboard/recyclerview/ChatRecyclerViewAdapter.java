@@ -26,6 +26,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
@@ -48,7 +49,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
     public ChatRecyclerViewAdapter(ArrayList<ChatRecyclerViewData> mData) {
         this.mData = mData;
-//        Collections.sort(mData);
+        Collections.sort(mData);
     }
 
     @NonNull
@@ -94,9 +95,9 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(holder.itemView.getContext(),mData.get(position).getChatroomID()+" " + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ChatBoardActivity.class);
-                Toast.makeText(context,mData.get(position).getChatroomID()+" " + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
                 context.startActivity(intent);
 
             }

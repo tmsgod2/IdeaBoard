@@ -17,19 +17,22 @@ import java.util.ArrayList;
 public class ChatFragment extends Fragment {
     String TAG = "h";
     ViewGroup rootView;
+    ChatroomData chatroomData=new ChatroomData(MainActivity.uid);
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView =(ViewGroup)inflater.inflate(R.layout.fragment_chat, container, false);
 
-
-        RecyclerViewSet(rootView,MainActivity.chatroomData.getChatrooms(),(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),
-                new ChatRecyclerViewAdapter(MainActivity.chatroomData.getChatrooms()),R.id.chat_re_name_textView);
-
         return  rootView;
+
     }
 
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        RecyclerViewSet(rootView,chatroomData.getChatrooms(),(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),
+                new ChatRecyclerViewAdapter(chatroomData.getChatrooms()),R.id.chat_re_name_textView);
+    }
 
     private void RecyclerViewSet(final ViewGroup view, ArrayList list, RecyclerView recyclerView, RecyclerView.Adapter adapter, final int toastPosition){
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
