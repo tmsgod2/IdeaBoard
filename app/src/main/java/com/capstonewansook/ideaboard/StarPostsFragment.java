@@ -1,7 +1,6 @@
 package com.capstonewansook.ideaboard;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,25 +16,25 @@ import com.capstonewansook.ideaboard.recyclerview.postsRecyclerViewData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 
-public class PostsFragment extends Fragment {
+public class StarPostsFragment extends Fragment {
     private FirebaseFirestore db;
     private final static String TAG = null;
     private ArrayList<postsRecyclerViewData> postsList;
     private postsRecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
     String uid;
-    public PostsFragment(String uid){
+    public StarPostsFragment(String uid){
         this.uid = uid;
     }
-    public static PostsFragment newInstance(String uid){
-        return new PostsFragment(uid);
+    public static StarPostsFragment newInstance(String uid){
+        return new StarPostsFragment(uid);
     }
     @Nullable
     @Override
@@ -44,32 +43,36 @@ public class PostsFragment extends Fragment {
         db = FirebaseFirestore.getInstance().getInstance();
 
         postsList = new ArrayList<>();
-
-        db.collection("posts")
-                .whereEqualTo("uid", uid)
-                .orderBy("date", Query.Direction.DESCENDING)
+        db.collection("users")
+                .document(uid)
+                .collection("Star")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                postsList.add(new postsRecyclerViewData(document.getId(),R.drawable.ic_star_gold_24dp,
-                                        document.get("title").toString() , document.get("content").toString()
-                                        ,((Timestamp)document.get("date")).toDate(),
-                                        Integer.parseInt(document.get("stars").toString())
-                                        ,document.get("content").toString()));
+                        for (final QueryDocumentSnapshot document : task.getResult()) {
+                            if ((boolean)document.get("star") == true) {
+                                FirebaseFirestore.getInstance().getInstance().collection("posts")
+                                        .document(document.getId())
+                                        .get()
+
+                                        .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                postsList.add(new postsRecyclerViewData(task.getResult().getId(), R.drawable.ic_star_gold_24dp,
+                                                        task.getResult().get("title").toString(), task.getResult().get("content").toString()
+                                                        ,((Timestamp) task.getResult().get("date")).toDate(),
+                                                        Integer.parseInt(task.getResult().get("stars").toString())
+                                                        , task.getResult().get("content").toString()));
+                                                adapter = new postsRecyclerViewAdapter(postsList);
+                                                recyclerView.setAdapter(adapter);
+                                            }
+                                        });
                             }
-                            adapter = new postsRecyclerViewAdapter(postsList);
-                            recyclerView.setAdapter(adapter);
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
-
                     }
-                });
 
-//        Log.d(TAG, "되나");
+                });
         recyclerView = viewGroup.findViewById(R.id.posts_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(viewGroup.getContext()));
 
