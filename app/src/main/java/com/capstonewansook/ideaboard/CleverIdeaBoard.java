@@ -138,4 +138,27 @@ public class CleverIdeaBoard extends AppCompatActivity implements IdeaRecyclerVi
     public void onItemClicked(int position) {
 
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(flag==1){
+            Bundle bundle = new Bundle();
+            bundle.putString("fromFrag1","프레그먼트1");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            fragment1 = new IdeaFragment1();
+            fragment1.setArguments(bundle);
+            transaction.replace(R.id.fr,fragment1);
+            transaction.commit();
+        }else{
+            Bundle bundle = new Bundle();
+            bundle.putString("fromFrag2","프레그먼트2");
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            fragment2 = new IdeaFragment2();
+            fragment2.setArguments(bundle);
+            transaction.replace(R.id.fr,fragment2);
+            transaction.commit();
+
+        }
+    }
 }
