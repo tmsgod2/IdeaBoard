@@ -11,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstonewansook.ideaboard.MainActivity;
 import com.capstonewansook.ideaboard.R;
 
 import java.text.SimpleDateFormat;
@@ -51,6 +54,15 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         holder.dateText.setText(format.format(date));
         holder.profileImage.setImageBitmap(profile);
 
+        if(mData.get(position).getUid().equals(MainActivity.uid)){
+            holder.nameText.setVisibility(View.INVISIBLE);
+            holder.profileImage.setVisibility(View.INVISIBLE);
+            holder.dateText.setVisibility(View.GONE);
+            holder.dateMeText.setVisibility(View.VISIBLE);
+            ConstraintSet set = new ConstraintSet();
+            ConstraintLayout constraintLayout =
+        }
+
     }
 
     @Override
@@ -59,16 +71,20 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        ConstraintLayout con;
         ImageView profileImage;
         TextView nameText;
         TextView messageText;
         TextView dateText;
+        TextView dateMeText;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            con = itemView.
             profileImage = itemView.findViewById(R.id.chat_bubble_re_profile_imageView);
             nameText = itemView.findViewById(R.id.chat_bubble_re_name_textView);
             messageText = itemView.findViewById(R.id.chat_bubble_re_message_textView);
             dateText = itemView.findViewById(R.id.chat_bubble_re_date_textView);
+            dateMeText = itemView.findViewById(R.id.chat_bubble_re_me_date_textView);
             profileImage.setBackground(new ShapeDrawable((new OvalShape())));
             profileImage.setClipToOutline(true);
         }

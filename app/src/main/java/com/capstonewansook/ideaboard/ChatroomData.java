@@ -30,10 +30,9 @@ public class ChatroomData {
         Date date;
         String message;
 
-        public ChatrData(String rid, String uid, Date date) {
+        public ChatrData(String rid, String uid) {
             this.rid = rid;
             this.uid = uid;
-            this.date = date;
         }
 
         public String getRid() {
@@ -91,11 +90,11 @@ public class ChatroomData {
                             if(task.getResult() != null) {
                                 for (QueryDocumentSnapshot snap: task.getResult()){
                                     if(snap.get("uid1").toString().equals(uid)){
-                                        data.add(new ChatrData(snap.getId(), snap.get("uid2").toString(),((Timestamp)snap.get("date")).toDate()));
+                                        data.add(new ChatrData(snap.getId(), snap.get("uid2").toString()));
 
                                     }
                                     else if(snap.get("uid2").toString().equals(uid)){
-                                        data.add(new ChatrData(snap.getId(), snap.get("uid1").toString(),((Timestamp)snap.get("date")).toDate()));
+                                        data.add(new ChatrData(snap.getId(), snap.get("uid1").toString()));
                                     }
 
                                 }
@@ -139,11 +138,13 @@ public class ChatroomData {
                                 if (!task.getResult().isEmpty()) {
                                     for (QueryDocumentSnapshot snap : task.getResult()) {
                                         data.get(finalI).setMessage(snap.get("message").toString());
+                                        data.get(finalI).setDate(((Timestamp)snap.get("date")).toDate());
                                         Log.d("ChatroomData", "메시지 불러오기 성공" + snap.get("message"));
                                     }
                                 }
                                 else{
                                     data.get(finalI).setMessage("");
+                                    data.get(finalI).setDate(null);
                                     Log.d("ChatroomData", "메시지 불러오기 실패");
                                 }
                                 check++;
