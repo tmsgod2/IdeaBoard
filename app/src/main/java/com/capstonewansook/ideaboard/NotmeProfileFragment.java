@@ -142,8 +142,7 @@ public class NotmeProfileFragment extends Fragment {
 
                                         } else if (chekroom == 0) {
                                             chatroomData = new ChatroomData(MainActivity.uid, uid);
-                                            Log.d("mtag", uids.toString());
-                                            Log.d("mtag", uids2.toString());
+
 
                                         }
                                     }

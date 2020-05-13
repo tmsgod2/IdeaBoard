@@ -120,7 +120,6 @@ public class ChatroomData {
         data.put("date", FieldValue.serverTimestamp());
         data.put("uid1",uid);
         data.put("uid2",uid2);
-
         db = FirebaseFirestore.getInstance();
         db.collection("chatrooms").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
