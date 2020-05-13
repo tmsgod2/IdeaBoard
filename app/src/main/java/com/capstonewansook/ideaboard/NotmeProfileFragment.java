@@ -163,7 +163,8 @@ public class NotmeProfileFragment extends Fragment {
         wantTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment post = PostsFragment.newInstance(uid);
+                Log.d("NotmeProfileFragment",uid+"되나");
+                Fragment post = StarPostsFragment.newInstance(uid);
                 ((MainActivity)getActivity()).replaceFragment(post);
             }
         });
