@@ -60,7 +60,9 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
             holder.dateText.setVisibility(View.GONE);
             holder.dateMeText.setVisibility(View.VISIBLE);
             ConstraintSet set = new ConstraintSet();
-            ConstraintLayout constraintLayout =
+            set.clone(holder.con);
+            set.setHorizontalBias(holder.messageText.getImeActionId(), 1.0f);
+            set.applyTo(holder.con);
         }
 
     }
@@ -79,7 +81,7 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         TextView dateMeText;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            con = itemView.
+            con = itemView.findViewById(R.id.chat_bubble_re_layout);
             profileImage = itemView.findViewById(R.id.chat_bubble_re_profile_imageView);
             nameText = itemView.findViewById(R.id.chat_bubble_re_name_textView);
             messageText = itemView.findViewById(R.id.chat_bubble_re_message_textView);
