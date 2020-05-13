@@ -70,7 +70,11 @@ public class IdeamainActivity extends AppCompatActivity {
     ImageView commentExitImageView;
     LinearLayout imageLayout;
     RelativeLayout loadingLayout;
+    ChatroomData chatroomData;
 
+    final ArrayList<String> uids = new ArrayList<>();
+    final ArrayList<String> uids2 = new ArrayList<>();
+    private int chekroom;
     final ArrayList<CommentRecyclerViewData> list = new ArrayList<>();
 
     @Override
@@ -153,6 +157,53 @@ public class IdeamainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                         Intent chatIntent = new Intent(getApplicationContext(), ChatBoardActivity.class);
                         startActivity(chatIntent);
+                        db.collection("chatrooms").get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if(task.isSuccessful()){
+                                            if(task.getResult() != null) {
+                                                for (QueryDocumentSnapshot snap: task.getResult()){
+                                                    uids.add(snap.get("uid1").toString());
+                                                    uids2.add(snap.get("uid2").toString());
+
+                                                }
+                                                Log.d("mi",MainActivity.uid);
+                                                for(String s : uids){
+                                                    for(String sd : uids2) {
+                                                        if (s.equals(MainActivity.uid) && s.equals(uid)) {
+                                                            chekroom = 1;
+                                                            break;
+                                                        }
+                                                        else if(s.equals(uid)&&sd.equals(MainActivity.uid)){
+                                                            chekroom = 1;
+                                                            break;
+                                                        }
+                                                        else if(!s.equals(MainActivity.uid)&&!sd.equals(uid)){
+                                                            chekroom = 0;
+                                                            break;
+                                                        }
+                                                        else if(!s.equals(uid)&&!sd.equals(MainActivity.uid)){
+                                                            chekroom = 0;
+                                                            break;
+                                                        }
+                                                    }break;
+                                                }
+
+                                                if (chekroom == 1) {
+                                                    chatroomData = new ChatroomData(MainActivity.uid);
+
+                                                } else if (chekroom == 0) {
+                                                    chatroomData = new ChatroomData(MainActivity.uid, uid);
+                                                    Log.d("mtag", uids.toString());
+                                                    Log.d("mtag", uids2.toString());
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+
 
                     }
                 });
