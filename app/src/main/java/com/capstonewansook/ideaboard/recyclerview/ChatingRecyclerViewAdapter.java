@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstonewansook.ideaboard.MainActivity;
@@ -31,12 +30,24 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         this.profile = profile;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+//        return super.getItemViewType(position);
+        if(mData.get(position).getUid().equals(MainActivity.uid)){
+            return 1;
+        }else
+            return 2;
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(R.layout.chat_bubble_me_recyclerview,parent,false);
+        View view = inflater.inflate(R.layout.chat_bubble_you_recyclerview,parent,false);
+//        if(viewType == 1){
+//            view = inflater.inflate(R.layout.chat_bubble_me_recyclerview,parent,false);
+//        }
         ChatingRecyclerViewAdapter.ViewHolder vh = new ChatingRecyclerViewAdapter.ViewHolder(view);
         return vh;
     }
@@ -54,16 +65,6 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         holder.dateText.setText(format.format(date));
         holder.profileImage.setImageBitmap(profile);
 
-        if(mData.get(position).getUid().equals(MainActivity.uid)){
-            holder.nameText.setVisibility(View.INVISIBLE);
-            holder.profileImage.setVisibility(View.INVISIBLE);
-            holder.dateText.setVisibility(View.GONE);
-            holder.dateMeText.setVisibility(View.VISIBLE);
-            ConstraintSet set = new ConstraintSet();
-            set.clone(holder.con);
-            set.setHorizontalBias(holder.messageText.getImeActionId(), 1.0f);
-            set.applyTo(holder.con);
-        }
 
     }
 
