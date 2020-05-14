@@ -88,7 +88,7 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
         holder.tv_story.setText(arrayList.get(position).getTv_story());
         holder.tv_day.setText(format.format(date));
         holder.tv_recomand.setText(arrayList.get(position).getTv_recomand());
-//        holder.tv_write.setText(arrayList.get(position).getTv_write());
+        holder.tv_write.setText(arrayList.get(position).getTv_write());
 
         holder.itemView.setTag(position);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
