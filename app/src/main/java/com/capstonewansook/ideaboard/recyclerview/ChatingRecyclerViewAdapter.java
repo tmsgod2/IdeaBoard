@@ -32,7 +32,6 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
 
     @Override
     public int getItemViewType(int position) {
-//        return super.getItemViewType(position);
         if(mData.get(position).getUid().equals(MainActivity.uid)){
             return 1;
         }else
@@ -45,9 +44,9 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         Context context = parent.getContext();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.chat_bubble_you_recyclerview,parent,false);
-//        if(viewType == 1){
-//            view = inflater.inflate(R.layout.chat_bubble_me_recyclerview,parent,false);
-//        }
+        if(viewType == 1){
+            view = inflater.inflate(R.layout.chat_bubble_me_recyclerview,parent,false);
+        }
         ChatingRecyclerViewAdapter.ViewHolder vh = new ChatingRecyclerViewAdapter.ViewHolder(view);
         return vh;
     }
@@ -58,13 +57,13 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         String name = mData.get(position).getName();
         String message = mData.get(position).getMessage();
         Date date = mData.get(position).getDate();
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
 
         holder.nameText.setText(name);
         holder.messageText.setText(message);
         holder.dateText.setText(format.format(date));
         holder.profileImage.setImageBitmap(profile);
-
+        holder.dateMeText.setText(format.format(date));
 
     }
 
