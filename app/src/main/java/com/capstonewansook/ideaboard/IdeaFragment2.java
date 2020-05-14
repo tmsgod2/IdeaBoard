@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,10 @@ import com.google.firebase.storage.StorageReference;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+//
 //인기순
 public class IdeaFragment2 extends Fragment {
     private View view;
@@ -45,6 +49,7 @@ public class IdeaFragment2 extends Fragment {
     private TextView tv;
     FirebaseAuth Ath = FirebaseAuth.getInstance();
     FirebaseFirestore db;
+    int comNum;
 
     private ArrayList<IdeaRecycletViewData> arrayList;
     private IdeaRecyclerViewAdapter mainAdapter;
@@ -60,15 +65,11 @@ public class IdeaFragment2 extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.ideafragment2,container,false);
         rv=view.findViewById(R.id.rv_newidea);
-//        Context context = view.getContext();
         mStorageRef = FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
 
 
-//        recyclerView = view.findViewById(R.id.rv_newidea);
-//        linearLayoutManager = new LinearLayoutManager(context);
-//        recyclerView.setLayoutManager(linearLayoutManager);
-//        mainAdapter = new IdeaRecyclerViewAdapter(arrayList);
+
 
         arrayList = new ArrayList<>();
 
@@ -87,13 +88,10 @@ public class IdeaFragment2 extends Fragment {
                                 for(QueryDocumentSnapshot snap: task.getResult()) {
                                     if (snap.get("date") instanceof Timestamp) {
 //                                        Toast.makeText(getActivity(), "환영합니다! " + snap.get("uid").toString(),Toast.LENGTH_LONG).show();
-                                        arrayList.add(new IdeaRecycletViewData(snap.get("uid").toString(), snap.get("title").toString(), ((Timestamp)snap.get("date")).toDate(), snap.get("stars").toString(),"1",snap.getId()));
+                                        CommentCal(snap.get("uid").toString(), snap.get("title").toString(), ((Timestamp)snap.get("date")).toDate(), snap.get("stars").toString(),snap.getId());
 
                                     }
                                 }
-//                                final RecyclerView recyclerView = view.findViewById(R.id.rv_newidea);
-//                                recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-//                                IdeaRecyclerViewAdapter adapter = new IdeaRecyclerViewAdapter(arrayList);
 
 
                                 recyclerView = view.findViewById(R.id.rv_newidea);
@@ -121,9 +119,6 @@ public class IdeaFragment2 extends Fragment {
 
 
 
-//        mainAdapter = new IdeaRecyclerViewAdapter(arrayList);
-//        recyclerView.setAdapter(mainAdapter);
-//        arrayList.add( new IdeaRecycletViewData(R.drawable.idea_profile,"안드러이드","2011.1.1",R.drawable.heart,R.drawable.comment,"13","10"));
 
 
 
@@ -158,5 +153,56 @@ public class IdeaFragment2 extends Fragment {
 //
     public void StartAdapter(String str){
         mainAdapter.getFilter().filter(str);
+    }
+
+
+
+
+    public void CommentCal(final String iv_profill, final String tv_story, final Date tv_day, final String tv_recomand, final String id){
+        comNum = 0;
+        Log.d(TAG, id +"???????\n");
+
+        db.collection("posts").document(id).collection("comments").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            if(task.getResult() != null)
+                            {
+
+
+                                for(QueryDocumentSnapshot snap: task.getResult()) {
+                                    comNum = comNum+ 1;
+                                    Log.d(TAG, comNum + "???????\n");
+                                }
+
+                            }
+
+                        }
+                        arrayList.add(new IdeaRecycletViewData(iv_profill, tv_story, tv_day, tv_recomand,Integer.toString(comNum),id));
+                        comNum = 0;
+
+                        recyclerView = view.findViewById(R.id.rv_newidea);
+                        linearLayoutManager = new LinearLayoutManager(view.getContext());
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        Collections.sort(arrayList, new Comparator<IdeaRecycletViewData>() {
+                            @Override
+                            public int compare(IdeaRecycletViewData o1, IdeaRecycletViewData o2) {
+                              return -(Integer.parseInt(o1.getTv_recomand())-Integer.parseInt(o2.getTv_recomand()));
+                            }
+                        });
+                        mainAdapter = new IdeaRecyclerViewAdapter(arrayList);
+                        recyclerView.setAdapter(mainAdapter);
+
+                    }
+
+
+
+                });
+
+
+
+
     }
 }

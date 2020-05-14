@@ -2,6 +2,7 @@ package com.capstonewansook.ideaboard;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,13 +29,21 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 public class IdeaFragment1 extends Fragment {
     private View view;
     private RecyclerView rv;
     private TextView tv;
     FirebaseFirestore db;
+    FirebaseFirestore db2;
     public StorageReference mStorageRef;
+    String TAG = "aaaaaaaaa";
+
+    int comNum;
 
 
     private ArrayList<IdeaRecycletViewData> arrayList;
@@ -54,6 +63,8 @@ public class IdeaFragment1 extends Fragment {
         Context context = view.getContext();
         mStorageRef = FirebaseStorage.getInstance().getReference();
         db = FirebaseFirestore.getInstance();
+        db2 = FirebaseFirestore.getInstance();
+
 
 
 
@@ -66,23 +77,17 @@ public class IdeaFragment1 extends Fragment {
                         {
                             if(task.getResult() != null)
                             {
+
+
                                 for(QueryDocumentSnapshot snap: task.getResult()) {
                                     if (snap.get("date") instanceof Timestamp) {
-//                                        Toast.makeText(getActivity(), "환영합니다! " + snap.get("uid").toString(),Toast.LENGTH_LONG).show();
-                                        arrayList.add(new IdeaRecycletViewData(snap.get("uid").toString(), snap.get("title").toString(), ((Timestamp)snap.get("date")).toDate(), snap.get("stars").toString(),"1",snap.getId()));
+
+//                                        arrayList.add(new IdeaRecycletViewData(snap.get("uid").toString(), snap.get("title").toString(), ((Timestamp)snap.get("date")).toDate(), snap.get("stars").toString(), Integer.toString(CommentCal(snap.getId())),snap.getId()));
+                                        CommentCal(snap.get("uid").toString(), snap.get("title").toString(), ((Timestamp)snap.get("date")).toDate(), snap.get("stars").toString(),snap.getId());
 
                                     }
                                 }
-//                                final RecyclerView recyclerView = view.findViewById(R.id.rv_newidea);
-//                                recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-//                                IdeaRecyclerViewAdapter adapter = new IdeaRecyclerViewAdapter(arrayList);
 
-
-                                recyclerView = view.findViewById(R.id.rv_newidea);
-                                linearLayoutManager = new LinearLayoutManager(view.getContext());
-                                recyclerView.setLayoutManager(linearLayoutManager);
-                                mainAdapter = new IdeaRecyclerViewAdapter(arrayList);
-                                recyclerView.setAdapter(mainAdapter);
                             }
 
 
@@ -92,7 +97,7 @@ public class IdeaFragment1 extends Fragment {
 
 
 
-
+//
 
 
 
@@ -104,7 +109,6 @@ public class IdeaFragment1 extends Fragment {
 
         mainAdapter = new IdeaRecyclerViewAdapter(arrayList);
         recyclerView.setAdapter(mainAdapter);
-//        arrayList.add( new IdeaRecycletViewData(R.drawable.idea_profile,"안드러이드","2000.1.1","13","10"));
 
         return view;
     }
@@ -112,4 +116,56 @@ public class IdeaFragment1 extends Fragment {
     public void StartAdapter(String str){
         mainAdapter.getFilter().filter(str);
     }
+
+
+
+    public void CommentCal(final String iv_profill, final String tv_story, final Date tv_day, final String tv_recomand, final String id){
+        comNum = 0;
+        Log.d(TAG, id +"???????\n");
+
+        db.collection("posts").document(id).collection("comments").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful())
+                        {
+                            if(task.getResult() != null)
+                            {
+
+
+                                for(QueryDocumentSnapshot snap: task.getResult()) {
+                                    comNum = comNum+ 1;
+                                    Log.d(TAG, comNum + "???????\n");
+                                }
+//
+                            }
+
+                        }
+                        arrayList.add(new IdeaRecycletViewData(iv_profill, tv_story, tv_day, tv_recomand,Integer.toString(comNum),id));
+                        comNum = 0;
+
+                        recyclerView = view.findViewById(R.id.rv_newidea);
+                        linearLayoutManager = new LinearLayoutManager(view.getContext());
+                        recyclerView.setLayoutManager(linearLayoutManager);
+                        Collections.sort(arrayList, new Comparator<IdeaRecycletViewData>() {
+                            @Override
+                            public int compare(IdeaRecycletViewData o1, IdeaRecycletViewData o2) {
+                               return o1.getTv_day().compareTo(o2.getTv_day());
+                            }
+                        });
+                        Collections.reverse(arrayList);
+                        mainAdapter = new IdeaRecyclerViewAdapter(arrayList);
+                        recyclerView.setAdapter(mainAdapter);
+
+                    }
+
+
+
+                });
+
+
+//
+
+    }
+
 }
