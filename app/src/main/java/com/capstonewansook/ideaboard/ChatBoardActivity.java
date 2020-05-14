@@ -185,8 +185,10 @@ public class ChatBoardActivity extends AppCompatActivity {
                             Log.w(TAG,"실패",e);
                             return;
                         }
+                        boolean isSame = true;
                         for(QueryDocumentSnapshot doc:queryDocumentSnapshots){
-                            Date date = ((Timestamp)doc.get("date")).toDate();
+
+                            Log.d(TAG,"");
                             String getUid = doc.get("fromid").toString();
                             String getName = "";
                             if(getUid.equals(uid2)){
@@ -195,10 +197,14 @@ public class ChatBoardActivity extends AppCompatActivity {
                             else{
                                 getName = MainActivity.cus.getName();
                             }
-                            if(!chatingList.get(chatingList.size()-1).getChatId().equals(doc.getId()))
-                            chatingList.add(new ChatingRecyclerViewData(doc.getId(),getName,getUid,doc.get("message").toString(),date));
+                            if(!chatingList.get(chatingList.size()-1).getChatId().equals(doc.getId())) {
+                                isSame = false;
+//                                Date date = ((Timestamp)doc.get("date")).toDate();
+                                chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(),new Date(System.currentTimeMillis())));
+                            }
 
                         }
+                        if(!isSame)
                         adapter.notifyItemInserted(chatingList.size()-1);
                     }
                 });
