@@ -31,10 +31,10 @@ public class ChatFragment extends Fragment {
     public void onStart() {
         super.onStart();
         RecyclerViewSet(rootView,chatroomData.getChatrooms(),(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),
-                new ChatRecyclerViewAdapter(chatroomData.getChatrooms()),R.id.chat_re_name_textView);
+                new ChatRecyclerViewAdapter(chatroomData.getChatrooms()));
     }
 
-    private void RecyclerViewSet(final ViewGroup view, ArrayList list, RecyclerView recyclerView, RecyclerView.Adapter adapter, final int toastPosition){
+    private void RecyclerViewSet(final ViewGroup view, ArrayList list, RecyclerView recyclerView, RecyclerView.Adapter adapter){
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
     }
