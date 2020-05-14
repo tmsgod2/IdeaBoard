@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
+//
 public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerViewAdapter.CustromViewHolder> implements Filterable {
     private ArrayList<IdeaRecycletViewData> arrayList;
     private ArrayList<IdeaRecycletViewData> arrayListall;

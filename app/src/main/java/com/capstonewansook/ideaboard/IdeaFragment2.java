@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-
+//
 //인기순
 public class IdeaFragment2 extends Fragment {
     private View view;
