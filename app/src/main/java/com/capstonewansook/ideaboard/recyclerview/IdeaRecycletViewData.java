@@ -70,5 +70,5 @@ public class IdeaRecycletViewData {
         this.tv_write = tv_write;
     }
 
-
+//
 }
