@@ -4,16 +4,24 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -44,6 +52,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ChatBoardActivity extends AppCompatActivity {
+    private ListView listView;
+    private DrawerLayout drawer;
+    private ListView listview ;
+    private ChatlistAdapter chatlistAdapter;
     private static final String TAG = "ChatBoardActivity";
 
     String roomId;
@@ -140,9 +152,34 @@ public class ChatBoardActivity extends AppCompatActivity {
 
                     }
                 });
+        actionBar.setTitle("누구누구 채팅방");
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+
+        drawer = (DrawerLayout) findViewById(R.id.chatdrawer);
+        drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        chatlistAdapter = new ChatlistAdapter() ;
+        chatlistAdapter.addItem(2,"채팅방 서랍") ;
+        chatlistAdapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_photo_size_select_actual_black_24dp),"사진",ContextCompat.getDrawable(this, R.drawable.ic_chevron_right_black_24dp)) ;
+        chatlistAdapter.addItem(1,"알림설정") ;
+        chatlistAdapter.addItem(null,"나가기",ContextCompat.getDrawable(this, R.drawable.ic_chevron_right_black_24dp)) ;
+        listView = (ListView) findViewById(R.id.drawer_chat) ;
+        listView.setAdapter(chatlistAdapter) ;
+        listView.setOnItemClickListener(new ListView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView parent, View v, int position, long id) {
+                drawer.closeDrawer(Gravity.RIGHT) ;
+
+            }
+        });
+
+
     }
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chat_manu,menu);
+        return true;
+    }
+
 
     //상단의 뒤로가기 버튼 클릭시 뒤로 감
     @Override
@@ -150,6 +187,9 @@ public class ChatBoardActivity extends AppCompatActivity {
         switch(item.getItemId()){
             case android.R.id.home:
                 onBackPressed();
+                return true;
+            case R.id.chatmanbutton:
+                drawer.openDrawer(Gravity.RIGHT);
                 return true;
         }
 
