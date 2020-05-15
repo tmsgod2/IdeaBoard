@@ -26,7 +26,6 @@ import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
@@ -49,7 +48,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
     public ChatRecyclerViewAdapter(ArrayList<ChatRecyclerViewData> mData) {
         this.mData = mData;
-        Collections.sort(mData);
+//        Collections.sort(mData);
     }
 
     @NonNull
@@ -74,8 +73,12 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 //        holder.profileImage.setImageResource(profile);
         holder.nameText.setText(name);
         holder.messageText.setText(message);
-        holder.dateText.setText(format.format(date));
-
+        try {
+            holder.dateText.setText(format.format(date));
+        }
+        catch (NullPointerException e){
+            holder.dateText.setText("");
+        }
 
         Log.d("ChatRecyclerViewAdapter",mData.get(position).getUid2());
         StorageReference profileRef = storage.getReference().child("users/"+mData.get(position).getUid2()+"/profileImage.jpg");
@@ -98,6 +101,9 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                 Toast.makeText(holder.itemView.getContext(),mData.get(position).getChatroomID()+" " + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ChatBoardActivity.class);
+                intent.putExtra("rid",mData.get(position).getChatroomID());
+                intent.putExtra("uid2",mData.get(position).getUid2());
+                intent.putExtra("name",mData.get(position).getName());
                 context.startActivity(intent);
 
             }

@@ -7,8 +7,6 @@ public class IdeaRecycletViewData {
     private  String iv_profill;
     private  String tv_story;
     private Date tv_day;
-//    private int iv_recomand;
-//    private int iv_write;
     private String tv_recomand;
     private String tv_write;
     private String idpost;
@@ -56,22 +54,6 @@ public class IdeaRecycletViewData {
         this.tv_day = tv_day;
     }
 
-//    public int getIv_recomand() {
-//        return iv_recomand;
-//    }
-//
-//    public void setIv_recomand(int iv_recomand) {
-//        this.iv_recomand = iv_recomand;
-//    }
-//
-//    public int getIv_write() {
-//        return iv_write;
-//    }
-//
-//    public void setIv_write(int iv_write) {
-//        this.iv_write = iv_write;
-//    }
-
     public String getTv_recomand() {
         return tv_recomand;
     }
@@ -87,4 +69,6 @@ public class IdeaRecycletViewData {
     public void setTv_write(String tv_write) {
         this.tv_write = tv_write;
     }
+
+
 }
