@@ -17,7 +17,8 @@
         app:layout_constraintEnd_toStartOf="@+id/comment_date_textView"
         app:layout_constraintTop_toTopOf="@+id/comment_date_textView"
         android:background="?attr/selectableItemBackground"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/comment_date_textView"

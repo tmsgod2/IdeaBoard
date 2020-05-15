@@ -5,6 +5,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,7 +24,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -35,6 +40,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ChatBoardActivity extends AppCompatActivity {
     private static final String TAG = "ChatBoardActivity";
@@ -49,6 +56,7 @@ public class ChatBoardActivity extends AppCompatActivity {
     ImageView imageInButton;
     ImageView fileInButton;
     ArrayList<ChatingRecyclerViewData> chatingList;
+    ChatingRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -90,6 +98,12 @@ public class ChatBoardActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SendMessage();
+            }
+        });
 
         //상단 액션바의 뒤로가기 버튼을 위해 작성
         ActionBar actionBar = getSupportActionBar();
@@ -116,15 +130,18 @@ public class ChatBoardActivity extends AppCompatActivity {
                                         fromUid = MainActivity.uid;
                                     }
 
-                                    chatingList.add(new ChatingRecyclerViewData(fromName,fromUid, message, date));
+                                    chatingList.add(new ChatingRecyclerViewData(snap.getId(),fromName,fromUid, message, date));
                                 }
-                                RecyclerViewSet(chatRecyclerView,new ChatingRecyclerViewAdapter(chatingList,profile));
+                                adapter = new ChatingRecyclerViewAdapter(chatingList,profile);
+                                RecyclerViewSet(chatRecyclerView,adapter);
+                                ReceiveMessage();
                             }
                         }
 
                     }
                 });
         actionBar.setDisplayHomeAsUpEnabled(true);
+
     }
 
     //상단의 뒤로가기 버튼 클릭시 뒤로 감
@@ -141,5 +158,55 @@ public class ChatBoardActivity extends AppCompatActivity {
     private void RecyclerViewSet(RecyclerView recyclerView, RecyclerView.Adapter adapter){
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+    }
+
+    private void SendMessage(){
+        Map<String, Object> chatData = new HashMap<>();
+        chatData.put("fromid", MainActivity.uid);
+        chatData.put("date", FieldValue.serverTimestamp());
+        chatData.put("message", chatEditText.getText().toString());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("chatrooms").document(roomId).collection("chats").add(chatData)
+        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Log.d(TAG, "채팅메시지 보냄");
+            }
+        });
+    }
+
+    private void ReceiveMessage(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("chatrooms").document(roomId).collection("chats").orderBy("date", Query.Direction.DESCENDING).limit(1)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if(e!=null){
+                            Log.w(TAG,"실패",e);
+                            return;
+                        }
+                        boolean isSame = true;
+                        for(QueryDocumentSnapshot doc:queryDocumentSnapshots){
+
+                            Log.d(TAG,"");
+                            String getUid = doc.get("fromid").toString();
+                            String getName = "";
+                            if(getUid.equals(uid2)){
+                                getName = name;
+                            }
+                            else{
+                                getName = MainActivity.cus.getName();
+                            }
+                            if(!chatingList.get(chatingList.size()-1).getChatId().equals(doc.getId())) {
+                                isSame = false;
+//                                Date date = ((Timestamp)doc.get("date")).toDate();
+                                chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(),new Date(System.currentTimeMillis())));
+                            }
+
+                        }
+                        if(!isSame)
+                        adapter.notifyItemInserted(chatingList.size()-1);
+                    }
+                });
     }
 }
