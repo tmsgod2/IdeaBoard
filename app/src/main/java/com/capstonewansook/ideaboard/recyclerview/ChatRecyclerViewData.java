@@ -8,6 +8,7 @@ public class ChatRecyclerViewData implements Comparable<ChatRecyclerViewData>{
     private String name;
     private String message;
     private Date date;
+    private String profile;
 
     public ChatRecyclerViewData(String chatroomID,String uid2, String name, String message, Date date) {
         this.chatroomID = chatroomID;
@@ -16,6 +17,14 @@ public class ChatRecyclerViewData implements Comparable<ChatRecyclerViewData>{
         this.message = message;
         this.date = date;
 
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 
     public String getUid2() {

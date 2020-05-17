@@ -11,17 +11,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstonewansook.ideaboard.recyclerview.ChatRecyclerViewAdapter;
 
-import java.util.ArrayList;
-
 
 public class ChatFragment extends Fragment {
     String TAG = "h";
     ViewGroup rootView;
-    ChatroomData chatroomData=new ChatroomData(MainActivity.uid);
+    ChatroomData chatData=new ChatroomData(MainActivity.uid);
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView =(ViewGroup)inflater.inflate(R.layout.fragment_chat, container, false);
+
 
         return  rootView;
 
@@ -30,12 +29,19 @@ public class ChatFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        RecyclerViewSet(rootView,chatroomData.getChatrooms(),(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),
-                new ChatRecyclerViewAdapter(chatroomData.getChatrooms()));
+        RecyclerViewSet(rootView,(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),
+                new ChatRecyclerViewAdapter(chatData.getChatrooms()));
     }
 
-    private void RecyclerViewSet(final ViewGroup view, ArrayList list, RecyclerView recyclerView, RecyclerView.Adapter adapter){
+    @Override
+    public void onResume() {
+        super.onResume();
+
+    }
+
+    private void RecyclerViewSet(final ViewGroup view, RecyclerView recyclerView, RecyclerView.Adapter adapter){
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
     }
+
 }
