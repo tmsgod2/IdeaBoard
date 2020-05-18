@@ -1,9 +1,13 @@
 package com.capstonewansook.ideaboard;
 
 import android.util.Log;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.capstonewansook.ideaboard.recyclerview.ChatRecyclerViewAdapter;
 import com.capstonewansook.ideaboard.recyclerview.ChatRecyclerViewData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,6 +33,8 @@ public class ChatroomData {
     FirebaseFirestore db;
     private int check;
     private String roomuid;
+    private ViewGroup viewGroup;
+    private RecyclerView recyclerView;
     private class ChatrData{
         String rid;
         String uid;
@@ -80,6 +86,39 @@ public class ChatroomData {
         public void setMessage(String message) {
             this.message = message;
         }
+    }
+    public ChatroomData(final String uid, ViewGroup viewGroup, RecyclerView recyclerView) {
+        this.uid = uid;
+        data = new ArrayList<>();
+        chatrooms = new ArrayList<>();
+        check = 0;
+        this.viewGroup = viewGroup;
+        this.recyclerView = recyclerView;
+
+        db = FirebaseFirestore.getInstance();
+        db.collection("chatrooms").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            if(task.getResult() != null) {
+                                for (QueryDocumentSnapshot snap: task.getResult()){
+                                    if (snap.get("uid1").toString().equals(uid)) {
+                                        data.add(new ChatrData(snap.getId(), snap.get("uid2").toString()));
+
+                                    } else if (snap.get("uid2").toString().equals(uid)) {
+                                        data.add(new ChatrData(snap.getId(), snap.get("uid1").toString()));
+                                    }
+                                }
+                            AddMessages();
+                            AddNames();
+                            }
+
+                        }
+
+                    }
+                });
+
     }
     public ChatroomData(final String uid) {
         this.uid = uid;
@@ -145,6 +184,7 @@ public class ChatroomData {
                 chatrooms.add(new ChatRecyclerViewData(data.get(i).getRid(), data.get(i).getUid(), data.get(i).getName(), data.get(i).getMessage(), data.get(i).getDate()));
                 Log.d("Chatroom", i + "");
             }
+            RecyclerViewSet(viewGroup, recyclerView,new ChatRecyclerViewAdapter(chatrooms));
         }
     }
 
@@ -161,13 +201,11 @@ public class ChatroomData {
                                     for (QueryDocumentSnapshot snap : task.getResult()) {
                                         data.get(finalI).setMessage(snap.get("message").toString());
                                         data.get(finalI).setDate(((Timestamp)snap.get("date")).toDate());
-                                        Log.d("ChatroomData", "메시지 불러오기 성공" + snap.get("message"));
                                     }
                                 }
                                 else{
                                     data.get(finalI).setMessage("");
                                     data.get(finalI).setDate(null);
-                                    Log.d("ChatroomData", "메시지 불러오기 실패");
                                 }
                                 check++;
                                 DataUpdate();
@@ -178,7 +216,6 @@ public class ChatroomData {
     }
     private void AddNames(){
         for(int i=0;i<data.size();i++){
-            Log.d("ChatroomData", "이름 "+data.get(i).getUid());
             final int finalI = i;
             db.collection("users").document(data.get(i).getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -199,6 +236,11 @@ public class ChatroomData {
     public void ShowMessage(){
         for(int i = 0; i<data.size();i++)
         Log.d("ChatroomData",data.get(i).getMessage());
+    }
+
+    private void RecyclerViewSet(final ViewGroup view, RecyclerView recyclerView, RecyclerView.Adapter adapter){
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(adapter);
     }
 
 }

@@ -65,6 +65,7 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         holder.profileImage.setImageBitmap(profile);
         holder.dateMeText.setText(format.format(date));
 
+
     }
 
     @Override

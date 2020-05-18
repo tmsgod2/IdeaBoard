@@ -5,4 +5,5 @@
     <color name="colorAccent">#546E7A</color>
     <color name="colorEditText">#D1EDFF</color>
     <color name="colorChatBubbleMe">#85E7FF</color>
+    <color name="colorChatBubbleYou">#A8C1FF</color>
 </resources>
