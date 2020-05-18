@@ -1,9 +1,10 @@
 package com.capstonewansook.ideaboard;
 
 import android.content.Context;
-import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -43,7 +44,6 @@ public class ChatlistAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.chatlist_item, parent, false);
         }
-
         ImageView iconImageView = (ImageView) convertView.findViewById(R.id.chatlist_image) ;
         TextView TextView = (TextView) convertView.findViewById(R.id.chatlist_textview1) ;
         ImageView iconImageView2 = (ImageView) convertView.findViewById(R.id.chatlist_image2) ;
@@ -58,10 +58,26 @@ public class ChatlistAdapter extends BaseAdapter {
             checkBox.setVisibility(View.VISIBLE);
         }
         if(chatlistitem.isCheck() == 2){
-            TextView.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
+            TextView.setTypeface(null, Typeface.BOLD);
+            TextView.setPadding(0,0,0,0);
+
+            convertView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                }
+            });
         }
         else
         {
+            TextView.setTypeface(null, Typeface.NORMAL);
+            TextView.setPadding(25,0,0,0);
+            convertView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return false;
+                }
+            });
         }
 
         return convertView;
