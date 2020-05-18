@@ -34,6 +34,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,7 +57,6 @@ import java.util.Map;
 public class ChatBoardActivity extends AppCompatActivity {
     private ListView listView;
     private DrawerLayout drawer;
-    private ListView listview ;
     private ChatlistAdapter chatlistAdapter;
     private static final String TAG = "ChatBoardActivity";
     private final int IMAGE_SEND = 1001;
@@ -176,21 +176,42 @@ public class ChatBoardActivity extends AppCompatActivity {
         actionBar.setTitle(name);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
         drawer = (DrawerLayout) findViewById(R.id.chatdrawer);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         chatlistAdapter = new ChatlistAdapter() ;
         chatlistAdapter.addItem(2,"채팅방 서랍") ;
         chatlistAdapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_photo_size_select_actual_black_24dp),"사진",ContextCompat.getDrawable(this, R.drawable.ic_chevron_right_black_24dp)) ;
         chatlistAdapter.addItem(1,"알림설정") ;
-        chatlistAdapter.addItem(null,"나가기",ContextCompat.getDrawable(this, R.drawable.ic_chevron_right_black_24dp)) ;
+        chatlistAdapter.addItem(null,"채팅방 나가기",ContextCompat.getDrawable(this, R.drawable.ic_chevron_right_black_24dp)) ;
         listView = (ListView) findViewById(R.id.drawer_chat) ;
         listView.setAdapter(chatlistAdapter) ;
+
         listView.setOnItemClickListener(new ListView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView parent, View v, int position, long id) {
-                drawer.closeDrawer(Gravity.RIGHT) ;
-
+                Chatlistitem item = (Chatlistitem) parent.getItemAtPosition(position) ;
+                String titleStr = item.getTitleStr();
+                if(titleStr == "채팅방 나가기") {
+                    FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.getResult().get("uid1").equals(MainActivity.uid)) {
+                                //FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid1","none");
+                                onBackPressed();
+                            }
+                            else
+                            {
+                                //FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid2","none");
+                                onBackPressed();
+                            }
+                        }
+                    });
+                }
+                else if(titleStr == "사진")
+                {
+                    Intent intent = new Intent(getApplicationContext(), Chatalbum.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -201,7 +222,6 @@ public class ChatBoardActivity extends AppCompatActivity {
         return true;
     }
 
-
     //상단의 뒤로가기 버튼 클릭시 뒤로 감
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -210,7 +230,13 @@ public class ChatBoardActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.chatmanbutton:
-                drawer.openDrawer(Gravity.RIGHT);
+                if(drawer.isDrawerOpen(Gravity.RIGHT)) {
+                    drawer.closeDrawer(Gravity.RIGHT);
+                }
+                else
+                {
+                    drawer.openDrawer(Gravity.RIGHT);
+                }
                 return true;
         }
 
