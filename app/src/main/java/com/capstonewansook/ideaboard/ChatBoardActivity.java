@@ -147,8 +147,11 @@ public class ChatBoardActivity extends AppCompatActivity {
                                     Date date = ((Timestamp)snap.get("date")).toDate();
                                     String fromName = "";
                                     String fromUid = "";
-                                    Log.d(TAG, snap.get("fromid").toString());
-                                    if(snap.get("fromid").toString().equals(uid2)) {
+                                    if(uid2.equals("none")){
+                                        fromName = "알 수 없음";
+                                        fromUid = "none";
+                                    }
+                                    else if(snap.get("fromid").toString().equals(uid2)) {
                                         fromName = name;
                                         fromUid = uid2;
                                     }

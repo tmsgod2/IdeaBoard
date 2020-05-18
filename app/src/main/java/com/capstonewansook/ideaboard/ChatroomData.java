@@ -103,17 +103,15 @@ public class ChatroomData {
                         if(task.isSuccessful()){
                             if(task.getResult() != null) {
                                 for (QueryDocumentSnapshot snap: task.getResult()){
-                                    if(snap.get("uid1").toString().equals(uid)){
+                                    if (snap.get("uid1").toString().equals(uid)) {
                                         data.add(new ChatrData(snap.getId(), snap.get("uid2").toString()));
 
-                                    }
-                                    else if(snap.get("uid2").toString().equals(uid)){
+                                    } else if (snap.get("uid2").toString().equals(uid)) {
                                         data.add(new ChatrData(snap.getId(), snap.get("uid1").toString()));
                                     }
-
                                 }
-                                AddMessages();
-                                AddNames();
+                            AddMessages();
+                            AddNames();
                             }
 
                         }
@@ -203,13 +201,11 @@ public class ChatroomData {
                                     for (QueryDocumentSnapshot snap : task.getResult()) {
                                         data.get(finalI).setMessage(snap.get("message").toString());
                                         data.get(finalI).setDate(((Timestamp)snap.get("date")).toDate());
-                                        Log.d("ChatroomData", "메시지 불러오기 성공" + snap.get("message"));
                                     }
                                 }
                                 else{
                                     data.get(finalI).setMessage("");
                                     data.get(finalI).setDate(null);
-                                    Log.d("ChatroomData", "메시지 불러오기 실패");
                                 }
                                 check++;
                                 DataUpdate();
@@ -220,7 +216,6 @@ public class ChatroomData {
     }
     private void AddNames(){
         for(int i=0;i<data.size();i++){
-            Log.d("ChatroomData", "이름 "+data.get(i).getUid());
             final int finalI = i;
             db.collection("users").document(data.get(i).getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

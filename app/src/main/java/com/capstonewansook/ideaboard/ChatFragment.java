@@ -19,7 +19,7 @@ public class ChatFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView =(ViewGroup)inflater.inflate(R.layout.fragment_chat, container, false);
 
-        chatData = new ChatroomData(MainActivity.uid, rootView, (RecyclerView)rootView.findViewById(R.id.chat_recyclerView));
+
 
         return  rootView;
 
@@ -28,6 +28,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        chatData = new ChatroomData(MainActivity.uid, rootView, (RecyclerView)rootView.findViewById(R.id.chat_recyclerView));
 //        RecyclerViewSet(rootView,(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),
 //                new ChatRecyclerViewAdapter(chatData.getChatrooms()));
     }
