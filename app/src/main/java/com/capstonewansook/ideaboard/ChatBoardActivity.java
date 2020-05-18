@@ -319,7 +319,7 @@ public class ChatBoardActivity extends AppCompatActivity {
 
 
 //                Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
-                    StorageReference profileRef = MainActivity.mStorageRef.child("chatings/" + roomId);
+                    final StorageReference profileRef = MainActivity.mStorageRef.child("chatings/" + roomId);
 
                     profileRef.putFile(image)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -327,7 +327,7 @@ public class ChatBoardActivity extends AppCompatActivity {
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     // Get a URL to the uploaded content
 //                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                    Log.d("asd", taskSnapshot.toString());
+                                    Log.d(TAG, profileRef.getDownloadUrl().toString());
 
                                 }
                             })
