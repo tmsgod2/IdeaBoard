@@ -89,6 +89,7 @@ public class ChatBoardActivity extends AppCompatActivity {
         chatRecyclerView = findViewById(R.id.chatboard_recyclerview);
         sendButton = findViewById(R.id.chatboard_sendButton);
         chatEditText = findViewById(R.id.chatboard_editText);
+        imageInButton = findViewById(R.id.chatboard_image_button);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference mStorageRef = storage.getReference();
