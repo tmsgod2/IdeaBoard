@@ -1,8 +1,11 @@
 package com.capstonewansook.ideaboard;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -14,14 +17,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,6 +44,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -57,6 +59,10 @@ public class ChatBoardActivity extends AppCompatActivity {
     private ListView listview ;
     private ChatlistAdapter chatlistAdapter;
     private static final String TAG = "ChatBoardActivity";
+    private final int IMAGE_SEND = 1001;
+    private final int TEXT_SEND_TYPE = 0;
+    private final int IMAGE_SEND_TYPE = 1;
+    private final int FILE_SEND_TYPE = 2;
 
     String roomId;
     String uid2;
@@ -77,11 +83,13 @@ public class ChatBoardActivity extends AppCompatActivity {
         roomId = getIntent().getStringExtra("rid");
         uid2 = getIntent().getStringExtra("uid2");
         name = getIntent().getStringExtra("name");
+        String url = getIntent().getStringExtra("prifileUrl");
 
         chatingList = new ArrayList<>();
         chatRecyclerView = findViewById(R.id.chatboard_recyclerview);
         sendButton = findViewById(R.id.chatboard_sendButton);
         chatEditText = findViewById(R.id.chatboard_editText);
+        imageInButton = findViewById(R.id.chatboard_image_button);
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference mStorageRef = storage.getReference();
@@ -113,7 +121,14 @@ public class ChatBoardActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SendMessage();
+                SendMessage(chatEditText.getText().toString(), TEXT_SEND_TYPE);
+            }
+        });
+
+        imageInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GetImage();
             }
         });
 
@@ -132,8 +147,11 @@ public class ChatBoardActivity extends AppCompatActivity {
                                     Date date = ((Timestamp)snap.get("date")).toDate();
                                     String fromName = "";
                                     String fromUid = "";
-                                    Log.d(TAG, snap.get("fromid").toString());
-                                    if(snap.get("fromid").toString().equals(uid2)) {
+                                    if(uid2.equals("none")){
+                                        fromName = "알 수 없음";
+                                        fromUid = "none";
+                                    }
+                                    else if(snap.get("fromid").toString().equals(uid2)) {
                                         fromName = name;
                                         fromUid = uid2;
                                     }
@@ -142,17 +160,20 @@ public class ChatBoardActivity extends AppCompatActivity {
                                         fromUid = MainActivity.uid;
                                     }
 
-                                    chatingList.add(new ChatingRecyclerViewData(snap.getId(),fromName,fromUid, message, date));
+                                    ChatingRecyclerViewData chatingdata = new ChatingRecyclerViewData(snap.getId(),fromName,fromUid, message, date);
+                                    chatingdata.setPrifleImage(profile);
+                                    chatingList.add(chatingdata);
                                 }
                                 adapter = new ChatingRecyclerViewAdapter(chatingList,profile);
                                 RecyclerViewSet(chatRecyclerView,adapter);
+                                FullDownScroll();
                                 ReceiveMessage();
                             }
                         }
 
                     }
                 });
-        actionBar.setTitle("누구누구 채팅방");
+        actionBar.setTitle(name);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
 
@@ -200,17 +221,28 @@ public class ChatBoardActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void SendMessage(){
+    private void FullDownScroll(){
+        chatRecyclerView.scrollToPosition(adapter.getItemCount()-1);
+    }
+
+    private void EditTextDelete(){
+        chatEditText.setText("");
+    }
+
+    private void SendMessage(String message, int type){
         Map<String, Object> chatData = new HashMap<>();
         chatData.put("fromid", MainActivity.uid);
         chatData.put("date", FieldValue.serverTimestamp());
-        chatData.put("message", chatEditText.getText().toString());
+        chatData.put("message", message);
+        chatData.put("type",type);
+        EditTextDelete();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("chatrooms").document(roomId).collection("chats").add(chatData)
         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d(TAG, "채팅메시지 보냄");
+                FullDownScroll();
             }
         });
     }
@@ -248,5 +280,48 @@ public class ChatBoardActivity extends AppCompatActivity {
                         adapter.notifyItemInserted(chatingList.size()-1);
                     }
                 });
+    }
+
+    //이미지 보내기 클릭시
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case IMAGE_SEND:
+                try {
+                    Uri image = data.getData();
+
+
+//                Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
+                    StorageReference profileRef = MainActivity.mStorageRef.child("chatings/" + roomId);
+
+                    profileRef.putFile(image)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                    // Get a URL to the uploaded content
+//                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                                    Log.d("asd", taskSnapshot.toString());
+
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    // Handle unsuccessful uploads
+                                    // ...
+                                }
+                            });
+                    return;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+        }
+    }
+
+    private void GetImage(){
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, IMAGE_SEND);
     }
 }

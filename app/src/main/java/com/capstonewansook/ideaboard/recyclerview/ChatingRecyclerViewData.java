@@ -1,5 +1,7 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
+import android.graphics.Bitmap;
+
 import java.util.Date;
 
 public class ChatingRecyclerViewData {
@@ -8,6 +10,15 @@ public class ChatingRecyclerViewData {
     String uid;
     String message;
     Date date;
+    Bitmap prifleImage;
+
+    public Bitmap getPrifleImage() {
+        return prifleImage;
+    }
+
+    public void setPrifleImage(Bitmap prifleImage) {
+        this.prifleImage = prifleImage;
+    }
 
     public ChatingRecyclerViewData(String chatId, String name, String uid, String message, Date date) {
         this.chatId = chatId;

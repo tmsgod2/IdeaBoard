@@ -31,11 +31,11 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textMultiLine"
-        android:text="Name"
+        android:text=""
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/chatboard_sendButton"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/bt_gallery"
+        app:layout_constraintStart_toEndOf="@+id/chatboard_image_button"
         android:maxLines="4"
         />
 
@@ -48,18 +48,23 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/chatboard_editText" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/chatboard_recyclerview"
-        android:layout_width="0dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/chatboard_editText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        >
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatboard_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
         />
-
+    </LinearLayout>
     <ImageView
-        android:id="@+id/bt_clib"
+        android:id="@+id/chatboard_clib_button"
         android:layout_width="35dp"
         android:layout_height="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -68,11 +73,11 @@
         app:srcCompat="@drawable/bt_clib" />
 
     <ImageView
-        android:id="@+id/bt_gallery"
+        android:id="@+id/chatboard_image_button"
         android:layout_width="35dp"
         android:layout_height="35dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/bt_clib"
+        app:layout_constraintStart_toEndOf="@+id/chatboard_clib_button"
         app:layout_constraintTop_toTopOf="@+id/chatboard_editText"
         app:srcCompat="@drawable/ic_image_black_24dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

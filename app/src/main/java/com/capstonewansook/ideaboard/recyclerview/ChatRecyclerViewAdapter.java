@@ -89,6 +89,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                         Glide.with(holder.profileImage.getContext())
                                 .load(task.getResult())
                                 .into(holder.profileImage);
+                        mData.get(position).setProfile(task.getResult().toString());
                     } else {
                         holder.profileImage.setImageResource(R.drawable.kakaotalklog2);
                     }
@@ -104,6 +105,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                 intent.putExtra("rid",mData.get(position).getChatroomID());
                 intent.putExtra("uid2",mData.get(position).getUid2());
                 intent.putExtra("name",mData.get(position).getName());
+                intent.putExtra("profileUrl",mData.get(position).getProfile());
                 context.startActivity(intent);
 
             }
