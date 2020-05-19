@@ -49,7 +49,8 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
     public ChatRecyclerViewAdapter(ArrayList<ChatRecyclerViewData> mData) {
         this.mData = mData;
-        Collections.sort(mData);
+        if(!mData.isEmpty())
+            Collections.sort(mData);
     }
 
     @NonNull
@@ -82,7 +83,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         }
 
         Log.d("ChatRecyclerViewAdapter",mData.get(position).getUid2());
-        StorageReference profileRef = storage.getReference().child("users/"+mData.get(position).getUid2()+"/profileImage.jpg");
+        StorageReference profileRef = storage.getReference().child("users/"+mData.get(position).getUid2()+"/profileImage");
         profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {

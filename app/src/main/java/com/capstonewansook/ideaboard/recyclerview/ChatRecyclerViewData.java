@@ -69,6 +69,11 @@ public class ChatRecyclerViewData implements Comparable<ChatRecyclerViewData>{
 
     @Override
     public int compareTo(ChatRecyclerViewData rankRecyclerViewData) {
-        return rankRecyclerViewData.date.compareTo(this.date);
+        try {
+            return rankRecyclerViewData.date.compareTo(this.date);
+        }
+        catch (NullPointerException e){
+            return 0;
+        }
     }
 }
