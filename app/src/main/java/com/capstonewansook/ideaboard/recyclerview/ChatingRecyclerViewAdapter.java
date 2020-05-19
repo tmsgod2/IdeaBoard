@@ -24,10 +24,12 @@ import java.util.Date;
 public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecyclerViewAdapter.ViewHolder> {
     private ArrayList<ChatingRecyclerViewData> mData;
     private Bitmap profile;
+    private String roomId;
 
-    public ChatingRecyclerViewAdapter(ArrayList<ChatingRecyclerViewData> mData,Bitmap profile) {
+    public ChatingRecyclerViewAdapter(ArrayList<ChatingRecyclerViewData> mData,Bitmap profile,String roomId) {
         this.mData = mData;
         this.profile = profile;
+        this.roomId = roomId;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
 
         String name = mData.get(position).getName();
         String message = mData.get(position).getMessage();
@@ -60,11 +62,25 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
 
         holder.nameText.setText(name);
-        holder.messageText.setText(message);
+
         holder.dateText.setText(format.format(date));
         holder.profileImage.setImageBitmap(profile);
         holder.dateMeText.setText(format.format(date));
-
+        if(mData.get(position).getType() == 1){
+//            FirebaseStorage storage = FirebaseStorage.getInstance();
+//            StorageReference imageRef = storage.getReference().child("chatings/" + roomId + "/" + mData.get(position).message);
+//            imageRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                @Override
+//                public void onComplete(@NonNull Task<Uri> task) {
+//                    if(task.isSuccessful()){
+//                        Glide.with(holder.itemView.getContext())
+//                                .load(task.getResult())
+//
+//                    }
+//                }
+//            })
+        }
+        holder.messageText.setText(message);
 
     }
 

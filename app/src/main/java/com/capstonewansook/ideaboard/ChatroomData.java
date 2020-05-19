@@ -4,18 +4,13 @@ import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.capstonewansook.ideaboard.recyclerview.ChatRecyclerViewAdapter;
 import com.capstonewansook.ideaboard.recyclerview.ChatRecyclerViewData;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -23,8 +18,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ChatroomData {
     private String uid;
@@ -153,22 +146,6 @@ public class ChatroomData {
                 });
 
     }
-    public ChatroomData(final String uid, final String uid2) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("date", FieldValue.serverTimestamp());
-        data.put("uid1",uid);
-        data.put("uid2",uid2);
-        db = FirebaseFirestore.getInstance();
-        db.collection("chatrooms").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                roomuid = documentReference.getId();
-
-            }
-        });
-
-
-    }
 
     public ArrayList<ChatRecyclerViewData> getChatrooms() {
 
@@ -184,7 +161,6 @@ public class ChatroomData {
                 chatrooms.add(new ChatRecyclerViewData(data.get(i).getRid(), data.get(i).getUid(), data.get(i).getName(), data.get(i).getMessage(), data.get(i).getDate()));
                 Log.d("Chatroom", i + "");
             }
-            RecyclerViewSet(viewGroup, recyclerView,new ChatRecyclerViewAdapter(chatrooms));
         }
     }
 
@@ -233,14 +209,14 @@ public class ChatroomData {
     }
 
 
+    public void DataAdd(ChatRecyclerViewData data){
+        chatrooms.add(data);
+    }
+
     public void ShowMessage(){
         for(int i = 0; i<data.size();i++)
         Log.d("ChatroomData",data.get(i).getMessage());
     }
 
-    private void RecyclerViewSet(final ViewGroup view, RecyclerView recyclerView, RecyclerView.Adapter adapter){
-        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(adapter);
-    }
 
 }
