@@ -147,24 +147,36 @@ public class ChatBoardActivity extends AppCompatActivity {
                                     Date date = ((Timestamp)snap.get("date")).toDate();
                                     String fromName = "";
                                     String fromUid = "";
-                                    if(uid2.equals("none")){
-                                        fromName = "알 수 없음";
-                                        fromUid = "none";
-                                    }
-                                    else if(snap.get("fromid").toString().equals(uid2)) {
+                                    if(snap.get("fromid").toString().equals(uid2)) {
                                         fromName = name;
                                         fromUid = uid2;
                                     }
-                                    else {
+                                    else if(snap.get("fromid").toString().equals(MainActivity.uid)) {
                                         fromName = MainActivity.cus.getName();
                                         fromUid = MainActivity.uid;
                                     }
+                                    else {
+                                        fromName = "알 수 없음";
+                                        fromUid = "none";
+                                    }
 
                                     ChatingRecyclerViewData chatingdata = new ChatingRecyclerViewData(snap.getId(),fromName,fromUid, message, date);
+                                    try{
+                                        chatingdata.setType(Integer.parseInt(snap.get("type").toString()));
+                                    }
+                                    catch (NullPointerException e){
+                                        chatingdata.setType(0);
+                                    }
                                     chatingdata.setPrifleImage(profile);
                                     chatingList.add(chatingdata);
                                 }
-                                adapter = new ChatingRecyclerViewAdapter(chatingList,profile);
+                                adapter = new ChatingRecyclerViewAdapter(chatingList,profile,roomId);
+                                RecyclerViewSet(chatRecyclerView,adapter);
+                                FullDownScroll();
+                                ReceiveMessage();
+                            }
+                            else{
+                                adapter = new ChatingRecyclerViewAdapter(chatingList,profile,roomId);
                                 RecyclerViewSet(chatRecyclerView,adapter);
                                 FullDownScroll();
                                 ReceiveMessage();
@@ -248,6 +260,7 @@ public class ChatBoardActivity extends AppCompatActivity {
     }
 
     private void FullDownScroll(){
+        if(!chatingList.isEmpty())
         chatRecyclerView.scrollToPosition(adapter.getItemCount()-1);
     }
 
@@ -295,7 +308,11 @@ public class ChatBoardActivity extends AppCompatActivity {
                             else{
                                 getName = MainActivity.cus.getName();
                             }
-                            if(!chatingList.get(chatingList.size()-1).getChatId().equals(doc.getId())) {
+                            if(chatingList.isEmpty()){
+                                isSame = false;
+                                chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(),new Date(System.currentTimeMillis())));
+                            }
+                            else if(!chatingList.get(chatingList.size()-1).getChatId().equals(doc.getId())) {
                                 isSame = false;
 //                                Date date = ((Timestamp)doc.get("date")).toDate();
                                 chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(),new Date(System.currentTimeMillis())));
@@ -319,15 +336,15 @@ public class ChatBoardActivity extends AppCompatActivity {
 
 
 //                Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
-                    StorageReference profileRef = MainActivity.mStorageRef.child("chatings/" + roomId);
+                    final StorageReference profileRef = MainActivity.mStorageRef.child("chatings/" + roomId + "/" + chatingList.size());
 
                     profileRef.putFile(image)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     // Get a URL to the uploaded content
-//                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                    Log.d("asd", taskSnapshot.toString());
+//
+                                    SendMessage(chatingList.size()+"",IMAGE_SEND_TYPE);
 
                                 }
                             })

@@ -1,11 +1,9 @@
 package com.capstonewansook.ideaboard;
 
-import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +20,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+
+import static com.capstonewansook.ideaboard.ChatroomIn.ChatroomCreate;
+import static com.capstonewansook.ideaboard.ChatroomIn.ChatroomOpen;
+import static com.capstonewansook.ideaboard.ChatroomIn.isChatroomExist;
 
 public class NotmeProfileFragment extends Fragment {
 
@@ -101,54 +101,12 @@ public class NotmeProfileFragment extends Fragment {
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ChatBoardActivity.class);
-                intent.putExtra("uid2",uid);
-                startActivity(intent);
-                db.collection("chatrooms").get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if(task.isSuccessful()){
-                                    if(task.getResult() != null) {
-                                        for (QueryDocumentSnapshot snap: task.getResult()){
-                                            uids.add(snap.get("uid1").toString());
-                                            uids2.add(snap.get("uid2").toString());
-
-                                        }
-                                        Log.d("mi",MainActivity.uid);
-                                        for(String s : uids){
-                                            for(String sd : uids2) {
-                                                if (s.equals(MainActivity.uid) && s.equals(uid)) {
-                                                    chekroom = 1;
-                                                    break;
-                                                }
-                                                else if(s.equals(uid)&&sd.equals(MainActivity.uid)){
-                                                    chekroom = 1;
-                                                    break;
-                                                }
-                                                else if(!s.equals(MainActivity.uid)&&!sd.equals(uid)){
-                                                    chekroom = 0;
-                                                    break;
-                                                }
-                                                else if(!s.equals(uid)&&!sd.equals(MainActivity.uid)){
-                                                    chekroom = 0;
-                                                    break;
-                                                }
-                                            }break;
-                                        }
-
-                                        if (chekroom == 1) {
-                                            chatroomData = new ChatroomData(MainActivity.uid);
-
-                                        } else if (chekroom == 0) {
-                                            chatroomData = new ChatroomData(MainActivity.uid, uid);
-
-
-                                        }
-                                    }
-                                }
-                            }
-                        });
+                String rid = isChatroomExist(uid);
+                if(rid.equals("none")){
+                    ChatroomCreate(chatButton.getContext(),uid, nameTextView.getText().toString());
+                }else{
+                    ChatroomOpen(chatButton.getContext(),rid,uid,nameTextView.getText().toString());
+                }
             }
         });
 

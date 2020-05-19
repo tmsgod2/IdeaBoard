@@ -4,13 +4,14 @@ import android.graphics.Bitmap;
 
 import java.util.Date;
 
-public class ChatingRecyclerViewData {
+public class ChatingRecyclerViewData implements Comparable<ChatingRecyclerViewData> {
     String chatId;
     String name;
     String uid;
     String message;
     Date date;
     Bitmap prifleImage;
+    int type;
 
     public Bitmap getPrifleImage() {
         return prifleImage;
@@ -26,6 +27,14 @@ public class ChatingRecyclerViewData {
         this.uid = uid;
         this.message = message;
         this.date = date;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getChatId() {
@@ -66,5 +75,10 @@ public class ChatingRecyclerViewData {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @Override
+    public int compareTo(ChatingRecyclerViewData chatingRecyclerViewData) {
+        return 0;
     }
 }

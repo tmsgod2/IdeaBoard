@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     public static CustomerData cus;
     //현재 접속한 고객의 uid 변수
     public static String uid;
+    //채팅창 변수
+    public static ChatroomData chatData;
 
     // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
     private long backKeyPressedTime = 0;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         cus = (CustomerData)getIntent().getSerializableExtra("CustomerData");
         uid = getIntent().getStringExtra("UID");
+        chatData = new ChatroomData(uid);
         Toast.makeText(this, "환영합니다! " + cus.getName()+ "\n"
                 +uid,Toast.LENGTH_LONG).show();
 
