@@ -121,6 +121,7 @@ public class ChatBoardActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(isChatReady())
                 SendMessage(chatEditText.getText().toString(), TEXT_SEND_TYPE);
             }
         });
@@ -268,6 +269,12 @@ public class ChatBoardActivity extends AppCompatActivity {
         chatEditText.setText("");
     }
 
+    private boolean isChatReady(){
+        if(chatEditText.getText().toString().length()>0){
+            return true;
+        }
+        else return false;
+    }
     private void SendMessage(String message, int type){
         Map<String, Object> chatData = new HashMap<>();
         chatData.put("fromid", MainActivity.uid);
@@ -281,7 +288,7 @@ public class ChatBoardActivity extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Log.d(TAG, "채팅메시지 보냄");
-                FullDownScroll();
+
             }
         });
     }
@@ -331,6 +338,7 @@ public class ChatBoardActivity extends AppCompatActivity {
                         }
                         if(!isSame)
                         adapter.notifyItemInserted(chatingList.size()-1);
+                        FullDownScroll();
                     }
                 });
     }
