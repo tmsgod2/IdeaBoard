@@ -21,6 +21,15 @@ public class ChatingRecyclerViewData implements Comparable<ChatingRecyclerViewDa
         this.prifleImage = prifleImage;
     }
 
+    public ChatingRecyclerViewData(String chatId, String name, String uid, String message, Date date, int type) {
+        this.chatId = chatId;
+        this.name = name;
+        this.uid = uid;
+        this.message = message;
+        this.date = date;
+        this.type = type;
+    }
+
     public ChatingRecyclerViewData(String chatId, String name, String uid, String message, Date date) {
         this.chatId = chatId;
         this.name = name;

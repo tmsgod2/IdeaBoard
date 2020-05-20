@@ -19,8 +19,8 @@
         android:id="@+id/chat_bubble_re_date_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@+id/chat_bubble_re_message_textView"
-        app:layout_constraintBottom_toBottomOf="@id/chat_bubble_re_message_textView"
+        app:layout_constraintStart_toEndOf="@+id/chat_bubble_re_imageView"
+        app:layout_constraintBottom_toBottomOf="@id/chat_bubble_re_imageView"
         android:text="2015.01.01"
         android:layout_marginStart="8dp"/>
     <TextView
@@ -30,7 +30,8 @@
         app:layout_constraintStart_toEndOf="@+id/chat_bubble_re_message_textView"
         app:layout_constraintBottom_toBottomOf="@id/chat_bubble_re_message_textView"
         android:text="2015.01.01"
-        android:layout_marginStart="8dp"/>
+        android:layout_marginStart="8dp"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/chat_bubble_re_name_textView"
         android:layout_width="wrap_content"
@@ -57,19 +58,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/chat_bubble_re_profile_imageView"
         app:layout_constraintTop_toBottomOf="@+id/chat_bubble_re_name_textView"
-        android:autoLink="all"/>
+        android:autoLink="all"
+        android:visibility="gone"/>
     <ImageView
         android:id="@+id/chat_bubble_re_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
-        android:minHeight="100dp"
+        android:minWidth="200dp"
+        android:minHeight="300dp"
         android:maxWidth="200dp"
         android:maxHeight="300dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_margin="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/chat_bubble_re_profile_imageView"
+        app:layout_constraintTop_toBottomOf="@+id/chat_bubble_re_name_textView"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
