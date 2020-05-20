@@ -310,12 +310,22 @@ public class ChatBoardActivity extends AppCompatActivity {
                             }
                             if(chatingList.isEmpty()){
                                 isSame = false;
-                                chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(),new Date(System.currentTimeMillis())));
+                                try {
+                                    chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(), new Date(System.currentTimeMillis()),Integer.parseInt(doc.get("type").toString())));
+                                }
+                                catch (NullPointerException nullE){
+                                    chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(), new Date(System.currentTimeMillis())));
+                                }
                             }
                             else if(!chatingList.get(chatingList.size()-1).getChatId().equals(doc.getId())) {
                                 isSame = false;
 //                                Date date = ((Timestamp)doc.get("date")).toDate();
-                                chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(),new Date(System.currentTimeMillis())));
+                                try {
+                                    chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(), new Date(System.currentTimeMillis()),Integer.parseInt(doc.get("type").toString())));
+                                }
+                                catch (NullPointerException nullE){
+                                    chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(), new Date(System.currentTimeMillis())));
+                                }
                             }
 
                         }
