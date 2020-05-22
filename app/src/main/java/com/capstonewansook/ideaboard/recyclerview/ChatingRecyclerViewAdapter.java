@@ -1,10 +1,13 @@
 package com.capstonewansook.ideaboard.recyclerview;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +26,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecyclerViewAdapter.ViewHolder> {
     private ArrayList<ChatingRecyclerViewData> mData;
@@ -44,11 +49,13 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
             if(mData.get(position).getType()==1){
                 return 3;
             }
+            if(mData.get(position).getType() == 2) return 5;
             return 1;
         }else {
             if(mData.get(position).getType()==1){
                 return 4;
             }
+            if(mData.get(position).getType() == 2) return 6;
             return 2;
         }
     }
@@ -68,15 +75,22 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         if(viewType == 4) {
             view = inflater.inflate(R.layout.chat_bubble_you_image_recyclerview,parent,false);
         }
+        if(viewType == 5){
+            view = inflater.inflate(R.layout.chat_bubble_me_file_recyclerview,parent,false);
+        }
+        if(viewType == 6) {
+            view = inflater.inflate(R.layout.chat_bubble_you_file_recyclerview,parent,false);
+        }
+
         ChatingRecyclerViewAdapter.ViewHolder vh = new ChatingRecyclerViewAdapter.ViewHolder(view);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, final int position) {
 
         String name = mData.get(position).getName();
-        String message = mData.get(position).getMessage();
+        final String message = mData.get(position).getMessage();
         Date date = mData.get(position).getDate();
         SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
 
@@ -100,6 +114,41 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
             });
         }
         holder.messageText.setText(message);
+        if(mData.get(position).getType()==2){
+            holder.messageText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference fileRef = storage.getReference().child("chatings/" + roomId + "/" + mData.get(position).getMessage());
+
+                    fileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Uri> task) {
+                            if(task.isSuccessful()){
+
+                                List<String> pathSegments = task.getResult().getPathSegments();
+                                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/SnowDear");
+
+                                if(!file.exists()){
+
+                                    Log.d("makeDir",file.mkdirs()+"");
+                                }
+                                DownloadManager.Request request = new DownloadManager.Request(task.getResult());
+                                request.setTitle(mData.get(position).getMessage());
+                                request.setDescription("파일 다운로드중.....");
+                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+                                request.setDestinationInExternalPublicDir(Environment.getExternalStorageDirectory().getAbsolutePath() + "/SnowDear",mData.get(position).getMessage());
+                                request.setAllowedOverMetered(true);
+                                request.setAllowedOverRoaming(true);
+
+                                DownloadManager manager = (DownloadManager) holder.itemView.getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+                                manager.enqueue(request);
+                            }
+                        }
+                    });
+                }
+            });
+        }
 
     }
 

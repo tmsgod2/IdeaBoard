@@ -396,7 +396,6 @@ public class ChatBoardActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    // Get a URL to the uploaded content
 //
                                     SendMessage(getName(fileUri)+"",FILE_SEND_TYPE);
 
@@ -405,8 +404,7 @@ public class ChatBoardActivity extends AppCompatActivity {
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception exception) {
-                                    // Handle unsuccessful uploads
-                                    // ...
+
                                 }
                             });
                 }catch (Exception e) {
