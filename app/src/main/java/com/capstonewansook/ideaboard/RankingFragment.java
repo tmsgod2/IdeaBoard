@@ -7,10 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioGroup;
 
-import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,16 +18,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -61,24 +57,11 @@ public class RankingFragment extends Fragment {
         rankList = new ArrayList<>();
 
             mStorageRef = FirebaseStorage.getInstance().getReference();
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             rootView = (ViewGroup)inflater.inflate(R.layout.fragment_ranking, container, false);
 
         tiimeData = new ArrayList<>();
-
-
-
-
-
-            //////
-
-
-
-
-        ////////
-
-
 
         db.collection("users").get()
                     .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -95,6 +78,39 @@ public class RankingFragment extends Fragment {
                                          } catch(NullPointerException e){}
                                      }
                                  }
+                                    db.collection("posts").get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if(task.isSuccessful())
+                                                    {
+                                                        if(task.getResult() != null)
+                                                        {
+                                                            for(QueryDocumentSnapshot snap: task.getResult()) {
+                                                                cal.setTime(((Timestamp)snap.get("date")).toDate());
+                                                                tiimeData.add(new RankingTiimeData(snap.getId(),snap.get("uid").toString(),cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),Integer.parseInt(snap.get("stars").toString())));
+//                                        cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE)
+                                                            }
+
+                                                        }
+                                                        dbReadpost = true;
+                                                        //프레그먼트 생성시 화면비춤
+                                                        if(flag==3){
+                                                            TimeYearCalcul(rankList,rootView);
+                                                            dbToRankingData = false;
+                                                        }else if(flag==2){
+                                                            TimeMonthCalcul(rankList,rootView);
+                                                            dbToRankingData = false;
+                                                        }else{
+                                                            TimeDateCalcul(rankList,rootView);
+                                                            dbToRankingData = false;
+                                                        }
+                                                        Log.d(TAG, i+" wwwwwwwwwww "+j);
+
+
+                                                    }
+                                                }
+                                            });
 
                                  }
 
@@ -104,47 +120,6 @@ public class RankingFragment extends Fragment {
                             }
                         }
                     });
-
-
-
-
-
-        db.collection("posts").get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful())
-                        {
-                            if(task.getResult() != null)
-                            {
-                                for(QueryDocumentSnapshot snap: task.getResult()) {
-                                        cal.setTime(((Timestamp)snap.get("date")).toDate());
-                                        tiimeData.add(new RankingTiimeData(snap.getId(),snap.get("uid").toString(),cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE),Integer.parseInt(snap.get("stars").toString())));
-//                                        cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),cal.get(Calendar.DATE)
-                                }
-
-                            }
-                            dbReadpost = true;
-                            //프레그먼트 생성시 화면비춤
-                            if(flag==3){
-                                TimeYearCalcul(rankList,rootView);
-                                dbToRankingData = false;
-                            }else if(flag==2){
-                                TimeMonthCalcul(rankList,rootView);
-                                dbToRankingData = false;
-                            }else{
-                                TimeDateCalcul(rankList,rootView);
-                                dbToRankingData = false;
-                            }
-                            Log.d(TAG, i+" wwwwwwwwwww "+j);
-
-
-                        }
-                    }
-                });
-
-
-
 
 
 
@@ -222,16 +197,7 @@ public class RankingFragment extends Fragment {
 
         }
 
-
-
-
     }
-
-
-
-
-
-
 
     public void TimeMonthCalcul(ArrayList<RankRecyclerViewData> rankList, ViewGroup rootView){
 
@@ -248,6 +214,7 @@ public class RankingFragment extends Fragment {
                         if(nowCal.get(Calendar.MONTH)==tiimeData.get(i).getMonth()) {
                             for (j = 0; j < rankList.size(); j++) {
                                 if (rankList.get(j).getUid().equals(tiimeData.get(i).getUid())) {
+//                                    Log.d(TAG, rankList.get(j).getStar()+"");
                                     rankList.get(j).setStar(tiimeData.get(i).getStar(), "+");
                                     Log.d(TAG, i + " " + j);
                                 }
