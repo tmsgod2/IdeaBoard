@@ -7,7 +7,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +25,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecyclerViewAdapter.ViewHolder> {
     private ArrayList<ChatingRecyclerViewData> mData;
@@ -125,19 +122,11 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
                             if(task.isSuccessful()){
-
-                                List<String> pathSegments = task.getResult().getPathSegments();
-                                File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/SnowDear");
-
-                                if(!file.exists()){
-
-                                    Log.d("makeDir",file.mkdirs()+"");
-                                }
                                 DownloadManager.Request request = new DownloadManager.Request(task.getResult());
                                 request.setTitle(mData.get(position).getMessage());
                                 request.setDescription("파일 다운로드중.....");
                                 request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-                                request.setDestinationInExternalPublicDir(Environment.getExternalStorageDirectory().getAbsolutePath() + "/SnowDear",mData.get(position).getMessage());
+                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,mData.get(position).getMessage());
                                 request.setAllowedOverMetered(true);
                                 request.setAllowedOverRoaming(true);
 

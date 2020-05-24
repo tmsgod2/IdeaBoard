@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -140,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
 
 
     }
@@ -245,4 +245,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+
 }
