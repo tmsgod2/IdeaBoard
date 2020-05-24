@@ -47,7 +47,8 @@ public class Chatalbum extends AppCompatActivity {
                 public void onSuccess(ListResult listResult) {
                     for (StorageReference item : listResult.getItems()) {
                         final ImageView imageView = new ImageView(getApplicationContext());
-                        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        imageView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT,400));
                         item.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                             @Override
                             public void onComplete(@NonNull Task<Uri> task) {
