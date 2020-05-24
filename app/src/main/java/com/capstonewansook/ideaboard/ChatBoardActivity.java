@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -86,7 +87,8 @@ public class ChatBoardActivity extends AppCompatActivity {
         uid2 = getIntent().getStringExtra("uid2");
         name = getIntent().getStringExtra("name");
         String url = getIntent().getStringExtra("prifileUrl");
-
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         chatingList = new ArrayList<>();
         chatRecyclerView = findViewById(R.id.chatboard_recyclerview);
         sendButton = findViewById(R.id.chatboard_sendButton);
