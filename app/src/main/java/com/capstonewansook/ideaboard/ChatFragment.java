@@ -1,6 +1,7 @@
 package com.capstonewansook.ideaboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,7 @@ import static com.capstonewansook.ideaboard.MainActivity.chatData;
 
 
 public class ChatFragment extends Fragment {
-    String TAG = "h";
+    private static final String TAG = "ChatFragment";
     ViewGroup rootView;
 
     @Override
@@ -28,6 +29,7 @@ public class ChatFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        Log.d(TAG,"asd");
         RecyclerViewSet(rootView,(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),
                 new ChatRecyclerViewAdapter(chatData.getChatrooms()));
     }

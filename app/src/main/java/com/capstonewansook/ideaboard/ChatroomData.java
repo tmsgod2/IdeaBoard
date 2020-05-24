@@ -159,7 +159,7 @@ public class ChatroomData {
             chatrooms.clear();
             for (int i = 0; i < data.size(); i++) {
                 chatrooms.add(new ChatRecyclerViewData(data.get(i).getRid(), data.get(i).getUid(), data.get(i).getName(), data.get(i).getMessage(), data.get(i).getDate()));
-                Log.d("Chatroom", i + "");
+
             }
         }
     }

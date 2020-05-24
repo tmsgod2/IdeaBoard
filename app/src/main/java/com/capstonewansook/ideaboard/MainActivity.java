@@ -25,12 +25,16 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
@@ -142,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        passPushTokenToServer();
 
     }
 
@@ -243,6 +248,17 @@ public class MainActivity extends AppCompatActivity {
                 // ...
             }
         });
+
+    }
+
+    void passPushTokenToServer(){
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Map<String, Object> tokenMap = new HashMap<>();
+        tokenMap.put("token",token);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(uid).update(tokenMap);
 
     }
 
