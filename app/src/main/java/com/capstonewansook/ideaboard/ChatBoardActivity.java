@@ -1,10 +1,12 @@
 package com.capstonewansook.ideaboard;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
@@ -60,6 +62,7 @@ public class ChatBoardActivity extends AppCompatActivity {
     private ChatlistAdapter chatlistAdapter;
     private static final String TAG = "ChatBoardActivity";
     private final int IMAGE_SEND = 1001;
+    private final int FILE_SEND = 1002;
     private final int TEXT_SEND_TYPE = 0;
     private final int IMAGE_SEND_TYPE = 1;
     private final int FILE_SEND_TYPE = 2;
@@ -84,13 +87,14 @@ public class ChatBoardActivity extends AppCompatActivity {
         uid2 = getIntent().getStringExtra("uid2");
         name = getIntent().getStringExtra("name");
         String url = getIntent().getStringExtra("prifileUrl");
-
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
         chatingList = new ArrayList<>();
         chatRecyclerView = findViewById(R.id.chatboard_recyclerview);
         sendButton = findViewById(R.id.chatboard_sendButton);
         chatEditText = findViewById(R.id.chatboard_editText);
         imageInButton = findViewById(R.id.chatboard_image_button);
-
+        fileInButton = findViewById(R.id.chatboard_clib_button);
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference mStorageRef = storage.getReference();
         final File localFile;
@@ -133,6 +137,12 @@ public class ChatBoardActivity extends AppCompatActivity {
             }
         });
 
+        fileInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GetFile();
+            }
+        });
         //상단 액션바의 뒤로가기 버튼을 위해 작성
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(name);
@@ -351,10 +361,10 @@ public class ChatBoardActivity extends AppCompatActivity {
             case IMAGE_SEND:
                 try {
                     Uri image = data.getData();
-
+                    final String imageName = getName(image);
 
 //                Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
-                    final StorageReference profileRef = MainActivity.mStorageRef.child("chatings/" + roomId + "/" + chatingList.size());
+                    final StorageReference profileRef = MainActivity.mStorageRef.child("chatings/" + roomId + "/" + chatingList.size()+".jpg");
 
                     profileRef.putFile(image)
                             .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -362,7 +372,7 @@ public class ChatBoardActivity extends AppCompatActivity {
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     // Get a URL to the uploaded content
 //
-                                    SendMessage(chatingList.size()+"",IMAGE_SEND_TYPE);
+                                    SendMessage(chatingList.size()+".jpg",IMAGE_SEND_TYPE);
 
                                 }
                             })
@@ -378,6 +388,31 @@ public class ChatBoardActivity extends AppCompatActivity {
                     e.printStackTrace();
                     return;
                 }
+            case FILE_SEND:
+                try{
+                    final Uri fileUri = data.getData();
+                    String fileName = getName(fileUri);
+                    final StorageReference profileRef = MainActivity.mStorageRef.child("chatings/" + roomId + "/" + fileName);
+
+                    profileRef.putFile(fileUri)
+                            .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+                                    SendMessage(getName(fileUri)+"",FILE_SEND_TYPE);
+
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+
+                                }
+                            });
+                }catch (Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
         }
     }
 
@@ -385,4 +420,23 @@ public class ChatBoardActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, IMAGE_SEND);
     }
+
+    private void GetFile(){
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        startActivityForResult(intent,FILE_SEND);
+    }
+    // 파일명 찾기
+    private String getName(Uri uri)
+    {
+        String[] projection = { MediaStore.Images.ImageColumns.DISPLAY_NAME };
+        Cursor cursor = managedQuery(uri, projection, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.ImageColumns.DISPLAY_NAME);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+
+
 }
