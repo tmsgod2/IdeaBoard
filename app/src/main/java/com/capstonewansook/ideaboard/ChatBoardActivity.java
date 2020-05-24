@@ -223,6 +223,8 @@ public class ChatBoardActivity extends AppCompatActivity {
                 else if(titleStr == "사진")
                 {
                     Intent intent = new Intent(getApplicationContext(), Chatalbum.class);
+                    intent.putExtra("roomid",roomId);
+                    intent.putExtra("size",chatingList.size());
                     startActivity(intent);
                 }
             }
