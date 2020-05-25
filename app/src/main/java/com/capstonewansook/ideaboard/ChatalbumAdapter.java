@@ -7,12 +7,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ChatalbumAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<ImageView> iv;
+    private ArrayList<ChatalbumData> iv;
     private int count;
-    public ChatalbumAdapter(Context context,ArrayList<ImageView> iv){
+    public ChatalbumAdapter(Context context,ArrayList<ChatalbumData> iv){
         this.context = context;
         this.iv = iv;
         count = iv.size();
@@ -36,7 +37,8 @@ public class ChatalbumAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
-        imageView = iv.get(position);
+        Collections.sort(iv);
+        imageView = iv.get(position).getImageView();
 
         return imageView;
     }

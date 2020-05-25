@@ -29,6 +29,7 @@
         <activity android:name=".IdeamainActivity" />
         <activity android:name=".InfomationActivity" />
         <activity android:name=".Chatalbum" />
+        <activity android:name=".Chatalbumclick" />
         <provider
             android:authorities="${applicationId}.provider"
             android:name=".GenericFileProvider"
