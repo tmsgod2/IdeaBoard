@@ -146,6 +146,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Intent serviceIntent = new Intent(this,MyFirebaseMessagingService.class);
+        startService(serviceIntent);
+
         passPushTokenToServer();
 
     }

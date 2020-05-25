@@ -293,6 +293,7 @@ public class ChatBoardActivity extends AppCompatActivity {
         chatData.put("date", FieldValue.serverTimestamp());
         chatData.put("message", message);
         chatData.put("type",type);
+        chatData.put("sendid",uid2);
         EditTextDelete();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("chatrooms").document(roomId).collection("chats").add(chatData)
