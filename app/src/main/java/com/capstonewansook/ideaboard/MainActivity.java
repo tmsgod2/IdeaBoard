@@ -157,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
 
         passPushTokenToServer();
 
-
     }
 
     //프래그먼트->프래그먼트 이동을 위한 함수
@@ -261,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     void passPushTokenToServer(){
 
         String token = FirebaseInstanceId.getInstance().getToken();
@@ -271,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
         db.collection("users").document(uid).update(tokenMap);
 
     }
+
 
 
 }

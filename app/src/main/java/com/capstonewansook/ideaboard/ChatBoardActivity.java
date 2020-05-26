@@ -219,12 +219,12 @@ public class ChatBoardActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if(task.getResult().get("uid1").equals(MainActivity.uid)) {
-                                //FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid1","none");
+                                FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid1","none");
                                 onBackPressed();
                             }
                             else
                             {
-                                //FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid2","none");
+                                FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid2","none");
                                 onBackPressed();
                             }
                         }

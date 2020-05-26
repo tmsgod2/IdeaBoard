@@ -29,6 +29,7 @@ public class StarPostsFragment extends Fragment {
     private ArrayList<postsRecyclerViewData> postsList;
     private postsRecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
+    private ViewGroup viewGroup;
     String uid;
     public StarPostsFragment(String uid){
         this.uid = uid;
@@ -39,9 +40,14 @@ public class StarPostsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final ViewGroup viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_posts,container,false);
+        viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_posts,container,false);
         db = FirebaseFirestore.getInstance().getInstance();
+        return viewGroup;
 
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
         postsList = new ArrayList<>();
         db.collection("users")
                 .document(uid)
@@ -71,14 +77,8 @@ public class StarPostsFragment extends Fragment {
                             }
                         }
                     }
-
                 });
         recyclerView = viewGroup.findViewById(R.id.posts_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(viewGroup.getContext()));
-
-        return viewGroup;
-
     }
-
 }
-

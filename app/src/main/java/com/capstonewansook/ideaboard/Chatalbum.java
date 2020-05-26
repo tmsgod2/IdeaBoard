@@ -1,5 +1,6 @@
 package com.capstonewansook.ideaboard;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
@@ -26,8 +28,9 @@ import java.util.ArrayList;
 public class Chatalbum extends AppCompatActivity {
     private TextView textView;
     private GridView gridView;
-    private ArrayList<ImageView> arrayList;
+    private ArrayList<ChatalbumData> arrayList;
     private int i;
+    private String string;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,16 +41,24 @@ public class Chatalbum extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle("사진");
         actionBar.setDisplayHomeAsUpEnabled(true);
-        String string = getIntent().getExtras().getString("roomid");
-        arrayList = new ArrayList<ImageView>();
+        string = getIntent().getExtras().getString("roomid");
+        arrayList = new ArrayList<ChatalbumData>();
         int size = getIntent().getExtras().getInt("size");
 
             FirebaseStorage.getInstance().getReference().child("chatings/" + string).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
                 @Override
                 public void onSuccess(ListResult listResult) {
-                    for (StorageReference item : listResult.getItems()) {
+                    for (final StorageReference item : listResult.getItems()) {
                         final ImageView imageView = new ImageView(getApplicationContext());
-                        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        final ChatalbumData chatalbumData = new ChatalbumData(imageView,0);
+                        item.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                            @Override
+                            public void onSuccess(StorageMetadata storageMetadata) {
+                                chatalbumData.setA((int)storageMetadata.getCreationTimeMillis());
+                            }
+                        });
+                        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                        imageView.setLayoutParams(new GridView.LayoutParams(GridView.LayoutParams.MATCH_PARENT,400));
                         item.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                             @Override
                             public void onComplete(@NonNull Task<Uri> task) {
@@ -55,12 +66,16 @@ public class Chatalbum extends AppCompatActivity {
                                     Glide.with(getApplicationContext())
                                             .load(task.getResult())
                                             .into(imageView);
+                                    chatalbumData.setImageView(imageView);
                                     imageView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
+                                            Intent intent = new Intent(getApplicationContext(), Chatalbumclick.class);
+                                            intent.putExtra("image", string+"/"+item.getName());
+                                            startActivity(intent);
                                         }
                                     });
-                                    arrayList.add(imageView);
+                                    arrayList.add(chatalbumData);
                                     textView.setVisibility(View.GONE);
                                 }
 

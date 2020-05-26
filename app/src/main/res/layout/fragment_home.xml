@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".ChatFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -14,7 +15,9 @@
             android:id="@+id/home_manystar_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="기발한 아이디어"
+            android:textColor="#000000"
             android:textSize="30sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintHorizontal_bias="0.0"
@@ -25,7 +28,9 @@
             android:id="@+id/home_manystar_plus_imageView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/ic_add_black"
+            android:background="#80FF0000"
+            android:scaleType="center"
+            android:src="@drawable/ic_chevron_right_black_24dp"
             app:layout_constraintBottom_toBottomOf="@+id/home_manystar_title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/home_manystar_title"
@@ -36,7 +41,9 @@
             android:id="@+id/home_newidea_title_textView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="새로운 아이디어"
+            android:textColor="#000000"
             android:textSize="30sp"
             app:layout_constraintEnd_toStartOf="@+id/guideline3"
             app:layout_constraintHorizontal_bias="0.0"
@@ -47,7 +54,9 @@
             android:id="@+id/home_newidea_plus_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:src="@drawable/ic_add_black"
+            android:background="#8000FF0D"
+            android:scaleType="center"
+            android:src="@drawable/ic_chevron_right_black_24dp"
             app:layout_constraintBottom_toBottomOf="@+id/home_newidea_title_textView"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/home_newidea_title_textView"
@@ -59,7 +68,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.5" />
-
 
 
         <androidx.constraintlayout.widget.Guideline
@@ -84,6 +92,7 @@
             android:id="@+id/home_newidea_recyclerView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

@@ -4,44 +4,53 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".RankingFragment">
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
 
         <RadioGroup
             android:id="@+id/ranking_radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/posts_recyclerview_layout"
+            android:gravity="center"
+
             android:orientation="horizontal"
             android:weightSum="3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/guideline4">
+            app:layout_constraintTop_toTopOf="parent">
 
             <RadioButton
                 android:id="@+id/ranking_day_radioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginRight="45dp"
                 android:checked="true"
+                android:gravity="center|center_horizontal|center_vertical"
                 android:text="일간" />
-
-            <RadioButton
-                android:id="@+id/ranking_mon_radioButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="월간" />
 
             <RadioButton
                 android:id="@+id/ranking_year_radioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginRight="45dp"
+                android:duplicateParentState="false"
+                android:gravity="center|center_horizontal|center_vertical"
                 android:text="연간" />
+
+            <RadioButton
+                android:id="@+id/ranking_mon_radioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center|center_horizontal|center_vertical"
+                android:text="월간" />
+
         </RadioGroup>
 
         <androidx.constraintlayout.widget.Guideline
@@ -50,15 +59,6 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="45dp" />
-
-        <TextView
-            android:id="@+id/textView7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="랭킹"
-            android:textSize="30sp"
-            app:layout_constraintBottom_toTopOf="@+id/guideline4"
-            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rankingRecyclerView"

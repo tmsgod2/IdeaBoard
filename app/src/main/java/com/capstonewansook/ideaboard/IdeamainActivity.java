@@ -74,6 +74,7 @@ public class IdeamainActivity extends AppCompatActivity {
     ImageView commentExitImageView;
     LinearLayout imageLayout;
     RelativeLayout loadingLayout;
+    TextView nameTextView;
 
     final ArrayList<CommentRecyclerViewData> list = new ArrayList<>();
 
@@ -102,18 +103,33 @@ public class IdeamainActivity extends AppCompatActivity {
         commentSubmitButton = findViewById(R.id.ideamain_comment_submit_button);
         commentExitImageView = findViewById(R.id.ideamain_comment_exit_imageView);
         imageLayout = findViewById(R.id.ideamain_image_linearlayout);
+        nameTextView = findViewById(R.id.ideamain_name);
 
 
         boardId = mainData.boardId;
         uid = mainData.uid;
         titleTextView.setText(mainData.title);
         contentTextView.setText(mainData.content);
+
+
         //star = 0; //mainData.stars;
         count = 0;
         if(uid.equals(MainActivity.uid)){
             chatImageView.setVisibility(View.GONE);
         }
         db = FirebaseFirestore.getInstance();
+
+
+        db.collection("users").document(uid).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        nameTextView.setText(task.getResult().get("name").toString());
+
+                    }});
+
+
+
         db.collection("users").document(MainActivity.uid).collection("Star").document(boardId).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
