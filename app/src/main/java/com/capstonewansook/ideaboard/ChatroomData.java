@@ -218,5 +218,22 @@ public class ChatroomData {
         Log.d("ChatroomData",data.get(i).getMessage());
     }
 
+    public int RoomIdIndexSearch(String rid){
+        for(int i =0; i<chatrooms.size();i++){
+            if(chatrooms.get(i).getChatroomID().equals(rid)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int Uid2IndexSearch(String uid2){
+        for(int i=0;i<chatrooms.size();i++){
+            if(chatrooms.get(i).getUid2().equals(uid2)){
+                return i;
+            }
+        }
+        return -1;
+    }
 
 }

@@ -36,7 +36,8 @@
         <activity android:name=".logintitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="Logintitle"/>
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

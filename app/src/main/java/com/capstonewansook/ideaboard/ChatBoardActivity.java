@@ -328,10 +328,12 @@ public class ChatBoardActivity extends AppCompatActivity {
                             else{
                                 getName = MainActivity.cus.getName();
                             }
+
                             if(chatingList.isEmpty()){
                                 isSame = false;
                                 try {
                                     chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(), new Date(System.currentTimeMillis()),Integer.parseInt(doc.get("type").toString())));
+
                                 }
                                 catch (NullPointerException nullE){
                                     chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(), new Date(System.currentTimeMillis())));
@@ -347,6 +349,9 @@ public class ChatBoardActivity extends AppCompatActivity {
                                     chatingList.add(new ChatingRecyclerViewData(doc.getId(), getName, getUid, doc.get("message").toString(), new Date(System.currentTimeMillis())));
                                 }
                             }
+                            int change = MainActivity.chatData.RoomIdIndexSearch(roomId);
+                            MainActivity.chatData.getChatrooms().get(change).setMessage(doc.get("message").toString());
+                            MainActivity.chatData.getChatrooms().get(change).setDate(new Date(System.currentTimeMillis()));
 
                         }
                         if(!isSame)

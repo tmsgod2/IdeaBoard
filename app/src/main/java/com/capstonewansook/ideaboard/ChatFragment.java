@@ -16,6 +16,14 @@ import static com.capstonewansook.ideaboard.MainActivity.chatData;
 
 
 public class ChatFragment extends Fragment {
+
+    private static ChatFragment instance = new ChatFragment();
+
+    public ChatFragment(){}
+
+    public static ChatFragment getInstance(){
+        return instance;
+    }
     private static final String TAG = "ChatFragment";
     ViewGroup rootView;
 
@@ -29,9 +37,8 @@ public class ChatFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG,"asd");
-        RecyclerViewSet(rootView,(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),
-                new ChatRecyclerViewAdapter(chatData.getChatrooms()));
+        Log.d(TAG, "asd");
+        SetChatRecycler();
     }
 
     @Override
@@ -40,6 +47,11 @@ public class ChatFragment extends Fragment {
 
     }
 
+    public void SetChatRecycler(){
+        RecyclerViewSet(rootView,(RecyclerView)rootView.findViewById(R.id.chat_recyclerView),
+                new ChatRecyclerViewAdapter(chatData.getChatrooms()));
+
+    }
     private void RecyclerViewSet(final ViewGroup view, RecyclerView recyclerView, RecyclerView.Adapter adapter){
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
