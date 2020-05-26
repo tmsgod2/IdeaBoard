@@ -11,7 +11,9 @@ import java.util.Map;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "MyFirebaseMessagingServ";
+    private ChatFragment chatFragment;
     public MyFirebaseMessagingService() {
+
     }
 
     @Override
@@ -28,8 +30,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 MainActivity.chatData.DataAdd(new ChatRecyclerViewData(mes.get("rid"),mes.get("uid2"),mes.get("name"),mes.get("message"),new Date(System.currentTimeMillis())));
             }
 
-            ChatFragment.getInstance().SetChatRecycler();
+            if(MainActivity.state == 1){
+                ChatFragment.myFragmentRefreshCallBack.myFragmentRefresh();
+            }
 
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 }

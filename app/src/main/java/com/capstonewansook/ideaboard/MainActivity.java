@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     public static StorageReference mStorageRef;
     //프로필 사진 저장 변수
     public static Bitmap profileBitmap;
+
+    public static int state = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -121,24 +123,28 @@ public class MainActivity extends AppCompatActivity {
                         transaction.replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss();
                         if(fragmentStack.peek().menuId!=R.id.home_menu)
                             fragmentStack.push(new FragmentData(homeFragment,R.id.home_menu));
+                        state = 0;
                         return true;
                     }
                     case R.id.chat_menu:{
                         transaction.replace(R.id.frameLayout, chatFragment).commitAllowingStateLoss();
                         if(fragmentStack.peek().menuId!=R.id.chat_menu)
                             fragmentStack.push(new FragmentData(chatFragment,R.id.chat_menu));
+                        state = 1;
                         return true;
                     }
                     case R.id.ranking_menu:{
                         transaction.replace(R.id.frameLayout, rankingFragment).commitAllowingStateLoss();
                         if(fragmentStack.peek().menuId!=R.id.ranking_menu)
                             fragmentStack.push(new FragmentData(rankingFragment,R.id.ranking_menu));
+                        state = 2;
                         return true;
                     }
                     case R.id.profile_menu:{
                         transaction.replace(R.id.frameLayout, profileFragment).commitAllowingStateLoss();
                         if(fragmentStack.peek().menuId!=R.id.profile_menu)
                             fragmentStack.push(new FragmentData(profileFragment,R.id.profile_menu));
+                        state = 3;
                         return true;
                     }
                     default: return false;
@@ -150,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
         startService(serviceIntent);
 
         passPushTokenToServer();
+
 
     }
 

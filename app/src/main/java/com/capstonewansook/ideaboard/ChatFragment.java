@@ -1,11 +1,15 @@
 package com.capstonewansook.ideaboard;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,22 +19,24 @@ import com.capstonewansook.ideaboard.recyclerview.ChatRecyclerViewAdapter;
 import static com.capstonewansook.ideaboard.MainActivity.chatData;
 
 
-public class ChatFragment extends Fragment {
+public class ChatFragment extends Fragment implements MyFragmentRefreshCallBack {
 
-    private static ChatFragment instance = new ChatFragment();
 
-    public ChatFragment(){}
-
-    public static ChatFragment getInstance(){
-        return instance;
-    }
     private static final String TAG = "ChatFragment";
-    ViewGroup rootView;
-
+    static ViewGroup rootView;
+    Handler handler = new Handler(Looper.getMainLooper()){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            super.handleMessage(msg);
+            SetChatRecycler();
+        }
+    };
+    public static MyFragmentRefreshCallBack myFragmentRefreshCallBack;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView =(ViewGroup)inflater.inflate(R.layout.fragment_chat, container, false);
+        myFragmentRefreshCallBack = this;
         return  rootView;
     }
 
@@ -57,4 +63,11 @@ public class ChatFragment extends Fragment {
         recyclerView.setAdapter(adapter);
     }
 
+
+
+    @Override
+    public void myFragmentRefresh() {
+        handler.sendEmptyMessage(0);
+
+    }
 }
