@@ -20,7 +20,8 @@
         app:layout_constraintBottom_toBottomOf="@id/chat_bubble_re_message_textView"
         android:text="2015.01.01"
         android:layout_marginStart="8dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/chat_bubble_re_name_textView"
