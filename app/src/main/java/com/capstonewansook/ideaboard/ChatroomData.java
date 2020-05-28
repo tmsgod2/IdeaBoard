@@ -159,7 +159,7 @@ public class ChatroomData {
             chatrooms.clear();
             for (int i = 0; i < data.size(); i++) {
                 chatrooms.add(new ChatRecyclerViewData(data.get(i).getRid(), data.get(i).getUid(), data.get(i).getName(), data.get(i).getMessage(), data.get(i).getDate()));
-                Log.d("Chatroom", i + "");
+
             }
         }
     }
@@ -218,5 +218,22 @@ public class ChatroomData {
         Log.d("ChatroomData",data.get(i).getMessage());
     }
 
+    public int RoomIdIndexSearch(String rid){
+        for(int i =0; i<chatrooms.size();i++){
+            if(chatrooms.get(i).getChatroomID().equals(rid)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int Uid2IndexSearch(String uid2){
+        for(int i=0;i<chatrooms.size();i++){
+            if(chatrooms.get(i).getUid2().equals(uid2)){
+                return i;
+            }
+        }
+        return -1;
+    }
 
 }
