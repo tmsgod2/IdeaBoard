@@ -9,97 +9,125 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <TextView
-            android:id="@+id/home_manystar_title"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="기발한 아이디어"
-            android:textColor="#000000"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline3"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/home_manystar_plus_imageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="#80FF0000"
-            android:scaleType="center"
-            android:src="@drawable/ic_chevron_right_black_24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/home_manystar_title"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/home_manystar_title"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="1.0" />
-
-        <TextView
-            android:id="@+id/home_newidea_title_textView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="새로운 아이디어"
-            android:textColor="#000000"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toStartOf="@+id/guideline3"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/guideline" />
-
-        <ImageView
-            android:id="@+id/home_newidea_plus_image"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="#8000FF0D"
-            android:scaleType="center"
-            android:src="@drawable/ic_chevron_right_black_24dp"
-            app:layout_constraintBottom_toBottomOf="@+id/home_newidea_title_textView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/home_newidea_title_textView"
-            app:layout_constraintTop_toTopOf="@+id/guideline" />
+        android:layout_height="match_parent"
+        android:background="#BEE2FF">
 
         <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
+            android:id="@+id/guideline9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             app:layout_constraintGuide_percent="0.5" />
 
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline3"
-            android:layout_width="wrap_content"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.85" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/home_manystar_recyclerView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/home_newidea_title_textView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_margin="10dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/home_manystar_title"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/home_newidea_recyclerView"
-            android:layout_width="0dp"
+            <TextView
+                android:id="@+id/home_manystar_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="#FFFFFF"
+                android:text="기발한 아이디어"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toStartOf="@+id/guideline3"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/home_manystar_plus_imageView"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="3dp"
+                android:background="#80FF0000"
+                android:scaleType="center"
+                android:src="@drawable/ic_chevron_right_black_24dp"
+                app:layout_constraintBottom_toBottomOf="@+id/home_manystar_title"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/home_manystar_title"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="1.0" />
+
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.85" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/home_manystar_recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/home_manystar_title"
+                app:layout_constraintVertical_bias="0.0" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/home_newidea_title_textView"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toTopOf="@+id/guideline9">
 
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.85" />
 
+            <TextView
+                android:id="@+id/home_newidea_title_textView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="새로운 아이디어"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                app:layout_constraintEnd_toStartOf="@+id/guideline7"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/home_newidea_plus_image"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_margin="3dp"
+                android:background="#8000FF0D"
+                android:scaleType="center"
+                android:src="@drawable/ic_chevron_right_black_24dp"
+                app:layout_constraintBottom_toTopOf="@+id/home_newidea_recyclerView"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/guideline7"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/home_newidea_recyclerView"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/home_newidea_title_textView" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </FrameLayout>

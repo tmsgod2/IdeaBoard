@@ -93,7 +93,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                                 .into(holder.profileImage);
                         mData.get(position).setProfile(task.getResult().toString());
                     } else {
-                        holder.profileImage.setImageResource(R.drawable.kakaotalklog2);
+                        holder.profileImage.setImageResource(R.drawable.ic_person_black_24dp);
                     }
                 }
             });

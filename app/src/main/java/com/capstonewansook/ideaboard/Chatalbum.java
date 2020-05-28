@@ -66,7 +66,6 @@ public class Chatalbum extends AppCompatActivity {
                                     Glide.with(getApplicationContext())
                                             .load(task.getResult())
                                             .into(imageView);
-                                    chatalbumData.setImageView(imageView);
                                     imageView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -75,6 +74,8 @@ public class Chatalbum extends AppCompatActivity {
                                             startActivity(intent);
                                         }
                                     });
+                                    chatalbumData.setImageView(imageView);
+
                                     arrayList.add(chatalbumData);
                                     textView.setVisibility(View.GONE);
                                 }
