@@ -25,7 +25,6 @@ import com.google.firebase.storage.StorageReference;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 //
 public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerViewAdapter.CustromViewHolder> implements Filterable {
     private ArrayList<IdeaRecycletViewData> arrayList;
@@ -63,7 +62,7 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
                             .load(task.getResult())
                             .into(holder.iv_profile);
                 } else {
-                    holder.iv_profile.setImageResource(R.drawable.kakaotalklog2);
+                    holder.iv_profile.setImageResource(R.drawable.ic_person_black_24dp);
                 }
             }
         });
