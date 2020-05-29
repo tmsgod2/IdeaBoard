@@ -1,7 +1,6 @@
 package com.capstonewansook.ideaboard;
 
 import android.Manifest;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -43,7 +42,6 @@ public class newpost extends AppCompatActivity {
     private EditText title;
     private EditText contents;
     private Intent intent;
-    private ClipData clipData;
     private Context context;
     private LinearLayout linearLayout;
     private ArrayList<Uri> imguri;
@@ -79,9 +77,6 @@ public class newpost extends AppCompatActivity {
                 if(!title.getText().toString().equals("") && !contents.getText().toString().equals("")) {
                     NewpostData newpostData = new NewpostData(MainActivity.uid, title.getText().toString(), contents.getText().toString(),(Object) FieldValue.serverTimestamp(),imguri.size());
                     DBCreate(newpostData);
-
-
-
                     loadinglayout.setVisibility(View.VISIBLE);
                 }
                 else
@@ -96,7 +91,6 @@ public class newpost extends AppCompatActivity {
                 permission(); //권한 가져오기
                 intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE,true);
                 startActivityForResult(intent, 101);
             }
         });
@@ -105,7 +99,7 @@ public class newpost extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        if(clipData != null)
+        if(imguri.isEmpty() == false)
             newimagebutton();
     }
 
@@ -125,13 +119,9 @@ public class newpost extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
                         postid = documentReference.getId();
-                        if(clipData != null)
-                        {
+                        if(imguri.isEmpty() == false)
                             upimg();
-                        }
-
                         onBackPressed();
                         loadinglayout.setVisibility(View.GONE);
                     }
@@ -175,13 +165,15 @@ public class newpost extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 101) {
-            if (data.getClipData() != null) {
-                //Uri image = data.getData();
-                clipData = data.getClipData();
-                for(int i = 0; i<clipData.getItemCount();i++)
-                {
-                    imguri.add(clipData.getItemAt(i).getUri());
+            try {
+                if (data.getData() != null) {
+                    Uri image = data.getData();
+                    imguri.add(image);
                 }
+            }catch (Exception e)
+            {
+                e.printStackTrace();
+                return;
             }
         }
     }
@@ -202,7 +194,6 @@ public class newpost extends AppCompatActivity {
         }
     }
     protected  void newimagebutton() {
-        for (int i = 0 ;i < clipData.getItemCount(); i++) {
             final Button but = new Button(context);
             but.setText("image " + count + " X");
             but.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,100));
@@ -218,6 +209,6 @@ public class newpost extends AppCompatActivity {
             });
             count += 1;
             linearLayout.addView(but);
-        }
+
     }
 }
