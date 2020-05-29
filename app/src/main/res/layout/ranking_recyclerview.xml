@@ -19,7 +19,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_stars_black" />
+        app:srcCompat="@drawable/ic_stars_black"
+        android:backgroundTint="#FFFFFFFF"/>
 
     <TextView
         android:id="@+id/rank_re_name_textView"

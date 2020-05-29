@@ -61,6 +61,8 @@ public class ChatBoardActivity extends AppCompatActivity {
     private DrawerLayout drawer;
     private ChatlistAdapter chatlistAdapter;
     private static final String TAG = "ChatBoardActivity";
+    private boolean noAlram;
+    private String uidNum;
     private final int IMAGE_SEND = 1001;
     private final int FILE_SEND = 1002;
     private final int TEXT_SEND_TYPE = 0;
@@ -95,6 +97,12 @@ public class ChatBoardActivity extends AppCompatActivity {
         chatEditText = findViewById(R.id.chatboard_editText);
         imageInButton = findViewById(R.id.chatboard_image_button);
         fileInButton = findViewById(R.id.chatboard_clib_button);
+        if(uid2.equals("none")){
+            chatEditText.setEnabled(false);
+            sendButton.setEnabled(false);
+            imageInButton.setEnabled(false);
+            fileInButton.setEnabled(false);
+        }
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference mStorageRef = storage.getReference();
         final File localFile;
@@ -201,45 +209,74 @@ public class ChatBoardActivity extends AppCompatActivity {
 
         drawer = (DrawerLayout) findViewById(R.id.chatdrawer);
         drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        chatlistAdapter = new ChatlistAdapter() ;
-        chatlistAdapter.addItem(2,"채팅방 서랍") ;
-        chatlistAdapter.addItem(ContextCompat.getDrawable(this, R.drawable.ic_photo_size_select_actual_black_24dp),"사진",ContextCompat.getDrawable(this, R.drawable.ic_chevron_right_black_24dp)) ;
-        chatlistAdapter.addItem(1,"알림설정") ;
-        chatlistAdapter.addItem(null,"채팅방 나가기",ContextCompat.getDrawable(this, R.drawable.ic_chevron_right_black_24dp)) ;
-        listView = (ListView) findViewById(R.id.drawer_chat) ;
-        listView.setAdapter(chatlistAdapter) ;
 
-        listView.setOnItemClickListener(new ListView.OnItemClickListener() {
+
+
+
+
+
+        db.collection("chatrooms").document(roomId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onItemClick(AdapterView parent, View v, int position, long id) {
-                Chatlistitem item = (Chatlistitem) parent.getItemAtPosition(position) ;
-                String titleStr = item.getTitleStr();
-                if(titleStr == "채팅방 나가기") {
-                    FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot result = task.getResult();
+                    try {
+                        if (result.get("uid1").toString().equals(MainActivity.uid)) {
+                            noAlram = (boolean) result.get("uid1NoSign");
+                        } else {
+                            noAlram = (boolean) result.get("uid2NoSign");
+                        }
+                    }
+                    catch (NullPointerException e){
+                        noAlram = false;
+                    }
+                    chatlistAdapter = new ChatlistAdapter() ;
+                    chatlistAdapter.addItem(2,"채팅방 서랍") ;
+                    chatlistAdapter.addItem(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_photo_size_select_actual_black_24dp),"사진",ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_chevron_right_black_24dp)) ;
+                    chatlistAdapter.addItem(1,"알림설정",roomId,noAlram) ;
+                    chatlistAdapter.addItem(null,"채팅방 나가기",ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_chevron_right_black_24dp)) ;
+                    listView = (ListView) findViewById(R.id.drawer_chat) ;
+                    listView.setAdapter(chatlistAdapter) ;
+                    listView.setOnItemClickListener(new ListView.OnItemClickListener() {
                         @Override
-                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if(task.getResult().get("uid1").equals(MainActivity.uid)) {
-                                FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid1","none");
-                                onBackPressed();
+                        public void onItemClick(AdapterView parent, View v, int position, long id) {
+                            Chatlistitem item = (Chatlistitem) parent.getItemAtPosition(position) ;
+                            String titleStr = item.getTitleStr();
+                            if(titleStr == "채팅방 나가기") {
+                                FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if(task.getResult().get("uid1").equals(MainActivity.uid)) {
+                                            FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid1","none");
+                                            int delete = MainActivity.chatData.RoomIdIndexSearch(roomId);
+                                            MainActivity.chatData.getChatrooms().remove(delete);
+                                            onBackPressed();
+                                        }
+                                        else
+                                        {
+                                            FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid2","none");
+                                            int delete = MainActivity.chatData.RoomIdIndexSearch(roomId);
+                                            MainActivity.chatData.getChatrooms().remove(delete);
+                                            onBackPressed();
+                                        }
+                                    }
+                                });
                             }
-                            else
+                            else if(titleStr == "사진")
                             {
-                                FirebaseFirestore.getInstance().collection("chatrooms").document(roomId).update("uid2","none");
-                                onBackPressed();
+                                Intent intent = new Intent(getApplicationContext(), Chatalbum.class);
+                                intent.putExtra("roomid",roomId);
+                                intent.putExtra("size",chatingList.size());
+                                startActivity(intent);
+                            }
+                            if(titleStr == "알림설정"){
+
                             }
                         }
                     });
                 }
-                else if(titleStr == "사진")
-                {
-                    Intent intent = new Intent(getApplicationContext(), Chatalbum.class);
-                    intent.putExtra("roomid",roomId);
-                    intent.putExtra("size",chatingList.size());
-                    startActivity(intent);
-                }
             }
         });
-
 
     }
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -351,7 +388,12 @@ public class ChatBoardActivity extends AppCompatActivity {
                             }
                             int change = MainActivity.chatData.RoomIdIndexSearch(roomId);
                             MainActivity.chatData.getChatrooms().get(change).setMessage(doc.get("message").toString());
-                            MainActivity.chatData.getChatrooms().get(change).setDate(new Date(System.currentTimeMillis()));
+                            try {
+                                MainActivity.chatData.getChatrooms().get(change).setDate(((Timestamp) doc.get("date")).toDate());
+                            }
+                            catch (Exception dateE) {
+                                MainActivity.chatData.getChatrooms().get(change).setDate(new Date(System.currentTimeMillis()));
+                            }
 
                         }
                         if(!isSame)
