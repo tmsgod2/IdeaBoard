@@ -1,7 +1,5 @@
 package com.capstonewansook.ideaboard;
 
-import android.util.Log;
-
 import com.capstonewansook.ideaboard.recyclerview.ChatRecyclerViewData;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -20,7 +18,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
         if(remoteMessage.getNotification() != null){
             Map<String, String> mes = remoteMessage.getData();
-            Log.d(TAG, remoteMessage.getData().toString());
             int change = MainActivity.chatData.Uid2IndexSearch(mes.get("uid2"));
             if(change>=0) {
                 MainActivity.chatData.getChatrooms().get(change).setMessage(mes.get("message"));

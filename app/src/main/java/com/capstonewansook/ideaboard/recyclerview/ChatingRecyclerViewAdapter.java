@@ -95,9 +95,18 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
         SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm");
 
         holder.nameText.setText(name);
-
+        StorageReference profileRef = FirebaseStorage.getInstance().getReference().child("users/"+mData.get(position).getUid()+"/profileImage");
+        profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if(task.isSuccessful()){
+                    Glide.with(holder.itemView.getContext())
+                            .load(task.getResult())
+                            .into(holder.profileImage);
+                }
+            }
+        });
         holder.dateText.setText(format.format(date));
-        holder.profileImage.setImageBitmap(profile);
         holder.dateMeText.setText(format.format(date));
         if(mData.get(position).getType() == 1){
             FirebaseStorage storage = FirebaseStorage.getInstance();

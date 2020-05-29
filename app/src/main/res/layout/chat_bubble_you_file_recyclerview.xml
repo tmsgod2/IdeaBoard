@@ -14,7 +14,9 @@
         android:src="@drawable/ic_chat_black"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"/>
+        android:layout_marginBottom="8dp"
+        android:scaleType="centerCrop"
+        />
     <TextView
         android:id="@+id/chat_bubble_re_date_textView"
         android:layout_width="wrap_content"
