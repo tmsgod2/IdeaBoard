@@ -20,6 +20,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -39,6 +41,8 @@ public class NotmeProfileFragment extends Fragment {
     private TextView officeTextView;
     private TextView postTextView;
     private TextView wantTextView;
+    private TextView profileStar;
+    private int star;
     private FloatingActionButton chatButton;
     FirebaseFirestore db;
     final ArrayList<String> uids = new ArrayList<>();
@@ -61,6 +65,7 @@ public class NotmeProfileFragment extends Fragment {
         postTextView = rootView.findViewById(R.id.profile_post_textView);
         wantTextView = rootView.findViewById(R.id.profile_want_idea_textView);
         chatButton = rootView.findViewById(R.id.notme_profile_chat_button);
+        profileStar = rootView.findViewById(R.id.profileStar);
         chatButton.setVisibility(View.VISIBLE);
         db = FirebaseFirestore.getInstance();
 
@@ -97,6 +102,22 @@ public class NotmeProfileFragment extends Fragment {
         });
         profileImageView.setBackground(new ShapeDrawable((new OvalShape())));
         profileImageView.setClipToOutline(true);
+
+        star = 0;
+        FirebaseFirestore.getInstance().collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult() != null) {
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            if (snapshot.get("uid").equals(uid))
+                                star += Integer.parseInt(snapshot.get("stars").toString());
+                        }
+                        profileStar.setText(star+"");
+                    }
+                }
+            }
+        });
 
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
