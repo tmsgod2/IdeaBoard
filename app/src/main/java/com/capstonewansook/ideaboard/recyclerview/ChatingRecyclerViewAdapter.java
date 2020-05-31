@@ -166,6 +166,7 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
                 holder.itemView.getContext().startActivity(intent);
             }
         });
+
     }
 
     @Override

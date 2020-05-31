@@ -53,31 +53,42 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
 
 
 
-        StorageReference profileRef = storage.getReference().child("users/"+arrayList.get(position).getIv_profill()+"/profileImage");
-        profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-            @Override
-            public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Glide.with(holder.iv_profile.getContext())
-                            .load(task.getResult())
-                            .into(holder.iv_profile);
-                } else {
-                    holder.iv_profile.setImageResource(R.drawable.ic_person_black_24dp);
+
+            StorageReference profileRef = storage.getReference().child("users/" + arrayList.get(position).getIv_profill() + "/profileImage");
+            profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    try {
+                        if (task.isSuccessful()) {
+                            Glide.with(holder.iv_profile.getContext())
+                                    .load(task.getResult())
+                                    .into(holder.iv_profile);
+                        } else {
+                            holder.iv_profile.setImageResource(R.drawable.ic_person_black_24dp);
+                        }
+                    }
+                    catch (Exception e){
+
+                    }
                 }
-            }
-        });
+            });
 
 
         StorageReference profileRef2 = storage.getReference().child("posts/"+arrayList.get(position).getIdpost()+"/image0");
         profileRef2.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
             @Override
             public void onComplete(@NonNull Task<Uri> task) {
-                if (task.isSuccessful()) {
-                    Glide.with(holder.idpost.getContext())
-                            .load(task.getResult())
-                            .into(holder.idpost);
-                } else {
+                try {
+                    if (task.isSuccessful()) {
+                        Glide.with(holder.idpost.getContext())
+                                .load(task.getResult())
+                                .into(holder.idpost);
+                    } else {
 //                    holder.idpost.setImageResource(R.drawable.kakaotalklog2);
+                    }
+                }
+                catch (Exception e){
+
                 }
             }
         });
