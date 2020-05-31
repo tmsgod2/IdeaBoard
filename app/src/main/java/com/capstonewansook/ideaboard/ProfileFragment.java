@@ -77,7 +77,12 @@ public class ProfileFragment extends Fragment {
         profileImageView = rootView.findViewById(R.id.profile_imageView);
         profileImageView.setBackground(new ShapeDrawable((new OvalShape())));
         profileImageView.setClipToOutline(true);
-        profileImageView.setImageBitmap(MainActivity.profileBitmap);
+        if(((MainActivity) getActivity()).imageCheck)
+        {
+            profileImageView.setImageBitmap(MainActivity.profileBitmap);
+        }else{
+            profileImageView.setImageResource(R.drawable.ic_person_black_24dp);
+        }
         profileImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
