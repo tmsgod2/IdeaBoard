@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private RankingFragment rankingFragment;
     private ProfileFragment profileFragment;
 
+    boolean imageCheck;
+
+
     //뒤로가기 눌렀을 때 들어간 순서 역순으로 프래그먼트 띄우기 위한 스택
     public static Stack<FragmentData> fragmentStack = new Stack<>();
 
@@ -247,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         // Successfully downloaded data to local file
                         // ...
+                        imageCheck = true;
                         profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                         Log.d(TAG, "이미지 불러오기 성공");
                     }
@@ -254,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle failed download
+                imageCheck = false;
                 // ...
             }
         });
