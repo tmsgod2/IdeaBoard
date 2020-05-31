@@ -96,7 +96,7 @@ public class NotmeProfileFragment extends Fragment {
                             .load(task.getResult())
                             .into(profileImageView);
                 } else {
-                    profileImageView.setImageResource(R.drawable.kakaotalklog2);
+                    profileImageView.setImageResource(R.drawable.ic_person_black_24dp);
                 }
             }
         });
