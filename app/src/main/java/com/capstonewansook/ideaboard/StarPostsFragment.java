@@ -65,13 +65,17 @@ public class StarPostsFragment extends Fragment {
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                try{
                                                 postsList.add(new postsRecyclerViewData(task.getResult().getId(), R.drawable.ic_star_gold_24dp,
                                                         task.getResult().get("title").toString(), task.getResult().get("content").toString()
                                                         ,((Timestamp) task.getResult().get("date")).toDate(),
                                                         Integer.parseInt(task.getResult().get("stars").toString())
                                                         , task.getResult().get("content").toString()));
                                                 adapter = new postsRecyclerViewAdapter(postsList);
-                                                recyclerView.setAdapter(adapter);
+                                                recyclerView.setAdapter(adapter);}
+                                                catch (NullPointerException nulle){
+
+                                                }
                                             }
                                         });
                             }
