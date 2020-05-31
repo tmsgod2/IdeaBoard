@@ -20,6 +20,7 @@ import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.capstonewansook.ideaboard.Chatalbumclick;
 import com.capstonewansook.ideaboard.MainActivity;
 import com.capstonewansook.ideaboard.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -157,7 +158,14 @@ public class ChatingRecyclerViewAdapter extends RecyclerView.Adapter<ChatingRecy
                 }
             });
         }
-
+        holder.chatImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(holder.itemView.getContext(), Chatalbumclick.class);
+                intent.putExtra("image",roomId+"/"+mData.get(position).getMessage());
+                holder.itemView.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
