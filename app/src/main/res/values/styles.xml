@@ -22,6 +22,8 @@
     </style>
 
     <style name="customButtonFontStyle" parent="@android:style/Widget.DeviceDefault.Button.Borderless">
+        <item name="android:background">@drawable/abc_btn_colored_material</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Widget.Button.Colored</item>
         <item name="android:fontFamily">@font/custom_font_nanumvarungothic</item>
     </style>
 
