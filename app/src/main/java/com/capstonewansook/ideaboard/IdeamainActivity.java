@@ -1,15 +1,28 @@
 package com.capstonewansook.ideaboard;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
+
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -61,6 +74,7 @@ public class IdeamainActivity extends AppCompatActivity {
     String name;
     int star;
     int count;
+    int extendedimage = 0;
     TextView deleteTextView;
     ImageView profileImage;
     TextView titleTextView;
@@ -84,7 +98,6 @@ public class IdeamainActivity extends AppCompatActivity {
         setContentView(R.layout.ideamain);
         loadingLayout = findViewById(R.id.loadingLayout);
         loadingLayout.bringToFront();
-
         mainData = (IdeaMainData) getIntent().getSerializableExtra(IdeaMainIn.IDEAMAIN_KEY);
 
         //상단 액션바의 뒤로가기 버튼을 위해 작성
@@ -104,7 +117,6 @@ public class IdeamainActivity extends AppCompatActivity {
         commentExitImageView = findViewById(R.id.ideamain_comment_exit_imageView);
         imageLayout = findViewById(R.id.ideamain_image_linearlayout);
         nameTextView = findViewById(R.id.ideamain_name);
-
 
         boardId = mainData.boardId;
         uid = mainData.uid;
@@ -166,6 +178,20 @@ public class IdeamainActivity extends AppCompatActivity {
                         IsDelete();
                     }
                 });
+
+           
+                imageLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent extendedintend = new Intent(getApplicationContext() , extededimageActivity.class);
+                        extendedintend.putExtra("extededimage",extendedimage);
+                        extendedintend.putExtra("ideamainuid",uid);
+                        extendedintend.putExtra("boardid",boardId);
+                        startActivity(extendedintend);
+                    }
+                });
+
         profileImage.setBackground(new ShapeDrawable((new OvalShape())));
         profileImage.setClipToOutline(true);
         starTextView.setText(String.valueOf(mainData.stars));
@@ -377,6 +403,7 @@ public class IdeamainActivity extends AppCompatActivity {
                     Glide.with(getApplicationContext())
                             .load(task.getResult())
                             .into(profileImage);
+                  extendedimage++;
                 }
             }
         });
