@@ -29,6 +29,7 @@ public class StarPostsFragment extends Fragment {
     private ArrayList<postsRecyclerViewData> postsList;
     private postsRecyclerViewAdapter adapter;
     private RecyclerView recyclerView;
+    private ViewGroup viewGroup;
     String uid;
     public StarPostsFragment(String uid){
         this.uid = uid;
@@ -39,9 +40,14 @@ public class StarPostsFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final ViewGroup viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_posts,container,false);
+        viewGroup = (ViewGroup)inflater.inflate(R.layout.fragment_posts,container,false);
         db = FirebaseFirestore.getInstance().getInstance();
+        return viewGroup;
 
+    }
+    @Override
+    public void onStart() {
+        super.onStart();
         postsList = new ArrayList<>();
         db.collection("users")
                 .document(uid)
@@ -59,26 +65,24 @@ public class StarPostsFragment extends Fragment {
                                         .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                                             @Override
                                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                                try{
                                                 postsList.add(new postsRecyclerViewData(task.getResult().getId(), R.drawable.ic_star_gold_24dp,
                                                         task.getResult().get("title").toString(), task.getResult().get("content").toString()
                                                         ,((Timestamp) task.getResult().get("date")).toDate(),
                                                         Integer.parseInt(task.getResult().get("stars").toString())
                                                         , task.getResult().get("content").toString()));
                                                 adapter = new postsRecyclerViewAdapter(postsList);
-                                                recyclerView.setAdapter(adapter);
+                                                recyclerView.setAdapter(adapter);}
+                                                catch (NullPointerException nulle){
+
+                                                }
                                             }
                                         });
                             }
                         }
                     }
-
                 });
         recyclerView = viewGroup.findViewById(R.id.posts_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(viewGroup.getContext()));
-
-        return viewGroup;
-
     }
-
 }
-

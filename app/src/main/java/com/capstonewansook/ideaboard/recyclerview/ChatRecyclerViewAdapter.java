@@ -49,7 +49,8 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 
     public ChatRecyclerViewAdapter(ArrayList<ChatRecyclerViewData> mData) {
         this.mData = mData;
-        Collections.sort(mData);
+        if(!mData.isEmpty())
+            Collections.sort(mData);
     }
 
     @NonNull
@@ -74,11 +75,15 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
 //        holder.profileImage.setImageResource(profile);
         holder.nameText.setText(name);
         holder.messageText.setText(message);
-        holder.dateText.setText(format.format(date));
-
+        try {
+            holder.dateText.setText(format.format(date));
+        }
+        catch (NullPointerException e){
+            holder.dateText.setText("");
+        }
 
         Log.d("ChatRecyclerViewAdapter",mData.get(position).getUid2());
-        StorageReference profileRef = storage.getReference().child("users/"+mData.get(position).getUid2()+"/profileImage.jpg");
+        StorageReference profileRef = storage.getReference().child("users/"+mData.get(position).getUid2()+"/profileImage");
         profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
@@ -86,8 +91,9 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                         Glide.with(holder.profileImage.getContext())
                                 .load(task.getResult())
                                 .into(holder.profileImage);
+                        mData.get(position).setProfile(task.getResult().toString());
                     } else {
-                        holder.profileImage.setImageResource(R.drawable.kakaotalklog2);
+                        holder.profileImage.setImageResource(R.drawable.ic_person_black_24dp);
                     }
                 }
             });
@@ -98,6 +104,10 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
                 Toast.makeText(holder.itemView.getContext(),mData.get(position).getChatroomID()+" " + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
                 Context context = view.getContext();
                 Intent intent = new Intent(context, ChatBoardActivity.class);
+                intent.putExtra("rid",mData.get(position).getChatroomID());
+                intent.putExtra("uid2",mData.get(position).getUid2());
+                intent.putExtra("name",mData.get(position).getName());
+                intent.putExtra("profileUrl",mData.get(position).getProfile());
                 context.startActivity(intent);
 
             }

@@ -36,7 +36,8 @@
                 android:layout_height="125dp"
                 android:layout_gravity="center"
                 android:layout_marginTop="20dp"
-                android:src="@drawable/loginlog" />
+                android:src="@drawable/snowdearicon"
+                 />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -106,22 +107,8 @@
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="20dp" />
-
-                <Button
-                    android:id="@+id/facebooklogin"
-                    android:layout_width="280dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="30dp"
-                    android:layout_marginBottom="30dp"
-                    android:background="@color/colorPrimaryDark"
-                    android:drawableStart="@drawable/facebooklog2"
-                    android:drawablePadding="1dp"
-                    android:text="페이스북 로그인"
-                    android:textColor="#ffffff"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="20dp"
+                    android:visibility="gone"/>
 
 
             </LinearLayout>

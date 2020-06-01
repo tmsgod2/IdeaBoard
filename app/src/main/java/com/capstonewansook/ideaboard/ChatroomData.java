@@ -1,17 +1,16 @@
 package com.capstonewansook.ideaboard;
 
 import android.util.Log;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstonewansook.ideaboard.recyclerview.ChatRecyclerViewData;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -19,8 +18,6 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ChatroomData {
     private String uid;
@@ -29,6 +26,8 @@ public class ChatroomData {
     FirebaseFirestore db;
     private int check;
     private String roomuid;
+    private ViewGroup viewGroup;
+    private RecyclerView recyclerView;
     private class ChatrData{
         String rid;
         String uid;
@@ -36,10 +35,9 @@ public class ChatroomData {
         Date date;
         String message;
 
-        public ChatrData(String rid, String uid, Date date) {
+        public ChatrData(String rid, String uid) {
             this.rid = rid;
             this.uid = uid;
-            this.date = date;
         }
 
         public String getRid() {
@@ -82,6 +80,39 @@ public class ChatroomData {
             this.message = message;
         }
     }
+    public ChatroomData(final String uid, ViewGroup viewGroup, RecyclerView recyclerView) {
+        this.uid = uid;
+        data = new ArrayList<>();
+        chatrooms = new ArrayList<>();
+        check = 0;
+        this.viewGroup = viewGroup;
+        this.recyclerView = recyclerView;
+
+        db = FirebaseFirestore.getInstance();
+        db.collection("chatrooms").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            if(task.getResult() != null) {
+                                for (QueryDocumentSnapshot snap: task.getResult()){
+                                    if (snap.get("uid1").toString().equals(uid)) {
+                                        data.add(new ChatrData(snap.getId(), snap.get("uid2").toString()));
+
+                                    } else if (snap.get("uid2").toString().equals(uid)) {
+                                        data.add(new ChatrData(snap.getId(), snap.get("uid1").toString()));
+                                    }
+                                }
+                            AddMessages();
+                            AddNames();
+                            }
+
+                        }
+
+                    }
+                });
+
+    }
     public ChatroomData(final String uid) {
         this.uid = uid;
         data = new ArrayList<>();
@@ -97,11 +128,11 @@ public class ChatroomData {
                             if(task.getResult() != null) {
                                 for (QueryDocumentSnapshot snap: task.getResult()){
                                     if(snap.get("uid1").toString().equals(uid)){
-                                        data.add(new ChatrData(snap.getId(), snap.get("uid2").toString(),((Timestamp)snap.get("date")).toDate()));
+                                        data.add(new ChatrData(snap.getId(), snap.get("uid2").toString()));
 
                                     }
                                     else if(snap.get("uid2").toString().equals(uid)){
-                                        data.add(new ChatrData(snap.getId(), snap.get("uid1").toString(),((Timestamp)snap.get("date")).toDate()));
+                                        data.add(new ChatrData(snap.getId(), snap.get("uid1").toString()));
                                     }
 
                                 }
@@ -113,22 +144,6 @@ public class ChatroomData {
 
                     }
                 });
-
-    }
-    public ChatroomData(final String uid, final String uid2) {
-        Map<String, Object> data = new HashMap<>();
-        data.put("date", FieldValue.serverTimestamp());
-        data.put("uid1",uid);
-        data.put("uid2",uid2);
-        db = FirebaseFirestore.getInstance();
-        db.collection("chatrooms").add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                roomuid = documentReference.getId();
-
-            }
-        });
-
 
     }
 
@@ -144,7 +159,7 @@ public class ChatroomData {
             chatrooms.clear();
             for (int i = 0; i < data.size(); i++) {
                 chatrooms.add(new ChatRecyclerViewData(data.get(i).getRid(), data.get(i).getUid(), data.get(i).getName(), data.get(i).getMessage(), data.get(i).getDate()));
-                Log.d("Chatroom", i + "");
+
             }
         }
     }
@@ -161,12 +176,12 @@ public class ChatroomData {
                                 if (!task.getResult().isEmpty()) {
                                     for (QueryDocumentSnapshot snap : task.getResult()) {
                                         data.get(finalI).setMessage(snap.get("message").toString());
-                                        Log.d("ChatroomData", "메시지 불러오기 성공" + snap.get("message"));
+                                        data.get(finalI).setDate(((Timestamp)snap.get("date")).toDate());
                                     }
                                 }
                                 else{
                                     data.get(finalI).setMessage("");
-                                    Log.d("ChatroomData", "메시지 불러오기 실패");
+                                    data.get(finalI).setDate(null);
                                 }
                                 check++;
                                 DataUpdate();
@@ -177,7 +192,6 @@ public class ChatroomData {
     }
     private void AddNames(){
         for(int i=0;i<data.size();i++){
-            Log.d("ChatroomData", "이름 "+data.get(i).getUid());
             final int finalI = i;
             db.collection("users").document(data.get(i).getUid())
                     .get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -195,9 +209,31 @@ public class ChatroomData {
     }
 
 
+    public void DataAdd(ChatRecyclerViewData data){
+        chatrooms.add(data);
+    }
+
     public void ShowMessage(){
         for(int i = 0; i<data.size();i++)
         Log.d("ChatroomData",data.get(i).getMessage());
+    }
+
+    public int RoomIdIndexSearch(String rid){
+        for(int i =0; i<chatrooms.size();i++){
+            if(chatrooms.get(i).getChatroomID().equals(rid)){
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    public int Uid2IndexSearch(String uid2){
+        for(int i=0;i<chatrooms.size();i++){
+            if(chatrooms.get(i).getUid2().equals(uid2)){
+                return i;
+            }
+        }
+        return -1;
     }
 
 }

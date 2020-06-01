@@ -45,7 +45,11 @@ public class RankRecyclerViewData implements Comparable<RankRecyclerViewData>{
     }
 
     public void setStar(int star) {
-        this.star = star;
+        this.star =star;
+    }
+
+    public void setStar(int star,String a) {
+        this.star =this.star+star;
     }
 
     public int getGrade() {

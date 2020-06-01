@@ -1,11 +1,9 @@
 package com.capstonewansook.ideaboard;
 
-import android.content.Intent;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +27,10 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import static com.capstonewansook.ideaboard.ChatroomIn.ChatroomCreate;
+import static com.capstonewansook.ideaboard.ChatroomIn.ChatroomOpen;
+import static com.capstonewansook.ideaboard.ChatroomIn.isChatroomExist;
+
 public class NotmeProfileFragment extends Fragment {
 
     private String uid;
@@ -39,6 +41,8 @@ public class NotmeProfileFragment extends Fragment {
     private TextView officeTextView;
     private TextView postTextView;
     private TextView wantTextView;
+    private TextView profileStar;
+    private int star;
     private FloatingActionButton chatButton;
     FirebaseFirestore db;
     final ArrayList<String> uids = new ArrayList<>();
@@ -61,6 +65,7 @@ public class NotmeProfileFragment extends Fragment {
         postTextView = rootView.findViewById(R.id.profile_post_textView);
         wantTextView = rootView.findViewById(R.id.profile_want_idea_textView);
         chatButton = rootView.findViewById(R.id.notme_profile_chat_button);
+        profileStar = rootView.findViewById(R.id.profileStar);
         chatButton.setVisibility(View.VISIBLE);
         db = FirebaseFirestore.getInstance();
 
@@ -91,64 +96,38 @@ public class NotmeProfileFragment extends Fragment {
                             .load(task.getResult())
                             .into(profileImageView);
                 } else {
-                    profileImageView.setImageResource(R.drawable.kakaotalklog2);
+                    profileImageView.setImageResource(R.drawable.ic_person_black_24dp);
                 }
             }
         });
         profileImageView.setBackground(new ShapeDrawable((new OvalShape())));
         profileImageView.setClipToOutline(true);
 
+        star = 0;
+        FirebaseFirestore.getInstance().collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult() != null) {
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            if (snapshot.get("uid").equals(uid))
+                                star += Integer.parseInt(snapshot.get("stars").toString());
+                        }
+                        profileStar.setText(star+"");
+                    }
+                }
+            }
+        });
+
         chatButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), ChatBoardActivity.class);
-                intent.putExtra("uid2",uid);
-                startActivity(intent);
-                db.collection("chatrooms").get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if(task.isSuccessful()){
-                                    if(task.getResult() != null) {
-                                        for (QueryDocumentSnapshot snap: task.getResult()){
-                                            uids.add(snap.get("uid1").toString());
-                                            uids2.add(snap.get("uid2").toString());
-
-                                        }
-                                        Log.d("mi",MainActivity.uid);
-                                        for(String s : uids){
-                                            for(String sd : uids2) {
-                                                if (s.equals(MainActivity.uid) && s.equals(uid)) {
-                                                    chekroom = 1;
-                                                    break;
-                                                }
-                                                else if(s.equals(uid)&&sd.equals(MainActivity.uid)){
-                                                    chekroom = 1;
-                                                    break;
-                                                }
-                                                else if(!s.equals(MainActivity.uid)&&!sd.equals(uid)){
-                                                    chekroom = 0;
-                                                    break;
-                                                }
-                                                else if(!s.equals(uid)&&!sd.equals(MainActivity.uid)){
-                                                    chekroom = 0;
-                                                    break;
-                                                }
-                                            }break;
-                                        }
-
-                                        if (chekroom == 1) {
-                                            chatroomData = new ChatroomData(MainActivity.uid);
-
-                                        } else if (chekroom == 0) {
-                                            chatroomData = new ChatroomData(MainActivity.uid, uid);
-
-
-                                        }
-                                    }
-                                }
-                            }
-                        });
+                String rid = isChatroomExist(uid);
+                if(rid.equals("none")){
+                    ChatroomCreate(chatButton.getContext(),uid, nameTextView.getText().toString());
+                }else{
+                    ChatroomOpen(chatButton.getContext(),rid,uid,nameTextView.getText().toString());
+                }
             }
         });
 
@@ -163,7 +142,7 @@ public class NotmeProfileFragment extends Fragment {
         wantTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Fragment post = PostsFragment.newInstance(uid);
+                Fragment post = StarPostsFragment.newInstance(uid);
                 ((MainActivity)getActivity()).replaceFragment(post);
             }
         });

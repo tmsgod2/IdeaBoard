@@ -22,8 +22,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -41,6 +46,8 @@ public class ProfileFragment extends Fragment {
     private TextView officeTextView;
     private TextView postTextView;
     private TextView wantTextView;
+    private TextView profileStar;
+    private int star;
     private static final int RC_IMAGE_CHANGE = 1001;
     private static final int RC_EXTERNAL_STORAGE_PERMISSION = 2001;
     private static final int RC_UPDATE_INFOMATION = 3001;
@@ -70,7 +77,12 @@ public class ProfileFragment extends Fragment {
         profileImageView = rootView.findViewById(R.id.profile_imageView);
         profileImageView.setBackground(new ShapeDrawable((new OvalShape())));
         profileImageView.setClipToOutline(true);
-        profileImageView.setImageBitmap(MainActivity.profileBitmap);
+        if(((MainActivity) getActivity()).imageCheck)
+        {
+            profileImageView.setImageBitmap(MainActivity.profileBitmap);
+        }else{
+            profileImageView.setImageResource(R.drawable.ic_person_black_24dp);
+        }
         profileImageView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
@@ -81,6 +93,24 @@ public class ProfileFragment extends Fragment {
 
         nameTextView = rootView.findViewById(R.id.profile_name_textView);
         nameTextView.setText(MainActivity.cus.getName());
+
+
+        profileStar = rootView.findViewById(R.id.profileStar);
+        star = 0;
+        FirebaseFirestore.getInstance().collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    if (task.getResult() != null) {
+                        for (QueryDocumentSnapshot snapshot : task.getResult()) {
+                            if (snapshot.get("uid").equals(MainActivity.uid))
+                                star += Integer.parseInt(snapshot.get("stars").toString());
+                        }
+                        profileStar.setText(star+"");
+                    }
+                }
+            }
+        });
 
         stateTextView = rootView.findViewById(R.id.profile_state_textView);
         stateTextView.setText(MainActivity.cus.getState());

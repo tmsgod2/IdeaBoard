@@ -1,7 +1,9 @@
 package com.capstonewansook.ideaboard;
 
+import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,6 +15,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,12 +25,16 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 public class MainActivity extends AppCompatActivity {
@@ -41,6 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private RankingFragment rankingFragment;
     private ProfileFragment profileFragment;
 
+    boolean imageCheck;
+
+
     //뒤로가기 눌렀을 때 들어간 순서 역순으로 프래그먼트 띄우기 위한 스택
     public static Stack<FragmentData> fragmentStack = new Stack<>();
 
@@ -48,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
     public static CustomerData cus;
     //현재 접속한 고객의 uid 변수
     public static String uid;
+    //채팅창 변수
+    public static ChatroomData chatData;
 
     // 마지막으로 뒤로가기 버튼을 눌렀던 시간 저장
     private long backKeyPressedTime = 0;
@@ -59,13 +72,29 @@ public class MainActivity extends AppCompatActivity {
     public static StorageReference mStorageRef;
     //프로필 사진 저장 변수
     public static Bitmap profileBitmap;
+
+    public static int state = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.WRITE_CONTACTS)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        101);
+            }
+        } else {
+        }
         cus = (CustomerData)getIntent().getSerializableExtra("CustomerData");
         uid = getIntent().getStringExtra("UID");
+        chatData = new ChatroomData(uid);
         Toast.makeText(this, "환영합니다! " + cus.getName()+ "\n"
                 +uid,Toast.LENGTH_LONG).show();
 
@@ -97,24 +126,28 @@ public class MainActivity extends AppCompatActivity {
                         transaction.replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss();
                         if(fragmentStack.peek().menuId!=R.id.home_menu)
                             fragmentStack.push(new FragmentData(homeFragment,R.id.home_menu));
+                        state = 0;
                         return true;
                     }
                     case R.id.chat_menu:{
                         transaction.replace(R.id.frameLayout, chatFragment).commitAllowingStateLoss();
                         if(fragmentStack.peek().menuId!=R.id.chat_menu)
                             fragmentStack.push(new FragmentData(chatFragment,R.id.chat_menu));
+                        state = 1;
                         return true;
                     }
                     case R.id.ranking_menu:{
                         transaction.replace(R.id.frameLayout, rankingFragment).commitAllowingStateLoss();
                         if(fragmentStack.peek().menuId!=R.id.ranking_menu)
                             fragmentStack.push(new FragmentData(rankingFragment,R.id.ranking_menu));
+                        state = 2;
                         return true;
                     }
                     case R.id.profile_menu:{
                         transaction.replace(R.id.frameLayout, profileFragment).commitAllowingStateLoss();
                         if(fragmentStack.peek().menuId!=R.id.profile_menu)
                             fragmentStack.push(new FragmentData(profileFragment,R.id.profile_menu));
+                        state = 3;
                         return true;
                     }
                     default: return false;
@@ -122,7 +155,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        Intent serviceIntent = new Intent(this,MyFirebaseMessagingService.class);
+        startService(serviceIntent);
 
+        passPushTokenToServer();
 
     }
 
@@ -214,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                         // Successfully downloaded data to local file
                         // ...
+                        imageCheck = true;
                         profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
                         Log.d(TAG, "이미지 불러오기 성공");
                     }
@@ -221,9 +258,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle failed download
+                imageCheck = false;
                 // ...
             }
         });
 
     }
+
+
+    void passPushTokenToServer(){
+
+        String token = FirebaseInstanceId.getInstance().getToken();
+        Map<String, Object> tokenMap = new HashMap<>();
+        tokenMap.put("token",token);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(uid).update(tokenMap);
+
+    }
+
+
+
 }

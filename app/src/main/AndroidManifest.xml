@@ -3,6 +3,8 @@
     package="com.capstonewansook.ideaboard">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -11,7 +13,24 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+     
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_insert_drive_file_black_file"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent"/>
+        <service
+            android:name=".MyFirebaseMessagingService"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
         <activity android:name=".extededimageActivity" />
+        <activity android:name=".Zample" />
         <activity android:name=".ProfileUpdateActivity" />
         <activity android:name=".SignUpActivity" />
         <activity android:name=".CleverIdeaBoard" />
@@ -19,14 +38,35 @@
         <activity android:name=".logintitle">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="Logintitle"/>
+                <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity" />
-        <activity android:name=".ChatBoardActivity" />
+        <activity android:name=".ChatBoardActivity">
+            <intent-filter>
+                <action android:name="ChatBoardActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity android:name=".IdeamainActivity" />
         <activity android:name=".InfomationActivity" />
+        <activity android:name=".Chatalbum" />
+
+        <activity android:name=".Chatalbumclick" />
+        <provider
+            android:authorities="${applicationId}.provider"
+            android:name=".GenericFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+
+                android:resource="@xml/provider_paths"/>
+
+        </provider>
     </application>
 
 </manifest>

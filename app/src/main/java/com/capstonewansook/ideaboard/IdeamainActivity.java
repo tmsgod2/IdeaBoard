@@ -7,10 +7,12 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
+
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
@@ -58,6 +60,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.capstonewansook.ideaboard.ChatroomIn.ChatroomCreate;
+import static com.capstonewansook.ideaboard.ChatroomIn.ChatroomOpen;
+import static com.capstonewansook.ideaboard.ChatroomIn.isChatroomExist;
+
 public class IdeamainActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private boolean starCheck;
@@ -65,6 +71,7 @@ public class IdeamainActivity extends AppCompatActivity {
     IdeaMainData mainData;
     String uid;
     String boardId;
+    String name;
     int star;
     int count;
     int extendedimage = 0;
@@ -81,11 +88,8 @@ public class IdeamainActivity extends AppCompatActivity {
     ImageView commentExitImageView;
     LinearLayout imageLayout;
     RelativeLayout loadingLayout;
-    ChatroomData chatroomData;
+    TextView nameTextView;
 
-    final ArrayList<String> uids = new ArrayList<>();
-    final ArrayList<String> uids2 = new ArrayList<>();
-    private int chekroom;
     final ArrayList<CommentRecyclerViewData> list = new ArrayList<>();
 
     @Override
@@ -112,15 +116,33 @@ public class IdeamainActivity extends AppCompatActivity {
         commentSubmitButton = findViewById(R.id.ideamain_comment_submit_button);
         commentExitImageView = findViewById(R.id.ideamain_comment_exit_imageView);
         imageLayout = findViewById(R.id.ideamain_image_linearlayout);
+        nameTextView = findViewById(R.id.ideamain_name);
 
         boardId = mainData.boardId;
         uid = mainData.uid;
         titleTextView.setText(mainData.title);
         contentTextView.setText(mainData.content);
+
+
         //star = 0; //mainData.stars;
         count = 0;
+        if(uid.equals(MainActivity.uid)){
+            chatImageView.setVisibility(View.GONE);
+        }
         db = FirebaseFirestore.getInstance();
-        FirebaseFirestore.getInstance().collection("users").document(MainActivity.uid).collection("Star").document(boardId).get()
+
+
+        db.collection("users").document(uid).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        nameTextView.setText(task.getResult().get("name").toString());
+
+                    }});
+
+
+
+        db.collection("users").document(MainActivity.uid).collection("Star").document(boardId).get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -138,110 +160,26 @@ public class IdeamainActivity extends AppCompatActivity {
                     starCheckBox.setBackgroundResource(R.drawable.ic_star_gold_24dp);
                 }
             }});
-                if (uid.equals(MainActivity.uid)) {
-                    deleteTextView.setVisibility(View.VISIBLE);
+        db.collection("users").document(uid).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    name = task.getResult().get("name").toString();
+                    Log.d(TAG,name);
                 }
-                deleteTextView.setOnClickListener(new View.OnClickListener() {
+            }
+        });
+        if (uid.equals(MainActivity.uid)) {
+            deleteTextView.setVisibility(View.VISIBLE);
+        }
+        deleteTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         IsDelete();
                     }
                 });
-                profileImage.setBackground(new ShapeDrawable((new OvalShape())));
-                profileImage.setClipToOutline(true);
-                starTextView.setText(String.valueOf(mainData.stars));
-                starCheckBox.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        starCheckBox.setEnabled(false);
-                        if (starCheckBox.isChecked() == false) {
-                            StarsUpdate(false);
-                        } else {
-                            StarsUpdate(true);
-                        }
-                    }
-                });
-                chatImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent chatIntent = new Intent(getApplicationContext(), ChatBoardActivity.class);
-                        startActivity(chatIntent);
-                        db.collection("chatrooms").get()
-                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        if(task.isSuccessful()){
-                                            if(task.getResult() != null) {
-                                                for (QueryDocumentSnapshot snap: task.getResult()){
-                                                    uids.add(snap.get("uid1").toString());
-                                                    uids2.add(snap.get("uid2").toString());
 
-                                                }
-                                                Log.d("mi",MainActivity.uid);
-                                                for(String s : uids){
-                                                    for(String sd : uids2) {
-                                                        if (s.equals(MainActivity.uid) && s.equals(uid)) {
-                                                            chekroom = 1;
-                                                            break;
-                                                        }
-                                                        else if(s.equals(uid)&&sd.equals(MainActivity.uid)){
-                                                            chekroom = 1;
-                                                            break;
-                                                        }
-                                                        else if(!s.equals(MainActivity.uid)&&!sd.equals(uid)){
-                                                            chekroom = 0;
-                                                            break;
-                                                        }
-                                                        else if(!s.equals(uid)&&!sd.equals(MainActivity.uid)){
-                                                            chekroom = 0;
-                                                            break;
-                                                        }
-                                                    }break;
-                                                }
-
-                                                if (chekroom == 1) {
-                                                    chatroomData = new ChatroomData(MainActivity.uid);
-
-                                                } else if (chekroom == 0) {
-                                                    chatroomData = new ChatroomData(MainActivity.uid, uid);
-
-
-                                                }
-                                            }
-                                        }
-                                    }
-                                });
-
-
-                    }
-                });
-
-                commentButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        view.setVisibility(View.GONE);
-                        KeboardOn();
-                    }
-                });
-
-                commentExitImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        view.setVisibility(view.GONE);
-                        KeboardOff();
-                    }
-                });
-
-                commentSubmitButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String comment = commentEditText.getText().toString();
-                        if (comment.length() > 0 && !comment.equals("")) {
-                            CommentWrite();
-                            KeboardOff();
-                        }
-                    }
-                });
+           
                 imageLayout.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -254,202 +192,255 @@ public class IdeamainActivity extends AppCompatActivity {
                     }
                 });
 
-                actionBar.setDisplayHomeAsUpEnabled(true);
-
-                // 댓글 리사이클러뷰 어뎁터 리스트 추가
-                CommentRead();
-
-                if (mainData.imgLength > 0)
-                    ImageDownload();
-
-                setProfileImage();
-
-            }
-
-            //상단의 뒤로가기 버튼 클릭시 뒤로 감
+        profileImage.setBackground(new ShapeDrawable((new OvalShape())));
+        profileImage.setClipToOutline(true);
+        starTextView.setText(String.valueOf(mainData.stars));
+        starCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case android.R.id.home:
-                        onBackPressed();
-                        return true;
-                }
-
-                return super.onOptionsItemSelected(item);
-            }
-
-            private void RecyclerViewSet(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-                recyclerView.setAdapter(adapter);
-            }
-
-            //댓글쓰기 버튼 클릭했을 때 에디트 텍스트랑 댓글 등록 버튼 활성화 밑 키보드 활성화
-            private void KeboardOn() {
-                commentEditText.setVisibility(View.VISIBLE);
-                commentSubmitButton.setVisibility(View.VISIBLE);
-                commentExitImageView.setVisibility(View.VISIBLE);
-                commentEditText.requestFocus();
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
-            }
-
-            //댓글 쓰기 취소 시 에디트 텍스트, 댓글등록 버튼 비활성화, 키보드 비활성화
-            private void KeboardOff() {
-                commentEditText.setText("");
-                commentEditText.setVisibility(View.GONE);
-                commentSubmitButton.setVisibility(View.GONE);
-                commentButton.setVisibility(View.VISIBLE);
-                InputMethodManager immhide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
-                immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
-            }
-
-            //추천
-            private void StarsUpdate(final boolean up) {
-                if (up == true) {
-                    Map<String, Object> starfield = new HashMap<>();
-                    starfield.put("star", true);
-                    db.collection("users")
-                            .document(MainActivity.uid)
-                            .collection("Star")
-                            .document(boardId)
-                            .set(starfield);
-                    Map<String, Object> starcollection = new HashMap<>();
-                    starcollection.put("star", true);
-                    db.collection("posts")
-                            .document(boardId)
-                            .collection("star")
-                            .document(MainActivity.uid)
-                            .set(starcollection)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    db.collection("posts")
-                                            .document(boardId)
-                                            .collection("star")
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    star = 0;
-                                                    for (DocumentSnapshot snap : task.getResult()) {
-                                                        if ((boolean) snap.get("star") == true) {
-                                                            star += 1;
-                                                        }
-                                                    }
-                                                    if (starCheckBox.isChecked() == false) {
-                                                        starCheckBox.setBackgroundResource(R.drawable.ic_star_black_ranking);
-                                                    } else {
-                                                        starCheckBox.setBackgroundResource(R.drawable.ic_star_gold_24dp);
-                                                    }
-                                                    starTextView.setText(String.valueOf(star));
-                                                    starCheckBox.setEnabled(true);
-                                                    Map<String, Object> starplus = new HashMap<>();
-                                                    starplus.put("stars", star);
-                                                    db.collection("posts")
-                                                            .document(boardId)
-                                                            .update(starplus);
-                                                }
-                                            });
-                                }
-                            });
+            public void onClick(View view) {
+                starCheckBox.setEnabled(false);
+                if (starCheckBox.isChecked() == false) {
+                    StarsUpdate(false);
                 } else {
-                    Map<String, Object> starfield = new HashMap<>();
-                    starfield.put("star", false);
-                    db.collection("users")
-                            .document(MainActivity.uid)
-                            .collection("Star")
-                            .document(boardId)
-                            .set(starfield);
-                    Map<String, Object> starcollection = new HashMap<>();
-                    starcollection.put("star", false);
-                    db.collection("posts")
-                            .document(boardId)
-                            .collection("star")
-                            .document(MainActivity.uid)
-                            .set(starcollection)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    db.collection("posts")
-                                            .document(boardId)
-                                            .collection("star")
-                                            .get()
-                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                    star = 0;
-                                                    for (DocumentSnapshot snap : task.getResult()) {
-                                                        if ((boolean) snap.get("star") == true) {
-                                                            star += 1;
-                                                        }
-                                                    }
-                                                    if (starCheckBox.isChecked() == false) {
-                                                        starCheckBox.setBackgroundResource(R.drawable.ic_star_black_ranking);
-                                                    } else {
-                                                        starCheckBox.setBackgroundResource(R.drawable.ic_star_gold_24dp);
-                                                    }
-                                                    starTextView.setText(String.valueOf(star));
-                                                    starCheckBox.setEnabled(true);
-                                                    Map<String, Object> starplus = new HashMap<>();
-                                                    starplus.put("stars", star);
-                                                    db.collection("posts")
-                                                            .document(boardId)
-                                                            .update(starplus);
-                                                }
-                                            });
-                                }
-                            });
+                    StarsUpdate(true);
                 }
             }
-
-            private void setProfileImage() {
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference profileRef = storage.getReference().child("users/" + uid + "/profileImage");
-                profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Uri> task) {
-                        if (task.isSuccessful()) {
-                            Glide.with(getApplicationContext())
-                                    .load(task.getResult())
-                                    .into(profileImage);
-                        }
-                    }
-                });
+        });
+        chatImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String rid = isChatroomExist(uid);
+                if(rid.equals("none")){
+                    ChatroomCreate(getApplicationContext(),uid, name);
+                }else{
+                    ChatroomOpen(getApplicationContext(),rid,uid,name);
+                }
             }
+        });
 
-            private void ImageDownload() {
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                for (int i = 0; i < mainData.imgLength; i++) {
-                    final ImageView image = new ImageView(getApplicationContext());
-                    image.setLayoutParams(new LinearLayout.LayoutParams(300, 300));
-                    image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) image.getLayoutParams();
-                    params.leftMargin = 8;
-                    params.rightMargin = 8;
-                    image.setLayoutParams(params);
-                    StorageReference imagefileRef = storage.getReference().child("posts/" + boardId + "/image" + i);
-                    Log.d(TAG, "posts/" + boardId + "/image" + i);
-                    imagefileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.setVisibility(View.GONE);
+                KeboardOn();
+            }
+        });
+
+        commentExitImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.setVisibility(view.GONE);
+                KeboardOff();
+            }
+        });
+
+        commentSubmitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String comment = commentEditText.getText().toString();
+                if (comment.length() > 0 && !comment.equals("")) {
+                    CommentWrite();
+                    KeboardOff();
+                }
+            }
+        });
+
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // 댓글 리사이클러뷰 어뎁터 리스트 추가
+        CommentRead();
+
+        if (mainData.imgLength > 0)
+            ImageDownload();
+
+        setProfileImage();
+
+    }
+
+
+    //상단의 뒤로가기 버튼 클릭시 뒤로 감
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void RecyclerViewSet(RecyclerView recyclerView, RecyclerView.Adapter adapter) {
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setAdapter(adapter);
+    }
+
+    //댓글쓰기 버튼 클릭했을 때 에디트 텍스트랑 댓글 등록 버튼 활성화 밑 키보드 활성화
+    private void KeboardOn() {
+        commentEditText.setVisibility(View.VISIBLE);
+        commentSubmitButton.setVisibility(View.VISIBLE);
+        commentExitImageView.setVisibility(View.VISIBLE);
+        commentEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
+
+    //댓글 쓰기 취소 시 에디트 텍스트, 댓글등록 버튼 비활성화, 키보드 비활성화
+    private void KeboardOff() {
+        commentEditText.setText("");
+        commentEditText.setVisibility(View.GONE);
+        commentSubmitButton.setVisibility(View.GONE);
+        commentButton.setVisibility(View.VISIBLE);
+        InputMethodManager immhide = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        immhide.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+    }
+
+    //추천
+    private void StarsUpdate(final boolean up) {
+        if (up == true) {
+            Map<String, Object> starfield = new HashMap<>();
+            starfield.put("star", true);
+            db.collection("users")
+                    .document(MainActivity.uid)
+                    .collection("Star")
+                    .document(boardId)
+                    .set(starfield);
+            Map<String, Object> starcollection = new HashMap<>();
+            starcollection.put("star", true);
+            db.collection("posts")
+                    .document(boardId)
+                    .collection("star")
+                    .document(MainActivity.uid)
+                    .set(starcollection)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            if (task.isSuccessful()) {
-                                Glide.with(getApplicationContext())
-                                        .load(task.getResult())
-                                        .into(image);
-                                imageLayout.addView(image);
-                                extendedimage++;
-                            }
+                        public void onComplete(@NonNull Task<Void> task) {
+                            db.collection("posts")
+                                    .document(boardId)
+                                    .collection("star")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            star = 0;
+                                            for (DocumentSnapshot snap : task.getResult()) {
+                                                if ((boolean) snap.get("star") == true) {
+                                                    star += 1;
+                                                }
+                                            }
+                                            if (starCheckBox.isChecked() == false) {
+                                                starCheckBox.setBackgroundResource(R.drawable.ic_star_black_ranking);
+                                            } else {
+                                                starCheckBox.setBackgroundResource(R.drawable.ic_star_gold_24dp);
+                                            }
+                                            starTextView.setText(String.valueOf(star));
+                                            starCheckBox.setEnabled(true);
+                                            Map<String, Object> starplus = new HashMap<>();
+                                            starplus.put("stars", star);
+                                            db.collection("posts")
+                                                    .document(boardId)
+                                                    .update(starplus);
+                                               }
+                                    });
                         }
                     });
+        } else {
+            Map<String, Object> starfield = new HashMap<>();
+            starfield.put("star", false);
+            db.collection("users")
+                    .document(MainActivity.uid)
+                    .collection("Star")
+                    .document(boardId)
+                    .set(starfield);
+            Map<String, Object> starcollection = new HashMap<>();
+            starcollection.put("star", false);
+            db.collection("posts")
+                    .document(boardId)
+                    .collection("star")
+                    .document(MainActivity.uid)
+                    .set(starcollection)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            db.collection("posts")
+                                    .document(boardId)
+                                    .collection("star")
+                                    .get()
+                                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                            star = 0;
+                                            for (DocumentSnapshot snap : task.getResult()) {
+                                                if ((boolean) snap.get("star") == true) {
+                                                    star += 1;
+                                                }
+                                            }
+                                            if (starCheckBox.isChecked() == false) {
+                                                starCheckBox.setBackgroundResource(R.drawable.ic_star_black_ranking);
+                                            } else {
+                                                starCheckBox.setBackgroundResource(R.drawable.ic_star_gold_24dp);
+                                            }
+                                            starTextView.setText(String.valueOf(star));
+                                            starCheckBox.setEnabled(true);
+                                            Map<String, Object> starplus = new HashMap<>();
+                                            starplus.put("stars", star);
+                                            db.collection("posts")
+                                                    .document(boardId)
+                                                    .update(starplus);
+                                        }
+                                    });
+                        }
+                    });
+        }
+    }
+
+    private void setProfileImage() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference profileRef = storage.getReference().child("users/" + uid + "/profileImage");
+        profileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    Glide.with(getApplicationContext())
+                            .load(task.getResult())
+                            .into(profileImage);
+                  extendedimage++;
                 }
             }
+        });
+    }
 
-            private void CommentRead() {
-                loadingLayout.setVisibility(View.VISIBLE);
-                list.clear();
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("posts").document(boardId).collection("comments")
-                        .orderBy("date", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+    private void ImageDownload() {
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        for (int i = 0; i < mainData.imgLength; i++) {
+            final ImageView image = new ImageView(getApplicationContext());
+            image.setLayoutParams(new LinearLayout.LayoutParams(300, 300));
+            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) image.getLayoutParams();
+            params.leftMargin = 8;
+            params.rightMargin = 8;
+            image.setLayoutParams(params);
+            StorageReference imagefileRef = storage.getReference().child("posts/" + boardId + "/image" + i);
+            Log.d(TAG, "posts/" + boardId + "/image" + i);
+            imagefileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                @Override
+                public void onComplete(@NonNull Task<Uri> task) {
+                    if (task.isSuccessful()) {
+                        Glide.with(getApplicationContext())
+                                .load(task.getResult())
+                                .into(image);
+                        imageLayout.addView(image);
+                    }
+                }
+            });
+        }
+    }
+
+    private void CommentRead() {
+        loadingLayout.setVisibility(View.VISIBLE);
+        list.clear();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(boardId).collection("comments")
+                .orderBy("date", Query.Direction.ASCENDING).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
@@ -467,55 +458,53 @@ public class IdeamainActivity extends AppCompatActivity {
                         }
                     }
                 });
-            }
+    }
 
-            private void CommentWrite() {
-                loadingLayout.setVisibility(View.VISIBLE);
-                Map<String, Object> c = new HashMap<>();
-                c.put("uid", MainActivity.uid);
-                c.put("name", MainActivity.cus.getName());
-                c.put("date", (Object) FieldValue.serverTimestamp());
-                c.put("content", commentEditText.getText().toString());
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("posts").document(boardId).collection("comments").add(c)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                CommentRead();
-                            }
-                        });
-            }
+    private void CommentWrite() {
+        loadingLayout.setVisibility(View.VISIBLE);
+        Map<String, Object> c = new HashMap<>();
+        c.put("uid", MainActivity.uid);
+        c.put("name", MainActivity.cus.getName());
+        c.put("date", (Object) FieldValue.serverTimestamp());
+        c.put("content", commentEditText.getText().toString());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(boardId).collection("comments").add(c)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        CommentRead();
+                    }
+                });
+    }
 
-            private void IsDelete() {
-                AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
-                alert_confirm.setMessage("삭제 하시겠습니까?").setCancelable(false).setPositiveButton("예",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                DeleteIdea();
-                            }
-                        }).setNegativeButton("아니오",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                return;
-                            }
-                        });
-                AlertDialog alert = alert_confirm.create();
-                alert.show();
+    private void IsDelete() {
+        AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
+        alert_confirm.setMessage("삭제 하시겠습니까?").setCancelable(false).setPositiveButton("예",
+                new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                DeleteIdea();
+            }}).setNegativeButton("아니오",
+                new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    return;
+                }
+            });
+        AlertDialog alert = alert_confirm.create();
+        alert.show();
 
-            }
-
-            private void DeleteIdea() {
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                db.collection("posts").document(boardId).delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                finish();
-                            }
-                        });
-            }
-        }
+    }
+    private void DeleteIdea() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("posts").document(boardId).delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        finish();
+                    }
+                });
+    }
+}
 
 

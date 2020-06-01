@@ -10,24 +10,26 @@
 
     <ImageView
         android:id="@+id/rank_re_profile_imageView"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:scaleType="centerCrop"
+        android:backgroundTint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_stars_black"
-        android:scaleType="centerCrop"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/rank_re_name_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="18dp"
         android:text="이름"
+        android:textColor="#000000"
         android:textSize="24sp"
         app:layout_constraintStart_toEndOf="@+id/rank_re_profile_imageView"
         app:layout_constraintTop_toTopOf="parent" />
@@ -42,14 +44,15 @@
 
     <TextView
         android:id="@+id/rank_re_star_textView"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="18dp"
         android:background="@drawable/ic_star_gold_24dp"
         android:gravity="center"
         android:text="1"
-        android:textSize="20sp"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -57,18 +60,22 @@
         android:id="@+id/rank_re_manyStar_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
         android:text="추천숫자"
         app:layout_constraintBottom_toBottomOf="@+id/rank_re_star_textView"
-        app:layout_constraintEnd_toStartOf="@+id/rank_re_star_textView" />
+        app:layout_constraintEnd_toStartOf="@+id/rank_re_star_textView"
+        app:layout_constraintTop_toTopOf="@+id/rank_re_star_textView" />
 
     <ImageView
         android:id="@+id/rank_re_manyStar_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/rank_re_star_textView"
         app:layout_constraintEnd_toStartOf="@+id/rank_re_manyStar_textView"
+        app:layout_constraintTop_toTopOf="@+id/rank_re_star_textView"
         app:srcCompat="@drawable/ic_star_gold_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

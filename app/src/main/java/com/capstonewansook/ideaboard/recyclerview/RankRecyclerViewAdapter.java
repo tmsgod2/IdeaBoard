@@ -87,7 +87,7 @@ public class RankRecyclerViewAdapter extends RecyclerView.Adapter<RankRecyclerVi
                             .load(task.getResult())
                             .into(holder.profileImage);
                 } else {
-                    holder.profileImage.setImageResource(R.drawable.kakaotalklog2);
+                    holder.profileImage.setImageResource(R.drawable.ic_person_black_24dp);
                 }
             }
         });
