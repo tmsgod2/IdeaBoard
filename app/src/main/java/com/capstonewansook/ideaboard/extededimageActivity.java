@@ -17,13 +17,16 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.capstonewansook.ideaboard.recyclerview.ExtendedFragment_1Adapter;
+import com.capstonewansook.ideaboard.recyclerview.ExtendedFragment_1Data;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class extededimageActivity extends AppCompatActivity {
     LinearLayout extendedimageLayout;
@@ -31,34 +34,36 @@ public class extededimageActivity extends AppCompatActivity {
     String boardid;
     int extendedimages;
 
-    ArrayList<String> arr = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_extededimage);
         extendedimageLayout = findViewById(R.id.extededimageLayout);
+
         Intent intent = getIntent();
         extendedimages = intent.getExtras().getInt("extededimage");
         uid = intent.getExtras().getString("ideamainuid");
         boardid = intent.getExtras().getString("boardid");
 
-        ViewPager viewPager = findViewById(R.id.viewpager);
-        ExtendedFragment_1Adapter exdt = new ExtendedFragment_1Adapter(getSupportFragmentManager());
-        viewPager.setAdapter(exdt);
+        final FirebaseStorage storage = FirebaseStorage.getInstance();
 
-        if(extendedimages > 0) {
-            ImageDownload();
-            for(int i = 0; i< arr.size(); i++){
-                ExtendedFragment_1 exfg = new ExtendedFragment_1();
-                Bundle bundle = new Bundle();
-                bundle.putString("imgRes",arr.get(i));
-                exfg.setArguments(bundle);
-                exdt.addItem(exfg);
-                Log.d("my123",arr.toString());
-            }
-            exdt.notifyDataSetChanged();
+        for (int i = 0; i < extendedimages; i++) {
+            final ImageView imageView = new ImageView(getApplicationContext());
+            StorageReference imagefileRef = storage.getReference().child("posts/" + boardid + "/image"+i);
+                imagefileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Glide.with(getApplicationContext()).load(task.getResult()).into(imageView);
+                            extendedimageLayout.addView(imageView);
+                        }
+                    }
+                });
         }
+
+
         extendedimageLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,23 +73,6 @@ public class extededimageActivity extends AppCompatActivity {
         });
 
 
-
-
     }
-    private void ImageDownload() {
-        FirebaseStorage storage = FirebaseStorage.getInstance();
 
-        for (int i = 0; i < extendedimages; i++) {
-            StorageReference imagefileRef = storage.getReference().child("posts/" + boardid + "/image" + i);
-            imagefileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                @Override
-                public void onComplete(@NonNull Task<Uri> task) {
-                    if (task.isSuccessful()) {
-                        arr.add(task.getResult().toString());
-                        Log.d("getdown123",arr.toString());
-                    }
-                }
-            });
-        }
-    }
 }
