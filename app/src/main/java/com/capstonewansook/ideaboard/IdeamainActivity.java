@@ -1,28 +1,16 @@
 package com.capstonewansook.ideaboard;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
-
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
-
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
-import android.view.animation.DecelerateInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -180,17 +168,16 @@ public class IdeamainActivity extends AppCompatActivity {
                 });
 
            
-                imageLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        Intent extendedintend = new Intent(getApplicationContext() , extededimageActivity.class);
-                        extendedintend.putExtra("extededimage",extendedimage);
-                        extendedintend.putExtra("ideamainuid",uid);
-                        extendedintend.putExtra("boardid",boardId);
-                        startActivity(extendedintend);
-                    }
-                });
+        imageLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent extendedintend = new Intent(getApplicationContext() , extededimageActivity.class);
+                extendedintend.putExtra("extededimage",extendedimage);
+                extendedintend.putExtra("ideamainuid",uid);
+                extendedintend.putExtra("boardid",boardId);
+                startActivity(extendedintend);
+            }
+        });
 
         profileImage.setBackground(new ShapeDrawable((new OvalShape())));
         profileImage.setClipToOutline(true);
@@ -403,7 +390,7 @@ public class IdeamainActivity extends AppCompatActivity {
                     Glide.with(getApplicationContext())
                             .load(task.getResult())
                             .into(profileImage);
-                  extendedimage++;
+
                 }
             }
         });
@@ -429,6 +416,7 @@ public class IdeamainActivity extends AppCompatActivity {
                                 .load(task.getResult())
                                 .into(image);
                         imageLayout.addView(image);
+                        extendedimage++;
                     }
                 }
             });

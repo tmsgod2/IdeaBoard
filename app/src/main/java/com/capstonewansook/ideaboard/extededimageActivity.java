@@ -1,30 +1,21 @@
 package com.capstonewansook.ideaboard;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.LinearLayoutCompat;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class extededimageActivity extends AppCompatActivity {
     LinearLayout extendedimageLayout;
@@ -49,6 +40,7 @@ public class extededimageActivity extends AppCompatActivity {
 
         for (int i = 0; i < extendedimages; i++) {
             final ImageView imageView = new ImageView(getApplicationContext());
+
             StorageReference imagefileRef = storage.getReference().child("posts/" + boardid + "/image"+i);
                 imagefileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                     @Override
@@ -56,6 +48,9 @@ public class extededimageActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Glide.with(getApplicationContext()).load(task.getResult()).into(imageView);
                             extendedimageLayout.addView(imageView);
+                            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) imageView.getLayoutParams();
+                            params.gravity = Gravity.CENTER;
+                            imageView.setLayoutParams(params);
                         }
                     }
                 });
