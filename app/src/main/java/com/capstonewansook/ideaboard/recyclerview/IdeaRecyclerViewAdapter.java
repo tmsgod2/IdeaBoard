@@ -84,7 +84,7 @@ public class IdeaRecyclerViewAdapter extends RecyclerView.Adapter< IdeaRecyclerV
                                 .load(task.getResult())
                                 .into(holder.idpost);
                     } else {
-//                    holder.idpost.setImageResource(R.drawable.kakaotalklog2);
+                     holder.idpost.setImageResource(R.drawable.ic_camera_alt_black_24dp);
                     }
                 }
                 catch (Exception e){
