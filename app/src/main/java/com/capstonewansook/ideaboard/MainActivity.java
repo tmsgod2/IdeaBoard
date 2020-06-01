@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -74,11 +77,15 @@ public class MainActivity extends AppCompatActivity {
     public static Bitmap profileBitmap;
 
     public static int state = 0;
+
+    RelativeLayout loadingLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        loadingLayout = findViewById(R.id.loadingLayout);
+        loadingLayout.bringToFront();
+        loadingLayout.setVisibility(View.VISIBLE);
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -243,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
     //미리 프로필 사진 불러와서 내정보 확인했을 때 끊김 없이 보여줌
     private void ProfileSetting() throws IOException {
         final File localFile = File.createTempFile("images", "jpg");
-        StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
+        final StorageReference profileRef = mStorageRef.child("users/"+MainActivity.uid+"/profileImage");
         profileRef.getFile(localFile)
                 .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
@@ -252,13 +259,18 @@ public class MainActivity extends AppCompatActivity {
                         // ...
                         imageCheck = true;
                         profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
+                        Matrix matrix = new Matrix();
+                        matrix.postRotate(90);
+                        profileBitmap = Bitmap.createBitmap(profileBitmap,0,0,profileBitmap.getWidth(),profileBitmap.getHeight(),matrix,true);
                         Log.d(TAG, "이미지 불러오기 성공");
+                        loadingLayout.setVisibility(View.INVISIBLE);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 // Handle failed download
                 imageCheck = false;
+                loadingLayout.setVisibility(View.INVISIBLE);
                 // ...
             }
         });
