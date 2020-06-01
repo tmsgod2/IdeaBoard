@@ -16,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.capstonewansook.ideaboard.recyclerview.ExtendedFragment_1Adapter;
-import com.capstonewansook.ideaboard.recyclerview.ExtendedFragment_1Data;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
