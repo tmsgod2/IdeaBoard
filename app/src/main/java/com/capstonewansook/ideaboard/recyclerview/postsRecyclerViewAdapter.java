@@ -84,7 +84,6 @@ public class postsRecyclerViewAdapter extends RecyclerView.Adapter<postsRecycler
 
 
         holder.imageView2.setImageResource(image2);
-        // new SimpleDateFormat("yyyy년 MM월dd일 HH시 mm분").format((Timestamp) task.getResult().get("date")).toDate()
         holder.textView1.setText( new SimpleDateFormat("yyyy년 MM월dd일 HH시 mm분").format(yymmdd));
         holder.textView2.setText(name);
         holder.textView3.setText(String.valueOf(star));

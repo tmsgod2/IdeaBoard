@@ -83,7 +83,7 @@ public class HomeFragment extends Fragment {
 
                                     }
                                 }
-                                RecyclerViewSet(rootView,list, (RecyclerView) rootView.findViewById(R.id.home_manystar_recyclerView),new HomeManystarRecyclerViewAdapter(list),R.id.home_re_manystar_title_textview);
+                                RecyclerViewSet(rootView,list, (RecyclerView) rootView.findViewById(R.id.home_manystar_recyclerView),new HomeManystarRecyclerViewAdapter(list));
                             }
 
 
@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment {
 
                                     }
                                 }
-                                RecyclerViewSet(rootView,newlist, (RecyclerView) rootView.findViewById(R.id.home_newidea_recyclerView),new HomeNewideaRecyclerViewAdapter(newlist),R.id.home_re_newidea_title_textView);
+                                RecyclerViewSet(rootView,newlist, (RecyclerView) rootView.findViewById(R.id.home_newidea_recyclerView),new HomeNewideaRecyclerViewAdapter(newlist));
                             }
 
 
@@ -115,7 +115,7 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void RecyclerViewSet(final ViewGroup view, ArrayList list, RecyclerView recyclerView, RecyclerView.Adapter adapter, final int toastPosition){
+    private void RecyclerViewSet(final ViewGroup view, ArrayList list, RecyclerView recyclerView, RecyclerView.Adapter adapter){
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         recyclerView.setAdapter(adapter);
     }

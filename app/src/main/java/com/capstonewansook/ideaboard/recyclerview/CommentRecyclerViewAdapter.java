@@ -55,12 +55,6 @@ public class CommentRecyclerViewAdapter extends RecyclerView.Adapter<CommentRecy
 
         holder.nameTextView.setText(name);
         holder.dateTextView.setText(format.format(date));
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(holder.itemView.getContext(), mData.get(position).getUid() + mData.get(position).getDate(),Toast.LENGTH_SHORT).show();
-            }
-        });
         holder.deleteTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

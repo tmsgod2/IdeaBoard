@@ -8,7 +8,6 @@ import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -179,9 +178,6 @@ public class ProfileFragment extends Fragment {
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                // Get a URL to the uploaded content
-//                                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                                Log.d("asd", taskSnapshot.toString());
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
@@ -200,14 +196,12 @@ public class ProfileFragment extends Fragment {
             case RC_UPDATE_INFOMATION:
                 if(resultCode == RESULT_OK){
                     HashMap<String,Object> cusData =(HashMap<String, Object>) data.getSerializableExtra("UpdateCustomerData");
-                    Log.d("before", (String) cusData.get("job"));
                     stateTextView.setText(cusData.get("state").toString());
                     officeTextView.setText(cusData.get("office").toString());
                     MainActivity.cus.setJob(cusData.get("job").toString());
                     MainActivity.cus.setState(cusData.get("state").toString());
                     MainActivity.cus.setLocate(cusData.get("locate").toString());
                     MainActivity.cus.setOffice(cusData.get("office").toString());
-                    Log.d("after",MainActivity.cus.getJob());
                 }
 
         }

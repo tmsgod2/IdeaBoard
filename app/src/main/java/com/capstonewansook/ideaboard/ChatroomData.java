@@ -1,6 +1,5 @@
 package com.capstonewansook.ideaboard;
 
-import android.util.Log;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -199,7 +198,6 @@ public class ChatroomData {
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                     if(task.isSuccessful()){
                         data.get(finalI).setName(task.getResult().get("name").toString());
-                        Log.d("ChatroomData", "이름 불러오기 성공"+task.getResult().get("name").toString());
                         check++;
                         DataUpdate();
                     }
@@ -213,10 +211,6 @@ public class ChatroomData {
         chatrooms.add(data);
     }
 
-    public void ShowMessage(){
-        for(int i = 0; i<data.size();i++)
-        Log.d("ChatroomData",data.get(i).getMessage());
-    }
 
     public int RoomIdIndexSearch(String rid){
         for(int i =0; i<chatrooms.size();i++){

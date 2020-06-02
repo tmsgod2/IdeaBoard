@@ -6,9 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loadingLayout = findViewById(R.id.loadingLayout);
-        loadingLayout.bringToFront();
         loadingLayout.setVisibility(View.VISIBLE);
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -102,8 +99,7 @@ public class MainActivity extends AppCompatActivity {
         cus = (CustomerData)getIntent().getSerializableExtra("CustomerData");
         uid = getIntent().getStringExtra("UID");
         chatData = new ChatroomData(uid);
-        Toast.makeText(this, "환영합니다! " + cus.getName()+ "\n"
-                +uid,Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "환영합니다! " + cus.getName(),Toast.LENGTH_LONG).show();
 
         fragmentManager = getSupportFragmentManager();
 
@@ -123,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
         transaction.replace(R.id.frameLayout, homeFragment).commitAllowingStateLoss();
         // 바텀 버튼 설정
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setEnabled(false);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             // 각 버튼을 누르면 해당 프레그먼트로 이동
             @Override
@@ -203,8 +200,11 @@ public class MainActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                        db.collection("users").document(uid).update("token","none");
                         FirebaseAuth.getInstance().signOut();
                         profileBitmap = null;
+
                         Intent intent = new Intent(getApplicationContext(),logintitle.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -255,15 +255,11 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        // Successfully downloaded data to local file
-                        // ...
+
                         imageCheck = true;
                         profileBitmap = BitmapFactory.decodeFile(localFile.getAbsolutePath());
-                        Matrix matrix = new Matrix();
-                        matrix.postRotate(90);
-                        profileBitmap = Bitmap.createBitmap(profileBitmap,0,0,profileBitmap.getWidth(),profileBitmap.getHeight(),matrix,true);
-                        Log.d(TAG, "이미지 불러오기 성공");
                         loadingLayout.setVisibility(View.INVISIBLE);
+                        bottomNavigationView.setEnabled(true);
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -271,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
                 // Handle failed download
                 imageCheck = false;
                 loadingLayout.setVisibility(View.INVISIBLE);
+                bottomNavigationView.setEnabled(true);
                 // ...
             }
         });

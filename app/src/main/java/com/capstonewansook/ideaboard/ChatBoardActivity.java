@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -337,8 +336,6 @@ public class ChatBoardActivity extends AppCompatActivity {
         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
-                Log.d(TAG, "채팅메시지 보냄");
-
             }
         });
     }
@@ -350,13 +347,10 @@ public class ChatBoardActivity extends AppCompatActivity {
                     @Override
                     public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
                         if(e!=null){
-                            Log.w(TAG,"실패",e);
                             return;
                         }
                         boolean isSame = true;
                         for(QueryDocumentSnapshot doc:queryDocumentSnapshots){
-
-                            Log.d(TAG,"");
                             String getUid = doc.get("fromid").toString();
                             String getName = "";
                             if(getUid.equals(uid2)){

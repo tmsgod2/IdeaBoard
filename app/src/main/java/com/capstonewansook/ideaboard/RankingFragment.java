@@ -115,7 +115,6 @@ public class RankingFragment extends Fragment {
                                  }
 
                                 dbReadUser = true;
-                                Log.d(TAG, i+" wwwwww "+j);
 
                             }
                         }
@@ -150,12 +149,6 @@ public class RankingFragment extends Fragment {
             }
         });
 
-
-
-            for(RankRecyclerViewData s : rankList){
-                Log.d(TAG,s.getName());
-            }
-
         return  rootView;
     }
 
@@ -178,7 +171,6 @@ public class RankingFragment extends Fragment {
                         for(j=0;j<rankList.size();j++){
                             if(rankList.get(j).getUid().equals(tiimeData.get(i).getUid())){
                                 rankList.get(j).setStar(tiimeData.get(i).getStar(),"+");
-                                Log.d(TAG, i+" "+j);
                             }
 
                         }
@@ -214,9 +206,7 @@ public class RankingFragment extends Fragment {
                         if(nowCal.get(Calendar.MONTH)==tiimeData.get(i).getMonth()) {
                             for (j = 0; j < rankList.size(); j++) {
                                 if (rankList.get(j).getUid().equals(tiimeData.get(i).getUid())) {
-//                                    Log.d(TAG, rankList.get(j).getStar()+"");
                                     rankList.get(j).setStar(tiimeData.get(i).getStar(), "+");
-                                    Log.d(TAG, i + " " + j);
                                 }
 
                             }
@@ -265,7 +255,6 @@ public class RankingFragment extends Fragment {
 
                                     if (rankList.get(j).getUid().equals(tiimeData.get(i).getUid())) {
                                         rankList.get(j).setStar(tiimeData.get(i).getStar(), "+");
-                                        Log.d(TAG, i + "ddddddddddddddd" + j);
                                     }
 
                                 }
@@ -291,12 +280,9 @@ public class RankingFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-//        dbReadUser =false;
-//        dbReadpost =false;
         RecyclerView recyclerView = rootView.findViewById(R.id.rankingRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(rootView.getContext()));
         RankRecyclerViewAdapter adapter = new RankRecyclerViewAdapter(rankList);
-        Log.d(TAG, i + "change" + j);
         recyclerView.setAdapter(adapter);
     }
 }
