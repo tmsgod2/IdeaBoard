@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#FFFFFF"
     tools:context=".IdeamainActivity">
+
     <include
         layout="@layout/loading"
         android:layout_width="0dp"
@@ -37,30 +39,54 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/ideamain_delete_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="삭제"
-                android:layout_marginEnd="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
                 android:layout_gravity="end"
-                android:textColor="@color/design_default_color_error"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="?attr/selectableItemBackground"
-                android:visibility="gone"/>
+                android:text="삭제"
+                android:textColor="@color/design_default_color_error"
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/posts_recyclerview_layout"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/ideamain_profile_imageView"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:src="@drawable/ic_person_black"
-                    android:scaleType="centerCrop"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="95dp"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/ideamain_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/ideamain_profile_imageView" />
+
+                    <ImageView
+                        android:id="@+id/ideamain_profile_imageView"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_margin="10dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_person_black"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -68,25 +94,14 @@
                     android:orientation="vertical">
 
 
-
-
-
-
-                    <TextView
-                        android:id="@+id/ideamain_name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-
                     <TextView
                         android:id="@+id/ideamain_title_textView"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:gravity="center"
-                        android:textSize="24sp"
-                        android:text="제목은 어쩌구 저쩌구" />
-
-
+                        android:text="제목은 어쩌구 저쩌구"
+                        android:textColor="#000000"
+                        android:textSize="24sp" />
 
 
                 </LinearLayout>
@@ -97,28 +112,32 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/posts_recyclerview_layout"
                 android:orientation="vertical"
-                android:background="@android:color/white">
+                android:padding="10dp">
 
                 <TextView
                     android:id="@+id/ideamain_contents_textView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textSize="18sp"
-                    android:text="내용은 이거저거 요거 그거등등등" />
+                    android:layout_marginBottom="10dp"
+                    android:lineSpacingExtra="8dp"
+                    android:text="내용은 이거저거 요거 그거등등등"
+                    android:textColor="#000000"
+                    android:textSize="18sp" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-                <LinearLayout
-                    android:id="@+id/ideamain_image_linearlayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:id="@+id/ideamain_image_linearlayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
 
-                </LinearLayout>
+                    </LinearLayout>
                 </HorizontalScrollView>
 
             </LinearLayout>
@@ -127,42 +146,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-            <CheckBox
-                android:id="@+id/ideamain_star_checkBox"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:background="@drawable/checkbox_background"
-                android:button="@android:color/transparent"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                />
-            <TextView
-                android:id="@+id/ideamain_star_textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/ideamain_star_checkBox"
-                android:text="100"
-                android:layout_alignBottom="@+id/ideamain_star_checkBox"/>
 
-            <ImageView
-                android:id="@+id/ideamain_chat_imageView"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:src="@drawable/ic_insert_comment_black_24dp"
-                android:layout_gravity=""
-                android:layout_alignParentRight="true"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="32dp"
-                />
+                <CheckBox
+                    android:id="@+id/ideamain_star_checkBox"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/checkbox_background"
+                    android:button="@android:color/transparent" />
+
+                <TextView
+                    android:id="@+id/ideamain_star_textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/ideamain_star_checkBox"
+                    android:layout_toRightOf="@+id/ideamain_star_checkBox"
+                    android:text="100" />
+
+                <ImageView
+                    android:id="@+id/ideamain_chat_imageView"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity=""
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/ic_insert_comment_black_24dp" />
             </RelativeLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ideamain_comment_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="20dp"
-                />
+                android:layout_marginBottom="20dp" />
 
         </LinearLayout>
 
@@ -172,38 +191,34 @@
         android:id="@+id/ideamain_comment_editText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/ideamain_comment_submit_button"
         android:layout_margin="0dp"
-        android:visibility="gone"
         android:background="@color/colorEditText"
         android:gravity="top"
-        android:minLines="2"
         android:maxLines="4"
-        />
+        android:minLines="2"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ideamain_comment_submit_button"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <Button
         android:id="@+id/ideamain_comment_submit_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:text="댓글쓰기"
         android:visibility="gone"
-        />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageView
         android:id="@+id/ideamain_comment_exit_imageView"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:src="@drawable/ic_highlight_off_black_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/ideamain_comment_submit_button"
-        app:layout_constraintStart_toStartOf="@+id/ideamain_comment_submit_button"
-        app:layout_constraintEnd_toEndOf="@+id/ideamain_comment_submit_button"
         android:visibility="gone"
-        />
-
-
+        app:layout_constraintBottom_toTopOf="@+id/ideamain_comment_submit_button"
+        app:layout_constraintEnd_toEndOf="@+id/ideamain_comment_submit_button"
+        app:layout_constraintStart_toStartOf="@+id/ideamain_comment_submit_button" />
 
 
     <Button
@@ -211,13 +226,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="0dp"
+        android:background="@color/colorPrimary"
         android:text="댓글쓰기"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/guideline5"
-        android:background="@color/colorPrimary"
-        />
+        app:layout_constraintTop_toBottomOf="@+id/guideline5" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
