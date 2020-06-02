@@ -1,7 +1,6 @@
 package com.capstonewansook.ideaboard;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,8 +66,6 @@ public class PostsFragment extends Fragment {
                             }
                             adapter = new postsRecyclerViewAdapter(postsList);
                             recyclerView.setAdapter(adapter);
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
                     }
                 });

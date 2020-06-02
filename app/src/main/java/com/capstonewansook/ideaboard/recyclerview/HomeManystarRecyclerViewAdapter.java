@@ -59,10 +59,6 @@ public class HomeManystarRecyclerViewAdapter extends RecyclerView.Adapter<HomeMa
             @Override
             public void onClick(View view) {
                 IdeaMainIn.IdeaMainConnect(holder.itemView.getContext(), mData.get(position).getBoardID());
-//                Context context = view.getContext();
-//                Intent intent = new Intent(context, IdeamainActivity.class);
-//                Toast.makeText(context, mData.get(position).getTitle()+" "+mData.get(position).getStars(),Toast.LENGTH_SHORT ).show();
-//                context.startActivity(intent);
             }
         });
 

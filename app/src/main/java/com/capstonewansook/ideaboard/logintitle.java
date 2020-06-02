@@ -2,7 +2,6 @@ package com.capstonewansook.ideaboard;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -129,7 +128,6 @@ public class logintitle extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
                             FirebaseUser user = mAuth.getCurrentUser();
-                            Log.d(TAG, user.getEmail()+"");
                             updateUI(user);
                         }
                         else{
@@ -212,7 +210,6 @@ public class logintitle extends AppCompatActivity {
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    Log.d(TAG, "실패 " + mAuth.getCurrentUser().getUid().toString());
 
                 }
             });
@@ -230,13 +227,6 @@ public class logintitle extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "등록 완료");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "에러",e);
                     }
                 });
     }

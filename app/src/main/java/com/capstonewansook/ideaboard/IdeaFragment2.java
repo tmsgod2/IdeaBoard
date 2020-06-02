@@ -1,15 +1,12 @@
 package com.capstonewansook.ideaboard;
 
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,8 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.capstonewansook.ideaboard.recyclerview.IdeaRecyclerViewAdapter;
 import com.capstonewansook.ideaboard.recyclerview.IdeaRecycletViewData;
-import com.capstonewansook.ideaboard.recyclerview.RankRecyclerViewAdapter;
-import com.capstonewansook.ideaboard.recyclerview.RankRecyclerViewData;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -160,7 +155,6 @@ public class IdeaFragment2 extends Fragment {
 
     public void CommentCal(final String iv_profill, final String tv_story, final Date tv_day, final String tv_recomand, final String id){
         comNum = 0;
-        Log.d(TAG, id +"???????\n");
 
         db.collection("posts").document(id).collection("comments").get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -174,7 +168,6 @@ public class IdeaFragment2 extends Fragment {
 
                                 for(QueryDocumentSnapshot snap: task.getResult()) {
                                     comNum = comNum+ 1;
-                                    Log.d(TAG, comNum + "???????\n");
                                 }
 
                             }

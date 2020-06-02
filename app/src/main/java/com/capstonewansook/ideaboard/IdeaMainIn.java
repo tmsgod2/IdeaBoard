@@ -2,7 +2,6 @@ package com.capstonewansook.ideaboard;
 
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -31,7 +30,6 @@ public class IdeaMainIn {
                                 Intent intent = new Intent(context, IdeamainActivity.class);
                                 intent.putExtra(IDEAMAIN_KEY, mainData);
                                 context.startActivity(intent);
-                                Toast.makeText(context,title,Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

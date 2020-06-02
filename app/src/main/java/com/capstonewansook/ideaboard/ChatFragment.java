@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,7 +42,6 @@ public class ChatFragment extends Fragment implements MyFragmentRefreshCallBack 
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "asd");
         SetChatRecycler();
     }
 

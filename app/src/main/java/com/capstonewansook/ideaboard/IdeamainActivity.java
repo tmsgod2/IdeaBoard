@@ -8,7 +8,6 @@ import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -153,7 +152,6 @@ public class IdeamainActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()){
                     name = task.getResult().get("name").toString();
-                    Log.d(TAG,name);
                 }
             }
         });
@@ -407,7 +405,6 @@ public class IdeamainActivity extends AppCompatActivity {
             params.rightMargin = 8;
             image.setLayoutParams(params);
             StorageReference imagefileRef = storage.getReference().child("posts/" + boardId + "/image" + i);
-            Log.d(TAG, "posts/" + boardId + "/image" + i);
             imagefileRef.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                 @Override
                 public void onComplete(@NonNull Task<Uri> task) {
